@@ -11,7 +11,10 @@ const HeaderNav: FC = () => {
   const [isSettingsOpen, toggleIsSettingsOpen] = useState(false);
 
   return (
-    <Header sx={{ background: "#f8f8f8", p: 0 }}>
+    <Header
+      sx={{ p: 0 }}
+      className="bg-gradient-to-l from-gray-100 from-gray-300 to-cyan-200 to-blue-100 to-blue-300 shadow-md"
+    >
       <Header.Item>
         <img src={derugPfp} style={{ width: "12em", paddingLeft: "1em" }} />
       </Header.Item>

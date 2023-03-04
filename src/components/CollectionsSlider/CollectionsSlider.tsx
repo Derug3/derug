@@ -9,8 +9,12 @@ const CollectionsSlider: FC = () => {
     return collections.map((c) => {
       return (
         <Box sx={{ width: "10em", padding: "0.5em" }} key={c.id}>
-          <img src={c.image} alt="collectionImg" />
-          {c.name}
+          <img
+            src={c.image}
+            alt="collectionImg"
+            style={{ maxWidth: "150px", maxHeight: "260px" }}
+          />
+          <span>{c.name}</span>
         </Box>
       );
     });

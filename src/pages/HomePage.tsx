@@ -36,7 +36,7 @@ const HomePage = () => {
         margin: "auto",
         display: "flex",
         flexDirection: "column",
-        gap: "6em",
+        gap: "4em",
       }}
     >
       <Box
@@ -79,8 +79,8 @@ const HomePage = () => {
             />
           </Box>
         </Autocomplete>
-        {!loading && <CollectionsSlider />}
       </Box>
+      {!loading && <CollectionsSlider />}
     </Box>
   );
 };
