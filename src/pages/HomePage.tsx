@@ -1,13 +1,11 @@
-import { styled } from "@material-ui/core";
 import CollectionsSlider from "../components/CollectionsSlider/CollectionsSlider";
-import { DUMMY_COLLECTIONS } from "../components/dummy/collections.dummy";
-import { Autocomplete, Box, Text } from "@primer/react";
+import { Box, Text } from "@primer/react";
 import { useEffect, useState } from "react";
 import { getByNameOrSlug, getRandomCollections } from "../api/collections.api";
 import { collectionsStore } from "../stores/collectionsStore";
 import useDebounce from "../hooks/useDebounce";
 import { ICollectionData } from "../interface/collections.interface";
-
+import Select from "react-select";
 const HomePage = () => {
   const { setCollections, collections } = collectionsStore.getState();
   const [searchValue, setSearchValue] = useState<string>();
@@ -25,16 +23,21 @@ const HomePage = () => {
   }, [name]);
 
   const handleSearch = (e: any) => {
-    if (e.target.value && e.target.value !== "") toggleLoading(true);
-    setSearchValue(e.target.value);
+    if (e && e !== "") {
+      toggleLoading(true);
+      setSearchValue(e);
+    } else {
+      setFilteredCollections(collections);
+    }
   };
 
   const searchByName = async () => {
     try {
       if (name && name !== "") {
-        const collections = await getByNameOrSlug(name);
+        const collectionsByName = await getByNameOrSlug(name);
+        console.log(collectionsByName, "CBN");
 
-        setFilteredCollections(collections);
+        setFilteredCollections(collectionsByName);
         toggleLoading(false);
       } else {
         setFilteredCollections(collections);
@@ -64,48 +67,40 @@ const HomePage = () => {
     >
       <Box>
         <Text as={"h1"}>Getting rugged collections back to life! 🔥🔥🔥</Text>
-        <Autocomplete>
-          <Autocomplete.Input
-            loading={loading}
-            onChange={handleSearch}
-            placeholder="Search rugged collection"
-            sx={{
-              width: "50%",
-              margin: "auto",
-              padding: "0.5em",
-            }}
-          />
-          <Box
-            sx={{
-              width: "50%",
-              margin: "auto",
-              padding: "0.5em",
-              borderRadius: "0px 0px 4px 4px",
-              maxHeight: "20em",
-              overflow: "scroll",
-              zIndex: "100",
-            }}
-          >
-            <Autocomplete.Menu
-              loading={loading}
-              items={[
-                { text: "main", id: 0, image: "asadssd" },
-                { text: "autocomplete-tests", id: 1 },
-                { text: "a11y-improvements", id: 2 },
-                { text: "button-bug-fixes", id: 3 },
-                { text: "radio-input-component", id: 4 },
-                { text: "release-1.0.0", id: 5 },
-                { text: "text-input-implementation", id: 6 },
-                { text: "visual-design-tweaks", id: 7 },
-              ]}
-              selectionVariant={"single"}
-              selectedItemIds={collections.map((c) => c.id)}
-              emptyStateText="No rugged collections"
-            />
-          </Box>
-        </Autocomplete>
       </Box>
-
+      <Box sx={{ width: "50%", margin: "auto", zIndex: 1 }}>
+        <Select
+          placeholder="Search rugged collections"
+          isLoading={loading}
+          onInputChange={handleSearch}
+          options={filteredCollections}
+          styles={{
+            menu: (base, props) => {
+              return {
+                zIndex: 1,
+              };
+            },
+          }}
+          formatOptionLabel={(e: any) => (
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                padding: "0.5em",
+                zIndex: 100,
+                gap: "0.5em",
+              }}
+            >
+              <img
+                style={{ borderRadius: "50%", width: "2.5em" }}
+                src={e.image}
+              />
+              <Text as={"h3"}>{e.name}</Text>
+            </Box>
+          )}
+        />
+      </Box>
       <CollectionsSlider />
     </Box>
   );
