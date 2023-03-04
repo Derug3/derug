@@ -1,4 +1,3 @@
-import { styled } from "@material-ui/core";
 import CollectionsSlider from "../components/CollectionsSlider/CollectionsSlider";
 import { DUMMY_COLLECTIONS } from "../components/dummy/collections.dummy";
 import { Autocomplete, Box, Text } from "@primer/react";
@@ -32,6 +31,7 @@ const HomePage = () => {
       }}
     >
       <Box>
+        <h1 className="text-3xl font-bold underline">Hello world!</h1>
         <Text as={"h1"}>Getting rugged collections back to life! 🔥🔥🔥</Text>
         <Autocomplete>
           <Autocomplete.Input
