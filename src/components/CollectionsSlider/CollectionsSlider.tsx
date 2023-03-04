@@ -1,8 +1,6 @@
 import React, { FC, useMemo } from "react";
-import { ICollectionData } from "../../interface/collections.interface";
 import Marqee from "react-fast-marquee";
 import "react-alice-carousel/lib/alice-carousel.css";
-import { DUMMY_COLLECTIONS } from "../dummy/collections.dummy";
 import { Box } from "@primer/react";
 import { collectionsStore } from "../../stores/collectionsStore";
 const CollectionsSlider: FC = () => {
@@ -12,16 +10,17 @@ const CollectionsSlider: FC = () => {
       return (
         <Box sx={{ width: "10em", padding: "0.5em" }} key={c.id}>
           <img src={c.image} alt="collectionImg" />
+          {c.name}
         </Box>
       );
     });
-  }, []);
+  }, [collections]);
   return (
     <Box>
-      <Marqee pauseOnHover loop={0} speed={40} direction={"right"}>
+      <Marqee loop={0} speed={90} direction={"right"}>
         <Box style={{ display: "flex" }}>{renderCollections}</Box>
       </Marqee>
-      <Marqee pauseOnHover loop={0} speed={40}>
+      <Marqee loop={0} speed={90} direction={"left"}>
         <Box style={{ display: "flex" }}>{renderCollections}</Box>
       </Marqee>
     </Box>
