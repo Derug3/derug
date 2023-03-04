@@ -7,6 +7,7 @@ import { Box } from "@primer/react";
 import { collectionsStore } from "../../stores/collectionsStore";
 const CollectionsSlider: FC = () => {
   const { collections } = collectionsStore.getState();
+
   const renderCollections = useMemo(() => {
     return collections.map((c) => {
       return (
@@ -15,7 +16,7 @@ const CollectionsSlider: FC = () => {
         </Box>
       );
     });
-  }, []);
+  }, [collections]);
   return (
     <Box>
       <Marqee pauseOnHover loop={0} speed={40} direction={"right"}>
