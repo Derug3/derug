@@ -1,5 +1,4 @@
 import CollectionsSlider from "../components/CollectionsSlider/CollectionsSlider";
-import { DUMMY_COLLECTIONS } from "../components/dummy/collections.dummy";
 import { Autocomplete, Box, Text } from "@primer/react";
 import { useEffect, useState } from "react";
 import { getRandomCollections } from "../api/collections.api";
