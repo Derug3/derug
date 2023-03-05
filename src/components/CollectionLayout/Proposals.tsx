@@ -1,115 +1,98 @@
-import { Button, ButtonGroup, ProgressBar } from "@primer/react";
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Dialog,
+  FormControl,
+  ProgressBar,
+  Textarea,
+  TextInput,
+} from "@primer/react";
 import { motion } from "framer-motion";
+import { useRef, useState } from "react";
+import Balancer from "react-wrap-balancer";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 
-export const proposals = () => (
-  <motion.div
-    className="flex w-full flex-col"
-    variants={FADE_DOWN_ANIMATION_VARIANTS}
-  >
-    <div className="w-full">
-      <div className="relative flex w-full min-w-0 flex-col break-words rounded bg-white shadow-lg ">
-        <div className="mb-0 rounded-t border-0 py-3">
-          <div className="flex flex-wrap items-center">
-            <div className="relative w-full max-w-full flex-1 flex-grow px-4">
-              <h3 className="text-blueGray-700 text-basefont-semibold whitespace-nowrap">
-                Derug submissions
-              </h3>
-            </div>
-            <div className="relative w-full max-w-full flex-1 flex-grow justify-end px-4 text-right">
-              <Button sx={{}}>Add reguest</Button>
-            </div>
-          </div>
-        </div>
+export const Proposals = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+  const returnFocusRef = useRef(null);
+  const [request, setRequest] = useState();
 
-        <div className="block w-full overflow-x-auto">
-          <table className="text-blueGray-700 w-full border-collapse items-center  ">
-            <thead className="thead-light ">
-              <tr>
-                <th className="bg-blueGray-50 text-blueGray-500 border-blueGray-100 whitespace-nowrap border border-l-0 border-r-0 border-solid px-6 py-3 text-left align-middle text-xs font-semibold uppercase">
-                  Referral
-                </th>
-                <th className="bg-blueGray-50 text-blueGray-500 border-blueGray-100 whitespace-nowrap border border-l-0 border-r-0 border-solid px-6 py-3 text-left align-middle text-xs font-semibold uppercase">
-                  Visitors
-                </th>
-                <th className="bg-blueGray-50 text-blueGray-700 border-blueGray-100 min-w-140-px whitespace-nowrap border border-l-0 border-r-0 border-solid px-6 py-3 text-left align-middle text-xs font-semibold uppercase"></th>
-                <th className="bg-blueGray-50 text-blueGray-700 border-blueGray-100 min-w-140-px whitespace-nowrap border border-l-0 border-r-0 border-solid px-6 py-3 text-left align-middle text-xs font-semibold uppercase"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 text-left align-middle text-xs">
-                  Request #0
-                </th>
-                <td className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 align-middle text-xs ">
-                  1,480
-                </td>
-                <td className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 align-middle text-xs">
-                  <ProgressBar progress={30} />
-                </td>
+  const submitRequest = () => {
+    // setRequest(title);
+    setIsOpen(false);
+  };
 
-                <td className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 align-middle text-xs">
-                  <ButtonGroup>
-                    <Button>❌</Button>
-                    <Button>✅</Button>
-                  </ButtonGroup>
-                </td>
-              </tr>
-              <tr>
-                <th className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 text-left align-middle text-xs">
-                  Request #1
-                </th>
-                <td className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 align-middle text-xs">
-                  5,480
-                </td>
-                <td className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 align-middle text-xs">
-                  <ProgressBar progress={10} />
-                </td>
-                <td className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 align-middle text-xs">
-                  <ButtonGroup>
-                    <Button>❌</Button>
-                    <Button>✅</Button>
-                  </ButtonGroup>
-                </td>
-              </tr>
-              <tr>
-                <th className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 text-left align-middle text-xs">
-                  Request #2
-                </th>
-                <td className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 align-middle text-xs">
-                  4,807
-                </td>
-                <td className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 align-middle text-xs">
-                  <ProgressBar progress={16} />
-                </td>
-                <td className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 align-middle text-xs">
-                  <ButtonGroup>
-                    <Button>❌</Button>
-                    <Button>✅</Button>
-                  </ButtonGroup>
-                </td>
-              </tr>
-              <tr>
-                <th className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 text-left align-middle text-xs">
-                  Request #3
-                </th>
-                <td className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 align-middle text-xs">
-                  3,678
-                </td>
-                <td className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 align-middle text-xs">
-                  <ProgressBar progress={33} />
-                </td>
-                <td className="whitespace-nowrap border-t-0 border-l-0 border-r-0 p-4 px-6 align-middle text-xs">
-                  <ButtonGroup>
-                    <Button>❌</Button>
-                    <Button>✅</Button>
-                  </ButtonGroup>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+  return (
+    <motion.div
+      className="flex w-full flex-col"
+      variants={FADE_DOWN_ANIMATION_VARIANTS}
+    >
+      <div className="w-full">
+        {/* initial screen */}
+        <div className="flex flex-col items-center justify-center w-full my-5 font-mono">
+          There is no derug request yet.
+          <Button
+            className="mt-3"
+            ref={returnFocusRef}
+            onClick={() => setIsOpen(true)}
+          >
+            Create derug request{" "}
+          </Button>
+          <Dialog
+            returnFocusRef={returnFocusRef}
+            isOpen={isOpen}
+            onDismiss={() => setIsOpen(false)}
+            sx={{ width: "600px" }}
+            aria-labelledby="header-id"
+          >
+            <Dialog.Header id="header-id">Derug request</Dialog.Header>
+            <Box p={3} className="flex justify-center flex-col">
+              <FormControl sx={{ display: "flex", width: "100%" }}>
+                <FormControl.Label>Title</FormControl.Label>
+                <TextInput
+                  sx={{ width: "100%" }}
+                  placeholder="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>Description</FormControl.Label>
+                <Textarea
+                  sx={{ width: "100%" }}
+                  placeholder="Enter a description"
+                  value={desc}
+                  onChange={(e) => setDesc(e.target.value)}
+                />
+              </FormControl>
+              <Button
+                className="mt-3"
+                ref={returnFocusRef}
+                onClick={() => submitRequest()}
+              >
+                Submit request
+              </Button>
+            </Box>
+          </Dialog>
         </div>
+        {/* <div className="flex flex-col place-content-evenly justify-center w-full pl-5 font-mono border border-slate-300">
+      <div className="flex gap-3 items-center justify-center py-2">
+        <Balancer className="text-lg">#1 Derug request </Balancer>
+        <ProgressBar progress={50} inline sx={{ width: "200px" }} />
+        <Button>Vote</Button>
       </div>
     </div>
-  </motion.div>
-);
+    <div className="flex flex-col place-content-evenly justify-center w-full pl-5 font-mono border border-slate-300">
+      <div className="flex gap-3 items-center justify-center py-2">
+        <Balancer className="text-lg">#2 Derug request </Balancer>
+        <ProgressBar progress={50} inline sx={{ width: "200px" }} />
+        <Button>Vote</Button>
+      </div>
+    </div> */}
+      </div>
+    </motion.div>
+  );
+};

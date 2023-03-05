@@ -18,7 +18,7 @@ const CollectionsSlider: FC = () => {
     return collections.map((c, index) => {
       return (
         <Box
-          className="box-content cursor-pointer h-48 w-48 border-r-4 border-t-4 p-4"
+          className="box-content cursor-pointer h-48 w-48 overflow-hidden border-r-4 border-t-4 p-4"
           key={index}
           onMouseEnter={() => setHoveredCollection(index)}
           onMouseLeave={() => setHoveredCollection(undefined)}

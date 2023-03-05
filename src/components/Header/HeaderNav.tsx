@@ -18,7 +18,10 @@ const HeaderNav: FC = () => {
       className="bg-gradient-to-l from-white-100 from-gray-300 to-cyan-200 to-blue-200 to-gray-300 drop-shadow-lg"
     >
       <Header.Item onClick={() => navigate(HOME)}>
-        <img src={derugPfp} style={{ width: "12em", paddingLeft: "1em" }} />
+        <img
+          src={derugPfp}
+          style={{ width: "12em", paddingLeft: "1em", cursor: "pointer" }}
+        />
       </Header.Item>
 
       <Header.Item full sx={{ display: "flex", justifyContent: "flex-end" }}>

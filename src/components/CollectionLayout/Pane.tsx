@@ -40,28 +40,16 @@ export const pane = (
         </TabNav.Link>
       </TabNav>
 
-      {/* {(selectedInfo === "description" || selectedInfo === "") && (
+      {(selectedInfo === "description" || selectedInfo === "") && (
         <Text id="description" as="p" sx={{ p: 2 }}>
-          {collection.json?.description}
-          {collection.json?.description}
-          {collection.json?.description}
-          {collection.json?.description}
-          {collection.json?.description}
+          text
         </Text>
       )}
       {selectedInfo === "traits" && (
         <div id="traits" className="grid grid-cols-4 gap-0 md:grid-cols-4">
-          {collection &&
-            collection?.json &&
-            collection?.json?.attributes?.map((item, index) => (
-              <div key={index}>
-                <div>
-                  {item.trait_type} : {item.value}
-                </div>
-              </div>
-            ))}
+          traits
         </div>
-      )} */}
+      )}
       {selectedInfo === "solanafm" && (
         <div id="solanafm" className="flex w-full">
           <iframe
