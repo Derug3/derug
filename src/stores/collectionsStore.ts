@@ -1,4 +1,4 @@
-import { createStore } from "zustand";
+import { create } from "zustand";
 import { ICollectionData } from "../interface/collections.interface";
 
 export interface ICollectionsStore {
@@ -10,7 +10,7 @@ const initialState = {
   collections: [],
 };
 
-export const collectionsStore = createStore<ICollectionsStore>((set, get) => ({
+export const collectionsStore = create<ICollectionsStore>((set, get) => ({
   ...initialState,
   setCollections: (collections) => set({ collections: collections }),
 }));
