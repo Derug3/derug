@@ -1,16 +1,9 @@
-import { createStore } from "zustand";
+import React from "react";
 import { ICollectionData } from "../interface/collections.interface";
 
 export interface ICollectionsStore {
-  collections: ICollectionData[];
+  collections: ICollectionData[] | undefined;
   setCollections: (collections: ICollectionData[]) => void;
 }
 
-const initialState = {
-  collections: [],
-};
-
-export const collectionsStore = createStore<ICollectionsStore>((set, get) => ({
-  ...initialState,
-  setCollections: (collections) => set({ collections: collections }),
-}));
+export const CollectionsContext = React.createContext({} as ICollectionsStore);
