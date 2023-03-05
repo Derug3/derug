@@ -6,6 +6,7 @@ module.exports = function override(config) {
     crypto: require.resolve("crypto-browserify"),
     stream: require.resolve("stream-browserify"),
     fs: require.resolve("fs"),
+    "process/browser": require.resolve("process/browser"),
   });
   config.resolve.fallback = fallback;
   config.plugins = (config.plugins || []).concat([
@@ -14,5 +15,10 @@ module.exports = function override(config) {
       Buffer: ["buffer", "Buffer"],
     }),
   ]);
+  config.module.rules.push({
+    test: /\.mjs$/,
+    include: /node_modules/,
+    type: "javascript/auto",
+  });
   return config;
 };

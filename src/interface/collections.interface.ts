@@ -6,4 +6,15 @@ export interface ICollectionData {
   discord?: string;
   isFlagged: boolean;
   type?: string[];
+  numMints?: number;
+}
+
+export interface ITrait {
+  name: string;
+  values: ITraitInfo[];
+}
+
+export interface ITraitInfo {
+  name: string;
+  percentage: number;
 }
