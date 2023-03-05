@@ -29,6 +29,13 @@ export const mapTraitsQuery = (
               ),
               2
             ),
+            fp: data.traits.traitActive[traitMeta][singleTrait]
+              ? data.traits.traitActive[traitMeta][singleTrait].p
+              : 0,
+            image: data.traits.traitMeta[traitMeta][singleTrait]["img"],
+            listedCount: data.traits.traitActive[traitMeta][singleTrait]
+              ? data.traits.traitActive[traitMeta][singleTrait].n
+              : 0,
           };
         }
       ),

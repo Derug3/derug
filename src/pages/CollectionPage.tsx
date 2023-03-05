@@ -1,7 +1,9 @@
 import { useQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import { Box } from "@primer/react";
+import React, { useEffect, useMemo, useState } from "react";
 import { mapTraitsQuery } from "../api/graphql/mappers";
 import { TRAITS_QUERY } from "../api/graphql/query";
+import TraitItem from "../components/Traits/TraitItem";
 import { ITrait } from "../interface/collections.interface";
 
 const CollectionPage = () => {
@@ -20,7 +22,13 @@ const CollectionPage = () => {
 
   console.log(traits);
 
-  return <div>CollectionPage</div>;
+  const renderTraits = useMemo(() => {
+    return traits?.map((t) => {
+      return <TraitItem name={t.name} values={[]} />;
+    });
+  }, [traits]);
+
+  return <Box>{!loading && <Box>{renderTraits}</Box>}</Box>;
 };
 
 export default CollectionPage;

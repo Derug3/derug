@@ -17,4 +17,7 @@ export interface ITrait {
 export interface ITraitInfo {
   name: string;
   percentage: number;
+  image: string;
+  fp: number;
+  listedCount: number;
 }
