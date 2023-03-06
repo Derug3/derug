@@ -1,12 +1,25 @@
 import { TabNav, Text } from "@primer/react";
 import { motion } from "framer-motion";
-import {
-  ICollectionData,
-  ICollectionStats,
-  ITrait,
-} from "../../interface/collections.interface";
+import { ITrait } from "../../interface/collections.interface";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 import TraitsList from "../Traits/TraitsList";
+
+const getNavStyling = (tab: string, selected: string) => {
+  return {
+    backgroundColor: tab === selected ? "rgba(9, 194, 246,.35)" : "white",
+    color: tab === selected ? "rgba(9, 194, 246)" : "#8696A7",
+    fontSize: "1rem",
+    fontWeight: "bold",
+    fontFamily: "monospace",
+    border:
+      tab !== selected ? "2px solid #BBC4CD" : "2px solid rgba(9, 194, 246)",
+    cursor: "pointer",
+    borderBottom: "none",
+    "&:hover": {
+      color: tab === selected ? "black" : "rgba(9, 194, 246)",
+    },
+  };
+};
 
 export const pane = (
   selectedInfo: string,
@@ -15,28 +28,35 @@ export const pane = (
   traits: ITrait[]
 ) => (
   <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS}>
-    <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS}>
-      <TabNav aria-label="Main" className="flex w-full">
-        <TabNav.Link
-          onClick={() => setSelectedInfo("description")}
-          sx={{ cursor: "pointer" }}
-          selected={selectedInfo === "description"}
-        >
-          Description
-        </TabNav.Link>
+    <motion.div
+      variants={FADE_DOWN_ANIMATION_VARIANTS}
+      className="pl-10 sticky"
+    >
+      <TabNav
+        aria-label="Main"
+        className="flex w-full "
+        style={{
+          borderBottom: "2px solid  rgba(9, 194, 246)",
+          position: "sticky",
+        }}
+      >
         <TabNav.Link
           onClick={() => setSelectedInfo("traits")}
-          sx={{ cursor: "pointer" }}
-          selected={selectedInfo === "traits"}
+          sx={getNavStyling(selectedInfo, "traits")}
         >
-          Traits
+          TRAITS
+        </TabNav.Link>
+        <TabNav.Link
+          onClick={() => setSelectedInfo("description")}
+          sx={getNavStyling(selectedInfo, "description")}
+        >
+          DESCRIPTION
         </TabNav.Link>
         <TabNav.Link
           onClick={() => setSelectedInfo("solanafm")}
-          sx={{ cursor: "pointer" }}
-          selected={selectedInfo === "solanafm"}
+          sx={getNavStyling(selectedInfo, "solanafm")}
         >
-          SolanaFM
+          SOLANAFM
         </TabNav.Link>
       </TabNav>
 

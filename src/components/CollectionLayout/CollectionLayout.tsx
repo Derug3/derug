@@ -18,7 +18,6 @@ export const CollectionLayout: FC<ICollectionLayoutProps> = ({
       <Box
         sx={{
           overflowY: "auto",
-          border: "1px solid gray",
         }}
       >
         <Box
@@ -27,23 +26,25 @@ export const CollectionLayout: FC<ICollectionLayoutProps> = ({
             top: 0,
             display: "grid",
             placeItems: "start",
-            borderBottom: "1px solid gray",
           }}
         >
           {header}
         </Box>
 
-        <Box sx={{ display: "grid", gridTemplateColumns: "60% 40%" }}>
-          <Box sx={{ maxHeight: "20em" }} className="overflow-x-scroll">
+        <Box sx={{ display: "grid", gridTemplateColumns: "50% 50%" }}>
+          <Box
+            sx={{
+              maxHeight: "30em",
+            }}
+            className="overflow-x-scroll "
+          >
             {pane}{" "}
           </Box>
           <Box>{content}</Box>
         </Box>
       </Box>
       <SplitPageLayout>
-        <SplitPageLayout.Content sx={{ paddingX: 6 }}>
-          {content}
-        </SplitPageLayout.Content>
+        <SplitPageLayout.Content>{content}</SplitPageLayout.Content>
         <SplitPageLayout.Pane
           sticky
           offsetHeader={64}

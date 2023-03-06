@@ -50,7 +50,7 @@ export const Collections: FC = () => {
         <CollectionLayout
           pane={pane(selectedInfo, setSelectedInfo, iframeRef, traits!)}
           content={content()}
-          header={header(collection)}
+          header={header(true, collection)}
           proposals={<div />}
         ></CollectionLayout>
       ) : (

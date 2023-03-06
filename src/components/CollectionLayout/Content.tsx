@@ -3,14 +3,17 @@ import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 
 export const content = () => (
   <motion.div
-    className="flex flex-col items-center bg-blue-200"
+    className="flex flex-col items-left h-10 text-left justify-center pl-5"
+    style={{
+      borderBottom: "2px solid rgb(9, 194, 246)",
+    }}
     variants={FADE_DOWN_ANIMATION_VARIANTS}
   >
     <motion.div
-      className="flex flex-row flex-wrap items-center gap-1 px-4 "
+      className="flex flex-row flex-wrap items-center font-mono font-bold "
       variants={FADE_DOWN_ANIMATION_VARIANTS}
     >
-      contenttttt
+      LISTING STATS
     </motion.div>
   </motion.div>
 );

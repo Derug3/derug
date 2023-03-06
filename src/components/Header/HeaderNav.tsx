@@ -13,7 +13,7 @@ const HeaderNav: FC = () => {
   const navigate = useNavigate();
 
   return (
-    <Header sx={{ p: 0, background: "#f8f8f5", padding: "0.5em 1em" }}>
+    <Header sx={{ p: 0, background: "#f8f8f5", padding: "0.5em 1.5em" }}>
       <Header.Item onClick={() => navigate(HOME)}>
         <img
           src={derugPfp}
