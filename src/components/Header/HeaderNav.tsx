@@ -13,32 +13,28 @@ const HeaderNav: FC = () => {
   const navigate = useNavigate();
 
   return (
-    <Header
-      sx={{ p: 0 }}
-      className="bg-gradient-to-l from-white-100 from-gray-300 to-cyan-200 to-blue-200 to-gray-300 drop-shadow-lg"
-    >
+    <Header sx={{ p: 0, background: "#f8f8f5", padding: "0.5em 1em" }}>
       <Header.Item onClick={() => navigate(HOME)}>
         <img
           src={derugPfp}
-          style={{ width: "12em", paddingLeft: "1em", cursor: "pointer" }}
+          style={{
+            width: "12em",
+            paddingLeft: "1em",
+            cursor: "pointer",
+            filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 15px)",
+          }}
         />
       </Header.Item>
 
       <Header.Item full sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <motion.button
-          className="hover:bg-grey-100 flex rounded-full border border-black p-1.5 px-4  text-sm transition-all"
-          {...FADE_IN_ANIMATION_SETTINGS}
-        >
+        <motion.button className="font-mono" {...FADE_IN_ANIMATION_SETTINGS}>
           <WalletMultiButton
             style={{
-              backgroundColor: "transparent",
-              fontSize: "0.875em",
-              height: "1.75em",
-              padding: "0 0.5em",
-              display: "flex",
-              color: "black",
+              backgroundColor: "rgba(0,183,234,15px)",
+              fontSize: "1em",
+              fontFamily: "monospace",
+              filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 15px)",
             }}
-            className="transition-all hover:text-gray-600"
           />
         </motion.button>
       </Header.Item>

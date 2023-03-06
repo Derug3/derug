@@ -5,7 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: "#f3f3f0",
+  background-color: "#f8f8f9";
 }
 
 
@@ -13,6 +13,8 @@ body {
 p,button{
   font-family: "Montserrat sans-serif";
 }
+
+
 
 @tailwind base;
 @tailwind components;
