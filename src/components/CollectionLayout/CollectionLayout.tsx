@@ -1,7 +1,5 @@
 import { Box, SplitPageLayout } from "@primer/react";
-import { FC, ReactNode, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { collectionsStore } from "../../stores/collectionsStore";
+import { FC, ReactNode } from "react";
 
 interface ICollectionLayoutProps {
   pane: ReactNode;
@@ -15,15 +13,10 @@ export const CollectionLayout: FC<ICollectionLayoutProps> = ({
   proposals,
   header,
 }) => {
-  const [searchParams] = useSearchParams();
-
-  console.log(searchParams.get("symbol"), "symbol");
-
   return (
     <>
       <Box
         sx={{
-          height: 450,
           overflowY: "auto",
           border: "1px solid gray",
         }}
@@ -40,21 +33,12 @@ export const CollectionLayout: FC<ICollectionLayoutProps> = ({
           {header}
         </Box>
 
-        <SplitPageLayout>
-          <SplitPageLayout.Content sx={{ paddingX: 6 }}>
-            {content}
-          </SplitPageLayout.Content>
-          <SplitPageLayout.Pane
-            sticky
-            offsetHeader={64}
-            padding="none"
-            resizable
-            position="end"
-            width="large"
-          >
-            {pane}
-          </SplitPageLayout.Pane>
-        </SplitPageLayout>
+        <Box sx={{ display: "grid", gridTemplateColumns: "60% 40%" }}>
+          <Box sx={{ maxHeight: "20em" }} className="overflow-x-scroll">
+            {pane}{" "}
+          </Box>
+          <Box>{content}</Box>
+        </Box>
       </Box>
       <Box
         sx={{

@@ -1,21 +1,21 @@
 import { TabNav, Text } from "@primer/react";
 import { motion } from "framer-motion";
-import { ICollection } from "../../interface/collections.interface";
+import {
+  ICollectionData,
+  ICollectionStats,
+  ITrait,
+} from "../../interface/collections.interface";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
+import TraitsList from "../Traits/TraitsList";
 
 export const pane = (
   selectedInfo: string,
   setSelectedInfo: (s: string) => void,
-  iframeRef: any
+  iframeRef: any,
+  traits: ITrait[]
 ) => (
-  <motion.div
-    className="flex	w-full flex-col items-center py-3 "
-    variants={FADE_DOWN_ANIMATION_VARIANTS}
-  >
-    <motion.div
-      className="flex w-full flex-col items-center px-4"
-      variants={FADE_DOWN_ANIMATION_VARIANTS}
-    >
+  <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS}>
+    <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS}>
       <TabNav aria-label="Main" className="flex w-full">
         <TabNav.Link
           onClick={() => setSelectedInfo("description")}
@@ -45,11 +45,7 @@ export const pane = (
           text
         </Text>
       )}
-      {selectedInfo === "traits" && (
-        <div id="traits" className="grid grid-cols-4 gap-0 md:grid-cols-4">
-          traits
-        </div>
-      )}
+      {selectedInfo === "traits" && <TraitsList traits={traits} />}
       {selectedInfo === "solanafm" && (
         <div id="solanafm" className="flex w-full">
           <iframe

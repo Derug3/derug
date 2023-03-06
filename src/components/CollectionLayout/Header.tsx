@@ -1,6 +1,7 @@
 import { Heading } from "@primer/react";
+import { ICollectionStats } from "../../interface/collections.interface";
 
-export const header = () => (
+export const header = (collection?: ICollectionStats) => (
   <div className="flex w-full self-start bg-gradient-to-r from-cyan-100 from-cyan-300 to-blue-100 to-blue-300 gap-4 font-mono text-gray-700 leading-6">
     {/* <Heading
       sx={{
@@ -22,7 +23,7 @@ export const header = () => (
         alignSelf: "center",
       }}
     >
-      Floor price<br></br> 0.01 SOL
+      Floor price<br></br> {collection?.fp} SOL
     </Heading>
     <Heading
       sx={{
@@ -33,7 +34,7 @@ export const header = () => (
         alignSelf: "center",
       }}
     >
-      Total volume<br></br> 323 sol
+      Market cap<br></br> {collection?.marketCap} sol
     </Heading>
     <Heading
       sx={{
@@ -44,7 +45,7 @@ export const header = () => (
         alignSelf: "center",
       }}
     >
-      Listed <br></br> 123
+      Listed <br></br> {collection?.numListed}
     </Heading>
     <Heading
       sx={{
@@ -55,7 +56,7 @@ export const header = () => (
         alignSelf: "center",
       }}
     >
-      Total supply <br></br> 10k
+      Total supply <br></br> {collection?.numMints}
     </Heading>
     <Heading
       sx={{
@@ -66,7 +67,7 @@ export const header = () => (
         alignSelf: "center",
       }}
     >
-      Owners <br></br> 5.123
+      First list date <br></br> {collection?.firstListed.toDateString()}
     </Heading>
   </div>
 );

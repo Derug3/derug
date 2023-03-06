@@ -22,7 +22,7 @@ const CollectionsSlider: FC = () => {
           key={index}
           onMouseEnter={() => setHoveredCollection(index)}
           onMouseLeave={() => setHoveredCollection(undefined)}
-          onClick={() => navigate(`${COLLECTION}?symbol=${c.symbol}`)}
+          onClick={() => navigate(`${COLLECTION}?symbol=${c.name}`)}
         >
           {hoveredCollection === index ? (
             <div className="relative flex justify-center">
@@ -44,7 +44,7 @@ const CollectionsSlider: FC = () => {
     });
   }, [collections, hoveredCollection]);
   return (
-    <Box>
+    <Box sx={{ zIndex: -1 }}>
       <Marqee pauseOnHover loop={0} speed={90} direction={"right"}>
         {renderCollections}
       </Marqee>
