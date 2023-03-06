@@ -3,7 +3,7 @@ import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 
 export const content = () => (
   <motion.div
-    className="flex flex-col items-left h-10 text-left justify-center pl-5"
+    className="flex flex-col items-left h-10 text-left justify-center"
     style={{
       borderBottom: "2px solid rgb(9, 194, 246)",
     }}

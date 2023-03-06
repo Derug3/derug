@@ -86,3 +86,23 @@
 .wallet-adapter-modal-list-more>svg>path{
   color: black !important;
 }
+
+/* width */
+::-webkit-scrollbar {
+ background: transparent;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: transparent;
+}
