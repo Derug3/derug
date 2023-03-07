@@ -64,6 +64,7 @@ const HomePage = () => {
   const renderSelect = useMemo(() => {
     return (
       <Select
+        className="absolute top-0 left-0 w-full h-full z-10"
         placeholder="Search rugged collections"
         isLoading={searchLoading}
         onInputChange={handleSearch}
@@ -118,7 +119,9 @@ const HomePage = () => {
           <Balancer>☀️</Balancer>
         </motion.h1>
       </Box>
-      <Box sx={{ width: "50%", margin: "auto", zIndex: 1 }}>{renderSelect}</Box>
+      <Box sx={{ width: "50%", margin: "auto", position: "relative" }}>
+        {renderSelect}
+      </Box>
       {!loading && <CollectionsSlider />}
     </Box>
   );
