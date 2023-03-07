@@ -40,11 +40,18 @@ export const CollectionLayout: FC<ICollectionLayoutProps> = ({
           >
             {pane}{" "}
           </Box>
-          <Box>{content}</Box>
+          <Box
+            sx={{
+              maxHeight: "30em",
+              overflow: "scroll",
+            }}
+          >
+            {content}{" "}
+          </Box>
+          {/* <Box>{content}</Box> */}
         </Box>
       </Box>
-      <SplitPageLayout>
-        {/* <SplitPageLayout.Content>{content}</SplitPageLayout.Content> */}
+      {/* <SplitPageLayout>
         <SplitPageLayout.Pane
           sticky
           offsetHeader={64}
@@ -67,7 +74,7 @@ export const CollectionLayout: FC<ICollectionLayoutProps> = ({
             {proposals}
           </Box>
         </SplitPageLayout.Pane>
-      </SplitPageLayout>
+      </SplitPageLayout> */}
     </>
   );
 };

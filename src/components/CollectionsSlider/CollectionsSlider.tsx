@@ -22,7 +22,7 @@ const CollectionsSlider: FC = () => {
           key={index}
           onMouseEnter={() => setHoveredCollection(index)}
           onMouseLeave={() => setHoveredCollection(undefined)}
-          onClick={() => navigate(`${COLLECTION}?symbol=${c.name}`)}
+          onClick={() => navigate(`${COLLECTION}?symbol=${c.symbol}`)}
         >
           {hoveredCollection === index ? (
             <div className="relative flex justify-center">

@@ -1,4 +1,5 @@
 export interface ICollectionData {
+  symbol: string;
   id: string;
   name: string;
   image: string;
@@ -7,6 +8,24 @@ export interface ICollectionData {
   isFlagged: boolean;
   type?: string[];
   numMints?: number;
+}
+
+export interface IListed {
+  auctionHouse: string;
+  price: number;
+  pdaAddresses: string;
+  expiry: number;
+  seller: string;
+  sellerReferal: string;
+  tokenAddress: string;
+  tokenMint: string;
+  tokenSize: number;
+  rarity: any;
+  extra: IExtra;
+}
+
+interface IExtra {
+  img: string;
 }
 
 export interface ITrait {
