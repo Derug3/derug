@@ -1,21 +1,26 @@
 import CollectionsSlider from "../components/CollectionsSlider/CollectionsSlider";
-import { Autocomplete, Box, Text } from "@primer/react";
-import { useEffect, useState } from "react";
+import { Box, Text } from "@primer/react";
+import { useEffect, useMemo, useState } from "react";
 import { getByNameOrSlug, getRandomCollections } from "../api/collections.api";
-import { collectionsStore } from "../stores/collectionsStore";
-import { motion } from "framer-motion";
-import { FADE_DOWN_ANIMATION_VARIANTS } from "../utilities/constants";
-import Balancer from "react-wrap-balancer";
 import useDebounce from "../hooks/useDebounce";
 import { ICollectionData } from "../interface/collections.interface";
-
+import Select from "react-select";
+import { FADE_DOWN_ANIMATION_VARIANTS } from "../utilities/constants";
+import Balancer from "react-wrap-balancer";
+import { motion } from "framer-motion";
+import { collectionsStore } from "../stores/collectionsStore";
+import { useNavigate } from "react-router";
 const HomePage = () => {
   const { setCollections, collections } = collectionsStore.getState();
   const [searchValue, setSearchValue] = useState<string>();
-  const [loading, toggleLoading] = useState(false);
-  const [filteredCollections, setFilteredCollections] =
-    useState<ICollectionData[]>(collections);
+  const [searchLoading, toggleSearchLoading] = useState(false);
+  const [filteredCollections, setFilteredCollections] = useState<
+    ICollectionData[] | undefined
+  >(collections);
+  const [loading, setLoading] = useState(true);
   const { name } = useDebounce(searchValue);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     void getCollectionsData();
@@ -26,20 +31,19 @@ const HomePage = () => {
   }, [name]);
 
   const handleSearch = (e: any) => {
-    if (e.target.value && e.target.value !== "") toggleLoading(true);
-    setSearchValue(e.target.value);
+    if (e && e !== "") {
+      toggleSearchLoading(true);
+      setSearchValue(e);
+    } else {
+      setFilteredCollections(collections);
+    }
   };
 
   const searchByName = async () => {
     try {
-      if (name && name !== "") {
-        const collections = await getByNameOrSlug(name);
-
-        setFilteredCollections(collections);
-        toggleLoading(false);
-      } else {
-        setFilteredCollections(collections);
-      }
+      const collectionsByName = await getByNameOrSlug(name!);
+      setFilteredCollections(collectionsByName);
+      toggleSearchLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -47,14 +51,46 @@ const HomePage = () => {
 
   const getCollectionsData = async () => {
     try {
-      toggleLoading(true);
-      setCollections(await getRandomCollections());
+      setLoading(true);
+      const randomCollections = await getRandomCollections();
+      setFilteredCollections(randomCollections);
+      setCollections(randomCollections);
+      setLoading(false);
     } catch (error) {
       console.log(error);
-    } finally {
-      toggleLoading(false);
     }
   };
+
+  const renderSelect = useMemo(() => {
+    return (
+      <Select
+        className="absolute top-0 left-0 w-full h-full z-10"
+        placeholder="Search rugged collections"
+        isLoading={searchLoading}
+        onInputChange={handleSearch}
+        options={filteredCollections}
+        onChange={(e) => navigate(`collection?symbol=${e.symbol}`)}
+        formatOptionLabel={(e: any) => (
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              padding: "0.5em",
+              zIndex: 100,
+              gap: "0.5em",
+            }}
+          >
+            <img
+              style={{ borderRadius: "50%", width: "2.5em" }}
+              src={e.image}
+            />
+            <Text as={"h3"}>{e.name}</Text>
+          </Box>
+        )}
+      />
+    );
+  }, [filteredCollections, searchLoading]);
 
   return (
     <Box
@@ -63,7 +99,7 @@ const HomePage = () => {
         margin: "auto",
         display: "flex",
         flexDirection: "column",
-        gap: "4em",
+        gap: "6em",
       }}
     >
       <Box
@@ -77,52 +113,14 @@ const HomePage = () => {
           className="py-5 align-center"
           variants={FADE_DOWN_ANIMATION_VARIANTS}
         >
-          <Balancer className="w-full mt-4 bg-gradient-to-br from-black to-stone-200 bg-clip-text text-center font-display  font-bold tracking-[-0.02em] text-transparent drop-shadow-sm md:text-3xl align-center">
+          <Balancer className="w-full bg-gradient-to-br from-black to-stone-200 bg-clip-text text-center font-display  font-bold tracking-[-0.02em] text-transparent drop-shadow-sm md:text-2xl align-center font-mono">
             Getting rugged collections back to life
           </Balancer>
-          <Balancer className="text-3xl">☀️</Balancer>
+          <Balancer>☀️</Balancer>
         </motion.h1>
-        <Autocomplete>
-          <Autocomplete.Input
-            loading={loading}
-            onChange={handleSearch}
-            placeholder="Search rugged collection"
-            sx={{
-              width: "50%",
-              margin: "auto",
-              padding: "0.5em",
-            }}
-          />
-          <Box
-            sx={{
-              width: "50%",
-              margin: "auto",
-              padding: "0.5em",
-              borderRadius: "0px 0px 4px 4px",
-              transition: "all 0.3s ease",
-              maxHeight: "20em",
-              overflow: "scroll",
-              zIndex: "100",
-            }}
-          >
-            <Autocomplete.Menu
-              loading={loading}
-              items={[
-                { text: "main", id: 0, image: "asadssd" },
-                { text: "autocomplete-tests", id: 1 },
-                { text: "a11y-improvements", id: 2 },
-                { text: "button-bug-fixes", id: 3 },
-                { text: "radio-input-component", id: 4 },
-                { text: "release-1.0.0", id: 5 },
-                { text: "text-input-implementation", id: 6 },
-                { text: "visual-design-tweaks", id: 7 },
-              ]}
-              selectionVariant={"single"}
-              selectedItemIds={collections.map((c) => c.id)}
-              emptyStateText="No rugged collections"
-            />
-          </Box>
-        </Autocomplete>
+      </Box>
+      <Box sx={{ width: "50%", margin: "auto", position: "relative" }}>
+        {renderSelect}
       </Box>
       {!loading && <CollectionsSlider />}
     </Box>

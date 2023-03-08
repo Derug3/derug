@@ -29,10 +29,13 @@ const CollectionsSlider: FC = () => {
               <img
                 src={c.image}
                 alt="collectionImg"
-                className="drop-shadow-2xl	"
-                style={{ opacity: "0.2" }}
+                className="drop-shadow-2xl"
+                style={{
+                  opacity: "0.6",
+                  filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 15px)",
+                }}
               />
-              <Balancer className="absolute text-xl inset-y-1/3 font-bold tracking-[-0.02em] font-mono">
+              <Balancer className="absolute text-xl font-bold inset-y-1/3 font-bold tracking-[-0.02em] font-mono">
                 {c.name}
               </Balancer>
             </div>
