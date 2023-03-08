@@ -1,9 +1,8 @@
-import { Box, TabNav, Text } from "@primer/react";
+import { Box, Text } from "@primer/react";
 import { motion } from "framer-motion";
 import { FC } from "react";
-import { IListed, ITrait } from "../../interface/collections.interface";
+import { IListed } from "../../interface/collections.interface";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
-import TraitsList from "../Traits/TraitsList";
 
 export const LeftPane: FC<{
   selectedInfo: string;

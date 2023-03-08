@@ -1,11 +1,10 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { LeftPane } from "../components/CollectionLayout/LeftPane";
 import { RightPane } from "../components/CollectionLayout/RightPane";
-import { header } from "./../components/CollectionLayout/Header";
-// import { Proposals } from "./../components/CollectionLayout/Proposals";
+import { StickyHeader } from "../components/CollectionLayout/StickyHeader";
 import {
-  ICollectionData,
   ICollectionStats,
+  IRequest,
   ITrait,
 } from "../interface/collections.interface";
 import { useQuery } from "@apollo/client";
@@ -15,9 +14,14 @@ import { mapCollectionStats, mapTraitsQuery } from "../api/graphql/mapper";
 import { getListedNfts } from "../api/collections.api";
 import { Box } from "@primer/react";
 import { HeaderTabs } from "../components/CollectionLayout/HeaderTabs";
+import { Proposals } from "../components/CollectionLayout/Proposals";
+import { AddDerugRequst } from "../components/CollectionLayout/AddDerugRequest";
 
 export const Collections: FC = () => {
   const [collection, setCollection] = useState<ICollectionStats>();
+  const [requests, setRequests] = useState<IRequest[]>();
+
+  const [derugRequestVisible, setDerugRequestVisible] = useState(false);
   const [listings, setListings] = useState<any[]>();
   const [traits, setTraits] = useState<ITrait[]>();
   const [selectedInfo, setSelectedInfo] = useState("description");
@@ -56,8 +60,17 @@ export const Collections: FC = () => {
 
   return (
     <Box className="overflow-y-auto">
+      <AddDerugRequst
+        isOpen={derugRequestVisible}
+        setIsOpen={setDerugRequestVisible}
+        derugRequests={requests}
+        setDerugRequest={setRequests}
+      />
       <Box className="sticky top-0 grid">
-        {header(true, collection)}
+        <StickyHeader
+          openDerugModal={setDerugRequestVisible}
+          collection={collection}
+        />
         <HeaderTabs
           selectedInfo={selectedInfo}
           setSelectedInfo={setSelectedInfo}
@@ -67,20 +80,11 @@ export const Collections: FC = () => {
       </Box>
 
       <Box sx={{ display: "grid", gridTemplateColumns: "50% 50%" }}>
-        <Box
-          sx={{
-            maxHeight: "27em",
-            overflow: "scroll",
-          }}
-        >
+        <Box className="max-h-96 overflow-y-scroll">
           <LeftPane selectedInfo={selectedInfo} listings={listings} />
         </Box>
-        <Box
-          sx={{
-            maxHeight: "27em",
-            overflow: "scroll",
-          }}
-        >
+
+        <Box className="max-h-96 overflow-y-scroll">
           <RightPane
             selectedData={selectedData}
             iframeRef={iframeRef}
@@ -88,6 +92,7 @@ export const Collections: FC = () => {
           />
         </Box>
       </Box>
+      <Proposals requests={requests} />
     </Box>
   );
 };
