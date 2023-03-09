@@ -44,33 +44,6 @@ export const Collections: FC = () => {
     variables: { slug: params.get("symbol") },
   });
 
-  const activeListingsData = useQuery(ACTIVE_LISTINGS_QUERY, {
-    variables: {
-      slug: params.get("symbol"),
-      filters: {
-        sources: ["TENSORSWAP", "HYPERSPACE", "MAGICEDEN_V2", "SOLANART"],
-        prices: {
-          min: null,
-          max: null,
-        },
-        rarities: {
-          min: 1,
-          max: null,
-          system: "Hrtt",
-        },
-        traits: null,
-        traitCount: {
-          min: 0,
-          max: null,
-        },
-        nameFilter: null,
-        ownerFilter: null,
-      },
-      sortBy: "PriceAsc",
-      limit: 100,
-    },
-  });
-
   useEffect(() => {
     if (data) {
       setTraits(mapTraitsQuery(data));
@@ -82,14 +55,6 @@ export const Collections: FC = () => {
       setCollection(mapCollectionStats(collectionFpData.data));
     }
   }, [collectionFpData]);
-
-  useEffect(() => {
-    if (activeListingsData.data) {
-      console.dir(activeListingsData.data.activeListings);
-
-      setListings(mapCollectionListings(activeListingsData.data));
-    }
-  }, [activeListingsData]);
 
   const boxRef = useRef<HTMLDivElement | null>(null);
 

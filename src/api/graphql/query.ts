@@ -1,6 +1,8 @@
 import { gql } from "@apollo/client";
 import { Axios } from "axios";
+import { gqlClient } from "../../utilities/utilities";
 import { post } from "../request.api";
+import { mapCollectionListings, mapNextData } from "./mapper";
 export const TRAITS_QUERY = gql`
   query CollTraits($slug: String!) {
     traits(slug: $slug) {
@@ -212,3 +214,24 @@ export const MINTS_QUERY_C = gql`
     mintListTSwap(slug: $slug)
   }
 `;
+
+export const makeNextQuery = async (
+  slug: string,
+  cursor: string,
+  limit: number
+) => {
+  const data = await gqlClient.query({
+    query: ACTIVE_LISTINGS_QUERY,
+    variables: {
+      slug,
+      cursor,
+      limit,
+      filter: null,
+    },
+  });
+
+  return {
+    nfts: mapCollectionListings(data.data),
+    nextQueryData: mapNextData(data.data),
+  };
+};

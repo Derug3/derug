@@ -1,6 +1,10 @@
+import { useQuery } from "@apollo/client";
 import { Box } from "@primer/react";
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
+import { useSearchParams } from "react-router-dom";
+import { mapCollectionListings, mapNextData } from "../../api/graphql/mapper";
+import { ACTIVE_LISTINGS_QUERY, makeNextQuery } from "../../api/graphql/query";
 import { INftListing } from "../../interface/collections.interface";
 import { collectionsStore } from "../../stores/collectionsStore";
 import { NFTS_PER_PAGE } from "../../utilities/constants";
@@ -9,33 +13,42 @@ import ListedNftItem from "./ListedNftItem";
 const ListedNfts: FC<{
   parentRef: React.MutableRefObject<HTMLDivElement | null>;
 }> = ({ parentRef }) => {
-  const { nftListings } = collectionsStore.getState();
+  const [params] = useSearchParams();
+  const activeListingsData = useQuery(ACTIVE_LISTINGS_QUERY, {
+    variables: {
+      slug: params.get("symbol"),
+      filters: null,
+      sortBy: "PriceAsc",
+      limit: 100,
+    },
+  });
 
   const [listedNfts, setListedNfts] = useState<INftListing[]>();
   const [loading, toggleLoading] = useState(false);
-  const [page, setPage] = useState(1);
-
-  const parentScrollRef = useRef<HTMLDivElement | null>(null);
+  const [hasMore, toggleHasMore] = useState(false);
+  const [nextCursor, setNextCursor] = useState<string>();
 
   useEffect(() => {
-    void mapNewBatchOfNfts();
-  }, []);
+    if (activeListingsData.data) {
+      console.log(activeListingsData.data);
+
+      setListedNfts(mapCollectionListings(activeListingsData.data));
+      const { endCursor, hasMore } = mapNextData(activeListingsData.data);
+      toggleHasMore(hasMore);
+      setNextCursor(endCursor);
+    }
+  }, [activeListingsData]);
 
   const mapNewBatchOfNfts = async () => {
     try {
-      if (!loading) {
-        toggleLoading(true);
-        // const nftBatc = await fetchNftMetadatas(
-        //   nftListings.slice(page * NFTS_PER_PAGE, (page + 1) * NFTS_PER_PAGE)
-        // );
-
-        // const addedNfts = [...(listedNfts ?? [])];
-        // nftBatc.forEach((it) => addedNfts.push(it));
-        // setListedNfts(addedNfts);
-        // console.log("SETTING PAGE");
-
-        setPage((prevValue) => prevValue + 1);
-      }
+      const { nfts, nextQueryData } = await makeNextQuery(
+        params.get("symbol")!,
+        nextCursor!,
+        100
+      );
+      setListedNfts((prevValue) => [...prevValue!, ...nfts]);
+      toggleHasMore(nextQueryData.hasMore);
+      setNextCursor(nextQueryData.endCursor);
     } catch (error) {
       console.log(error);
     } finally {
@@ -62,7 +75,7 @@ const ListedNfts: FC<{
           }}
           threshold={500}
           useWindow={false}
-          hasMore={listedNfts.length < nftListings.length}
+          hasMore={hasMore}
           loader={<p style={{ fontWeight: "bold" }}>Loading...</p>}
           loadMore={mapNewBatchOfNfts}
           getScrollParent={() => parentRef.current!}

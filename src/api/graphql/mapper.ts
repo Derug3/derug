@@ -53,17 +53,18 @@ export const mapTraitsQuery = (
   return trait;
 };
 
-export const mapCollectionStats = (data: any): ICollectionStats => {
+export const mapCollectionStats = (data: any): ICollectionStats | undefined => {
   const dataInfo = data.instrumentTV2;
-  return {
-    firstListed: dayjs.unix(dataInfo.firstListDate).toDate(),
-    marketCap: dataInfo.statsOverall.marketCap,
-    numListed: dataInfo.statsOverall.numListed,
-    numMints: dataInfo.statsOverall.numMints,
-    fp: dataInfo.statsOverall.floorPrice,
-    volume24H: dataInfo.statsOverall.floor24h,
-    royalty: dataInfo.sellRoyaltyFeeBPS / 100,
-  };
+  if (dataInfo)
+    return {
+      firstListed: dayjs.unix(dataInfo.firstListDate).toDate(),
+      marketCap: dataInfo.statsOverall.marketCap,
+      numListed: dataInfo.statsOverall.numListed,
+      numMints: dataInfo.statsOverall.numMints,
+      fp: dataInfo.statsOverall.floorPrice,
+      volume24H: dataInfo.statsOverall.floor24h,
+      royalty: dataInfo.sellRoyaltyFeeBPS / 100,
+    };
 };
 
 export const mapCollectionListings = (data: any): INftListing[] => {
@@ -81,7 +82,19 @@ export const mapCollectionListings = (data: any): INftListing[] => {
     });
   });
 
-  console.log(nftListings, "LISTINGS");
-
   return nftListings;
+};
+
+export const mapNextData = (data: any) => {
+  if (data.activeListings.page.endCursor)
+    return {
+      endCursor: data.activeListings.page.endCursor.txKey,
+      hasMore: data.activeListings.page.hasMore,
+    };
+  else {
+    return {
+      hasMore: false,
+      endCursor: undefined,
+    };
+  }
 };
