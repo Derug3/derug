@@ -1,8 +1,11 @@
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import dayjs from "dayjs";
 import { divide, multiply, round } from "mathjs";
+import { ListingSource } from "../../enums/collections.enums";
 import {
   ICollectionData,
   ICollectionStats,
+  INftListing,
   ITrait,
   ITraitInfo,
 } from "../../interface/collections.interface";
@@ -61,4 +64,24 @@ export const mapCollectionStats = (data: any): ICollectionStats => {
     volume24H: dataInfo.statsOverall.floor24h,
     royalty: dataInfo.sellRoyaltyFeeBPS / 100,
   };
+};
+
+export const mapCollectionListings = (data: any): INftListing[] => {
+  const nftListings: INftListing[] = [];
+
+  data.activeListings.txs.forEach((p: any) => {
+    nftListings.push({
+      mint: p.mint.onchainId,
+      owner: p.tx.sellerId,
+      price: divide(+p.tx.grossAmount, LAMPORTS_PER_SOL),
+      soruce: p.tx.source as ListingSource,
+      imageUrl: p.mint.imageUri,
+      txAt: p.tx.txAt,
+      name: p.mint.name,
+    });
+  });
+
+  console.log(nftListings, "LISTINGS");
+
+  return nftListings;
 };

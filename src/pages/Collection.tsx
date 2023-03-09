@@ -8,30 +8,74 @@ import {
   ICollectionStats,
   ITrait,
 } from "../interface/collections.interface";
-import { useQuery } from "@apollo/client";
-import { FP_QUERY, TRAITS_QUERY } from "../api/graphql/query";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import {
+  ACTIVE_LISTINGS_QUERY,
+  FP_QUERY,
+  MINTS_QUERY,
+  MINTS_QUERY_C,
+  TRAITS_QUERY,
+} from "../api/graphql/query";
 import { useSearchParams } from "react-router-dom";
-import { mapCollectionStats, mapTraitsQuery } from "../api/graphql/mapper";
+import {
+  mapCollectionListings,
+  mapCollectionStats,
+  mapTraitsQuery,
+} from "../api/graphql/mapper";
 import { getListedNfts } from "../api/collections.api";
 import { Box } from "@primer/react";
 import { HeaderTabs } from "../components/CollectionLayout/HeaderTabs";
+import { collectionsStore } from "../stores/collectionsStore";
 
 export const Collections: FC = () => {
+  const { setListings, nftListings } = collectionsStore.getState();
   const [collection, setCollection] = useState<ICollectionStats>();
-  const [listings, setListings] = useState<any[]>();
   const [traits, setTraits] = useState<ITrait[]>();
   const [selectedInfo, setSelectedInfo] = useState("description");
   const [selectedData, setSelectedData] = useState("traits");
   const iframeRef = useRef(null);
   const [params] = useSearchParams();
 
-  const { data, loading } = useQuery(TRAITS_QUERY, {
+  const { data } = useQuery(TRAITS_QUERY, {
     variables: { slug: params.get("symbol") },
   });
 
   const collectionFpData = useQuery(FP_QUERY, {
     variables: { slug: params.get("symbol") },
   });
+
+  const activeListingsData = useQuery(ACTIVE_LISTINGS_QUERY, {
+    variables: {
+      slug: params.get("symbol"),
+      filters: {
+        sources: ["TENSORSWAP", "HYPERSPACE", "MAGICEDEN_V2", "SOLANART"],
+        prices: {
+          min: null,
+          max: null,
+        },
+        rarities: {
+          min: 1,
+          max: null,
+          system: "Hrtt",
+        },
+        traits: null,
+        traitCount: {
+          min: 0,
+          max: null,
+        },
+        nameFilter: null,
+        ownerFilter: null,
+      },
+      sortBy: "PriceAsc",
+      limit: 100,
+    },
+  });
+
+  useEffect(() => {
+    if (data) {
+      setTraits(mapTraitsQuery(data));
+    }
+  }, [data]);
 
   useEffect(() => {
     if (collectionFpData.data) {
@@ -40,19 +84,14 @@ export const Collections: FC = () => {
   }, [collectionFpData]);
 
   useEffect(() => {
-    void fetchiiing();
-    if (data) {
-      setTraits(mapTraitsQuery(data));
+    if (activeListingsData.data) {
+      console.dir(activeListingsData.data.activeListings);
+
+      setListings(mapCollectionListings(activeListingsData.data));
     }
-  }, [data]);
+  }, [activeListingsData]);
 
-  const fetchiiing = async () => {
-    if (!params.get("symbol")) return;
-    const nfts = await getListedNfts(params.get("symbol") as string);
-    console.log(nfts, "nftss");
-
-    setListings(nfts);
-  };
+  const boxRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <Box className="overflow-y-auto">
@@ -67,14 +106,18 @@ export const Collections: FC = () => {
       </Box>
 
       <Box sx={{ display: "grid", gridTemplateColumns: "50% 50%" }}>
-        <Box
-          sx={{
-            maxHeight: "27em",
-            overflow: "scroll",
+        <div
+          ref={boxRef}
+          className="ASDSAD"
+          style={{
+            maxHeight: "270em",
+            overflow: "none",
           }}
         >
-          <LeftPane selectedInfo={selectedInfo} listings={listings} />
-        </Box>
+          {nftListings && (
+            <LeftPane parentRef={boxRef} selectedInfo={selectedInfo} />
+          )}
+        </div>
         <Box
           sx={{
             maxHeight: "27em",
