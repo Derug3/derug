@@ -17,18 +17,18 @@ export const StickyHeader: FC<{
     <Box className="flex flex-row gap-10">
       <HeadingItem
         amount={collection?.fp}
-        descColor="green"
+        descColor="#B3FFAE"
         title="FLOOR PRICE"
         desc="SOL"
       />
       <HeadingItem
         title="LISTED"
-        descColor="red"
+        descColor="#FF7D7D"
         desc="NFTs"
         amount={collection?.numListed}
       />
       <HeadingItem
-        descColor="green"
+        descColor="#B3FFAE"
         title="MARKET CAP"
         amount={collection?.marketCap}
         desc="SOL"
@@ -41,7 +41,7 @@ export const StickyHeader: FC<{
         amount={collection?.numMints}
       />
       <HeadingItem
-        descColor="black"
+        descColor="#F9D923"
         title="FIRST LISTING"
         amount={collection?.firstListed.toDateString().slice(0, 10)}
         desc=""

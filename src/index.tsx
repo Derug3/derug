@@ -3,14 +3,21 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
-import { ThemeProvider } from "@primer/react";
+import { theme, ThemeProvider } from "@primer/react";
+import deepmerge from "deepmerge";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
+const customTheme = deepmerge(theme, {
+  fonts: {
+    mono: "MonoLisa, monospace",
+  },
+});
 root.render(
   <BrowserRouter>
-    <ThemeProvider>
+    <ThemeProvider theme={customTheme} colorMode="dark">
       <React.StrictMode>
         <App />
       </React.StrictMode>

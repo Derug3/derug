@@ -16,3 +16,5 @@ export const FADE_UP_ANIMATION_VARIANTS = {
 
 export const HOME = "";
 export const COLLECTION = "/collection";
+
+export const NFTS_PER_PAGE = 10;

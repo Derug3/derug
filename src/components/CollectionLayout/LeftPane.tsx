@@ -3,11 +3,14 @@ import { motion } from "framer-motion";
 import { FC } from "react";
 import { IListed } from "../../interface/collections.interface";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
+import ListedNfts from "../ListedNfts/ListedNfts";
 
 export const LeftPane: FC<{
   selectedInfo: string;
+  description?: string;
+  parentRef: any;
   listings: IListed[] | undefined;
-}> = ({ selectedInfo, listings }) => {
+}> = ({ selectedInfo, description, parentRef, listings }) => {
   return (
     <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS}>
       <motion.div
@@ -16,17 +19,21 @@ export const LeftPane: FC<{
       >
         <div className="">
           {(selectedInfo === "description" || selectedInfo === "") && (
-            <Text id="description" as="p" sx={{ p: 2 }}>
-              text
+            <Text
+              id="description"
+              as="p"
+              sx={{ p: 2 }}
+              className="text-white text-left"
+            >
+              {description}
             </Text>
           )}
-          {selectedInfo === "listed" && listings && (
-            <Box className="flex flex-row flex-wrap mt-5 gap-1">
-              {listings.map((list: IListed) => (
-                <Box className="flex w-20">
-                  <img src={list.extra.img} className="rounded-[4px]" />
-                </Box>
-              ))}
+          {selectedInfo === "listed" && (
+            <Box
+              className="flex flex-row flex-wrap mt-5 gap-1"
+              style={{ overflow: "auto" }}
+            >
+              <ListedNfts parentRef={parentRef} />
             </Box>
           )}
         </div>
