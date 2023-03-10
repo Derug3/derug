@@ -3,8 +3,8 @@ import { FC } from "react";
 
 const getNavStyling = (tab: string, selected: string) => {
   return {
-    backgroundColor: tab === selected ? "rgba(9, 194, 246,.35)" : "white",
-    color: tab === selected ? "rgba(9, 194, 246)" : "#8696A7",
+    backgroundColor: tab === selected ? "rgba(9, 194, 246,.35)" : "transparent",
+    color: tab === selected ? "rgba(9, 194, 246)" : "white",
     fontSize: "1rem",
     fontWeight: "bold",
     fontFamily: "monospace",

@@ -10,6 +10,7 @@ import Balancer from "react-wrap-balancer";
 import { motion } from "framer-motion";
 import { collectionsStore } from "../stores/collectionsStore";
 import { useNavigate } from "react-router";
+import { selectStyles } from "../utilities/styles";
 const HomePage = () => {
   const { setCollections, collections } = collectionsStore.getState();
   const [searchValue, setSearchValue] = useState<string>();
@@ -68,6 +69,7 @@ const HomePage = () => {
         placeholder="Search rugged collections"
         isLoading={searchLoading}
         onInputChange={handleSearch}
+        styles={selectStyles}
         options={filteredCollections}
         onChange={(e) => navigate(`collection?symbol=${e.symbol}`)}
         formatOptionLabel={(e: any) => (
@@ -113,7 +115,12 @@ const HomePage = () => {
           className="py-5 align-center"
           variants={FADE_DOWN_ANIMATION_VARIANTS}
         >
-          <Balancer className="w-full bg-gradient-to-br from-black to-stone-200 bg-clip-text text-center font-display  font-bold tracking-[-0.02em] text-transparent drop-shadow-sm md:text-2xl align-center font-mono">
+          <Balancer
+            style={{
+              filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 15px)",
+            }}
+            className="w-full bg-gradient-to-br from-black to-stone-200 bg-clip-text text-center font-display  font-bold tracking-[-0.02em] text-transparent drop-shadow-sm md:text-2xl align-center font-mono"
+          >
             Getting rugged collections back to life
           </Balancer>
           <Balancer>☀️</Balancer>
