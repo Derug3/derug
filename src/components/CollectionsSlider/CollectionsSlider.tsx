@@ -35,7 +35,7 @@ const CollectionsSlider: FC = () => {
                   filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 15px)",
                 }}
               />
-              <Balancer className="absolute text-xl font-bold inset-y-1/3 font-bold tracking-[-0.02em] font-mono">
+              <Balancer className="absolute text-xl text-white font-bold inset-y-1/3 font-bold tracking-[-0.02em] font-mono">
                 {c.name}
               </Balancer>
             </div>
@@ -48,10 +48,22 @@ const CollectionsSlider: FC = () => {
   }, [collections, hoveredCollection]);
   return (
     <Box>
-      <Marqee pauseOnHover loop={0} speed={90} direction={"right"}>
+      <Marqee
+        pauseOnHover
+        loop={0}
+        speed={90}
+        direction={"right"}
+        gradient={false}
+      >
         {renderCollections}
       </Marqee>
-      <Marqee pauseOnHover loop={0} speed={90} direction={"left"}>
+      <Marqee
+        pauseOnHover
+        loop={0}
+        speed={90}
+        direction={"left"}
+        gradient={false}
+      >
         {renderCollections}
       </Marqee>
     </Box>
