@@ -16,7 +16,9 @@ const Traits: FC<{ trait: ITrait }> = ({ trait }) => {
         >
           <img src={t.image} className="rounded-[4px] w-20" />
           <Box className="flex flex-col items-center justify-center">
-            <Text className="text-sm font-semibold">{t.name}</Text>
+            <Text className="text-sm font-semibold " sx={{ color: "white" }}>
+              {t.name}
+            </Text>
             <Text
               style={{
                 filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 15px)",

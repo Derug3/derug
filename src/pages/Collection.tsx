@@ -4,20 +4,30 @@ import { RightPane } from "../components/CollectionLayout/RightPane";
 import { header } from "./../components/CollectionLayout/Header";
 // import { Proposals } from "./../components/CollectionLayout/Proposals";
 import {
+  IChainCollectionData,
   ICollectionData,
   ICollectionStats,
   INftListing,
   ITrait,
 } from "../interface/collections.interface";
 import { useQuery } from "@apollo/client";
-import { FP_QUERY, TRAITS_QUERY } from "../api/graphql/query";
+import {
+  ACTIVE_LISTINGS_QUERY,
+  FP_QUERY,
+  TRAITS_QUERY,
+} from "../api/graphql/query";
 import { useSearchParams } from "react-router-dom";
-import { mapCollectionStats, mapTraitsQuery } from "../api/graphql/mapper";
+import {
+  mapCollectionListings,
+  mapCollectionStats,
+  mapNextData,
+  mapTraitsQuery,
+} from "../api/graphql/mapper";
 import { Box } from "@primer/react";
 import { HeaderTabs } from "../components/CollectionLayout/HeaderTabs";
-import { collectionsStore } from "../stores/collectionsStore";
 import { CollectionContext } from "../stores/collectionContext";
 import { getSingleCollection } from "../api/collections.api";
+import { getCollectionChainData } from "../solana/collections";
 
 export const Collections: FC = () => {
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
@@ -27,6 +37,9 @@ export const Collections: FC = () => {
   const [basicCollectionData, setBasicCollectionData] =
     useState<ICollectionData>();
   const [listings, setListings] = useState<INftListing[]>();
+  const [chainCollectionData, setChainCollectionData] =
+    useState<IChainCollectionData>();
+
   const iframeRef = useRef(null);
   const slug = useSearchParams()[0].get("symbol");
 
@@ -36,6 +49,15 @@ export const Collections: FC = () => {
 
   const collectionFpData = useQuery(FP_QUERY, {
     variables: { slug },
+  });
+
+  const activeListingsData = useQuery(ACTIVE_LISTINGS_QUERY, {
+    variables: {
+      slug,
+      filters: null,
+      sortBy: "PriceAsc",
+      limit: 100,
+    },
   });
 
   useEffect(() => {
@@ -54,9 +76,29 @@ export const Collections: FC = () => {
     }
   }, [collectionFpData]);
 
+  useEffect(() => {
+    if (activeListingsData.data) {
+      setListings(mapCollectionListings(activeListingsData.data));
+    }
+  }, [activeListingsData]);
+
   const getBasicCollectionData = async () => {
     try {
       setBasicCollectionData(await getSingleCollection(slug ?? ""));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (basicCollectionData) void getChainCollectionDetails();
+  }, [basicCollectionData, listings]);
+
+  const getChainCollectionDetails = async () => {
+    try {
+      setChainCollectionData(
+        await getCollectionChainData(basicCollectionData!, listings?.at(0))
+      );
     } catch (error) {
       console.log(error);
     }
@@ -67,6 +109,8 @@ export const Collections: FC = () => {
   return (
     <CollectionContext.Provider
       value={{
+        chainCollectionData,
+        setChainCollectionData,
         activeListings: listings,
         setActiveListings: setListings,
         collection: basicCollectionData,

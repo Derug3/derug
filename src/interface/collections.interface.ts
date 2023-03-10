@@ -1,3 +1,4 @@
+import { PublicKey } from "@solana/web3.js";
 import { ListingSource } from "../enums/collections.enums";
 
 export interface ICollectionData {
@@ -64,10 +65,9 @@ export interface INftListing {
   name: string;
 }
 
-// export interface IListedNft {
-//   mint: string;
-//   soruce: ListingSource;
-//   name: string;
-//   imageUrl: string;
-//   price: number;
-// }
+export interface IChainCollectionData {
+  slug: string;
+  rugUpdateAuthority: string;
+  collectionMint: string;
+  derugDataAddress?: PublicKey;
+}

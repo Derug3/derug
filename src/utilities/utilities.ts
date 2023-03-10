@@ -16,3 +16,5 @@ export const MAINNET_RPC_CONNECTION = new Connection(
 export const METAPLEX_PROGRAM = new PublicKey(
   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 );
+
+export const MAGIC_EDEN_URL = "https://api-mainnet.magiceden.dev/v2";

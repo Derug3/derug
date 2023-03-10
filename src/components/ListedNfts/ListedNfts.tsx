@@ -23,27 +23,10 @@ const ListedNfts: FC<{
 }> = ({ parentRef }) => {
   const { activeListings, setActiveListings } = useContext(CollectionContext);
   const [params] = useSearchParams();
-  const activeListingsData = useQuery(ACTIVE_LISTINGS_QUERY, {
-    variables: {
-      slug: params.get("symbol"),
-      filters: null,
-      sortBy: "PriceAsc",
-      limit: 100,
-    },
-  });
 
   const [loading, toggleLoading] = useState(false);
   const [hasMore, toggleHasMore] = useState(false);
   const [nextCursor, setNextCursor] = useState<string>();
-
-  useEffect(() => {
-    if (activeListingsData.data) {
-      setActiveListings(mapCollectionListings(activeListingsData.data));
-      const { endCursor, hasMore } = mapNextData(activeListingsData.data);
-      toggleHasMore(hasMore);
-      setNextCursor(endCursor);
-    }
-  }, [activeListingsData]);
 
   const mapNewBatchOfNfts = async () => {
     try {

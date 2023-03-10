@@ -12,7 +12,8 @@ body {
 
 
 p,button{
-  
+  color: white;
+  font-family: monospace
 }
 
 
