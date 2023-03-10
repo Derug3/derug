@@ -6,43 +6,41 @@ import { header } from "./../components/CollectionLayout/Header";
 import {
   ICollectionData,
   ICollectionStats,
+  INftListing,
   ITrait,
 } from "../interface/collections.interface";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import {
-  ACTIVE_LISTINGS_QUERY,
-  FP_QUERY,
-  MINTS_QUERY,
-  MINTS_QUERY_C,
-  TRAITS_QUERY,
-} from "../api/graphql/query";
+import { useQuery } from "@apollo/client";
+import { FP_QUERY, TRAITS_QUERY } from "../api/graphql/query";
 import { useSearchParams } from "react-router-dom";
-import {
-  mapCollectionListings,
-  mapCollectionStats,
-  mapTraitsQuery,
-} from "../api/graphql/mapper";
-import { getListedNfts } from "../api/collections.api";
+import { mapCollectionStats, mapTraitsQuery } from "../api/graphql/mapper";
 import { Box } from "@primer/react";
 import { HeaderTabs } from "../components/CollectionLayout/HeaderTabs";
 import { collectionsStore } from "../stores/collectionsStore";
+import { CollectionContext } from "../stores/collectionContext";
+import { getSingleCollection } from "../api/collections.api";
 
 export const Collections: FC = () => {
-  const { setListings, nftListings } = collectionsStore.getState();
-  const [collection, setCollection] = useState<ICollectionStats>();
+  const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
   const [traits, setTraits] = useState<ITrait[]>();
   const [selectedInfo, setSelectedInfo] = useState("description");
   const [selectedData, setSelectedData] = useState("traits");
+  const [basicCollectionData, setBasicCollectionData] =
+    useState<ICollectionData>();
+  const [listings, setListings] = useState<INftListing[]>();
   const iframeRef = useRef(null);
-  const [params] = useSearchParams();
+  const slug = useSearchParams()[0].get("symbol");
 
   const { data } = useQuery(TRAITS_QUERY, {
-    variables: { slug: params.get("symbol") },
+    variables: { slug },
   });
 
   const collectionFpData = useQuery(FP_QUERY, {
-    variables: { slug: params.get("symbol") },
+    variables: { slug },
   });
+
+  useEffect(() => {
+    void getBasicCollectionData();
+  }, []);
 
   useEffect(() => {
     if (data) {
@@ -52,51 +50,70 @@ export const Collections: FC = () => {
 
   useEffect(() => {
     if (collectionFpData.data) {
-      setCollection(mapCollectionStats(collectionFpData.data));
+      setCollectionStats(mapCollectionStats(collectionFpData.data));
     }
   }, [collectionFpData]);
+
+  const getBasicCollectionData = async () => {
+    try {
+      setBasicCollectionData(await getSingleCollection(slug ?? ""));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const boxRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <Box className="overflow-y-auto">
-      <Box className="sticky top-0 grid">
-        {header(true, collection)}
-        <HeaderTabs
-          selectedInfo={selectedInfo}
-          setSelectedInfo={setSelectedInfo}
-          selectedData={selectedData}
-          setSelectedData={setSelectedData}
-        />
-      </Box>
-
-      <Box sx={{ display: "grid", gridTemplateColumns: "50% 50%" }}>
-        <div
-          ref={boxRef}
-          className="ASDSAD"
-          style={{
-            maxHeight: "270em",
-            overflow: "none",
-          }}
-        >
-          {nftListings && (
-            <LeftPane parentRef={boxRef} selectedInfo={selectedInfo} />
-          )}
-        </div>
-        <Box
-          sx={{
-            maxHeight: "27em",
-            overflow: "scroll",
-          }}
-        >
-          <RightPane
+    <CollectionContext.Provider
+      value={{
+        activeListings: listings,
+        setActiveListings: setListings,
+        collection: basicCollectionData,
+        setCollection: setBasicCollectionData,
+        collectionStats,
+        setCollectionStats,
+        traits,
+        setTraits,
+      }}
+    >
+      <Box className="overflow-y-auto">
+        <Box className="sticky top-0 grid">
+          {header(true, collectionStats)}
+          <HeaderTabs
+            selectedInfo={selectedInfo}
+            setSelectedInfo={setSelectedInfo}
             selectedData={selectedData}
-            iframeRef={iframeRef}
-            traits={traits}
+            setSelectedData={setSelectedData}
           />
         </Box>
+
+        <Box sx={{ display: "grid", gridTemplateColumns: "50% 50%" }}>
+          <div
+            ref={boxRef}
+            className="ASDSAD"
+            style={{
+              maxHeight: "270em",
+              overflow: "none",
+            }}
+          >
+            <LeftPane parentRef={boxRef} selectedInfo={selectedInfo} />
+          </div>
+          <Box
+            sx={{
+              maxHeight: "27em",
+              overflow: "scroll",
+            }}
+          >
+            <RightPane
+              selectedData={selectedData}
+              iframeRef={iframeRef}
+              traits={traits}
+            />
+          </Box>
+        </Box>
       </Box>
-    </Box>
+    </CollectionContext.Provider>
   );
 };
 

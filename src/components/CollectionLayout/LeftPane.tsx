@@ -2,6 +2,7 @@ import { Box, TabNav, Text } from "@primer/react";
 import { motion } from "framer-motion";
 import React, { FC } from "react";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
+import CollectionData from "../CollectionData/CollectionData";
 import ListedNfts from "../ListedNfts/ListedNfts";
 
 export const LeftPane: FC<{
@@ -19,7 +20,7 @@ export const LeftPane: FC<{
       <div className="">
         {(selectedInfo === "description" || selectedInfo === "") && (
           <Text id="description" as="p" sx={{ p: 2 }}>
-            text
+            <CollectionData />
           </Text>
         )}
         {selectedInfo === "listed" && (

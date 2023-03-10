@@ -1,5 +1,6 @@
 import { TabNav } from "@primer/react";
-import { FC } from "react";
+import { FC, useContext } from "react";
+import { CollectionContext } from "../../stores/collectionContext";
 
 const getNavStyling = (tab: string, selected: string) => {
   return {
@@ -24,6 +25,8 @@ export const HeaderTabs: FC<{
   setSelectedInfo: (s: string) => void;
   setSelectedData: (s: string) => void;
 }> = ({ selectedInfo, selectedData, setSelectedInfo, setSelectedData }) => {
+  const { traits, activeListings } = useContext(CollectionContext);
+
   return (
     <div
       className="flex w-full self-start bg-gradient-to-r
@@ -42,8 +45,9 @@ export const HeaderTabs: FC<{
             onClick={() => setSelectedInfo("description")}
             sx={getNavStyling(selectedInfo, "description")}
           >
-            DESCRIPTION
+            DETAILS
           </TabNav.Link>
+
           <TabNav.Link
             onClick={() => setSelectedInfo("listed")}
             sx={getNavStyling(selectedInfo, "listed")}
@@ -61,12 +65,14 @@ export const HeaderTabs: FC<{
             position: "sticky",
           }}
         >
-          <TabNav.Link
-            onClick={() => setSelectedData("traits")}
-            sx={getNavStyling(selectedData, "traits")}
-          >
-            TRAITS
-          </TabNav.Link>
+          {traits && traits.length > 0 && (
+            <TabNav.Link
+              onClick={() => setSelectedData("traits")}
+              sx={getNavStyling(selectedData, "traits")}
+            >
+              TRAITS
+            </TabNav.Link>
+          )}
           <TabNav.Link
             onClick={() => setSelectedData("statistics")}
             sx={getNavStyling(selectedData, "statistics")}

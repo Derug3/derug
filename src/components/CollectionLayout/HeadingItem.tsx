@@ -18,8 +18,8 @@ const HeadingItem: FC<{
       <Text
         className="text-base"
         style={{
-          color: `${descColor}`,
-          filter: `${`drop-shadow(${descColor} 0px 0px 10px)`}`,
+          color: `white`,
+          filter: `${`drop-shadow(white 0px 0px 10px)`}`,
         }}
       >
         {amount} <span>{desc}</span>

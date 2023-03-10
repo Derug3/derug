@@ -6,6 +6,7 @@ const Traits: FC<{ trait: ITrait }> = ({ trait }) => {
     return trait.values.map((t) => {
       return (
         <Box
+          key={t.name}
           className="flex flex-row gap-5 items-center justify-center pl-1 pr-3 py-3"
           sx={{
             border: `2px solid rgb(9, 194, 246)`,

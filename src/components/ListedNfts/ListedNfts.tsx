@@ -1,11 +1,19 @@
 import { useQuery } from "@apollo/client";
 import { Box } from "@primer/react";
-import React, { FC, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  FC,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import { useSearchParams } from "react-router-dom";
 import { mapCollectionListings, mapNextData } from "../../api/graphql/mapper";
 import { ACTIVE_LISTINGS_QUERY, makeNextQuery } from "../../api/graphql/query";
 import { INftListing } from "../../interface/collections.interface";
+import { CollectionContext } from "../../stores/collectionContext";
 import { collectionsStore } from "../../stores/collectionsStore";
 import { NFTS_PER_PAGE } from "../../utilities/constants";
 import ListedNftItem from "./ListedNftItem";
@@ -13,6 +21,7 @@ import ListedNftItem from "./ListedNftItem";
 const ListedNfts: FC<{
   parentRef: React.MutableRefObject<HTMLDivElement | null>;
 }> = ({ parentRef }) => {
+  const { activeListings, setActiveListings } = useContext(CollectionContext);
   const [params] = useSearchParams();
   const activeListingsData = useQuery(ACTIVE_LISTINGS_QUERY, {
     variables: {
@@ -23,16 +32,13 @@ const ListedNfts: FC<{
     },
   });
 
-  const [listedNfts, setListedNfts] = useState<INftListing[]>();
   const [loading, toggleLoading] = useState(false);
   const [hasMore, toggleHasMore] = useState(false);
   const [nextCursor, setNextCursor] = useState<string>();
 
   useEffect(() => {
     if (activeListingsData.data) {
-      console.log(activeListingsData.data);
-
-      setListedNfts(mapCollectionListings(activeListingsData.data));
+      setActiveListings(mapCollectionListings(activeListingsData.data));
       const { endCursor, hasMore } = mapNextData(activeListingsData.data);
       toggleHasMore(hasMore);
       setNextCursor(endCursor);
@@ -46,7 +52,8 @@ const ListedNfts: FC<{
         nextCursor!,
         100
       );
-      setListedNfts((prevValue) => [...prevValue!, ...nfts]);
+      const newListings = [...(activeListings ?? []), ...nfts];
+      setActiveListings(newListings);
       toggleHasMore(nextQueryData.hasMore);
       setNextCursor(nextQueryData.endCursor);
     } catch (error) {
@@ -57,14 +64,14 @@ const ListedNfts: FC<{
   };
 
   const renderListedNfts = () => {
-    return listedNfts?.map((ln) => {
+    return activeListings?.map((ln) => {
       return <ListedNftItem listedNft={ln} key={ln.mint} />;
     });
   };
 
   return (
     <div style={{ height: "27em", overflow: "scroll" }}>
-      {listedNfts && (
+      {activeListings && (
         <InfiniteScroll
           style={{
             display: "flex",

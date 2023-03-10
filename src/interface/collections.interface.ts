@@ -7,6 +7,7 @@ export interface ICollectionData {
   image: string;
   twitter?: string;
   discord?: string;
+  description: string;
   isFlagged: boolean;
   type?: string[];
   numMints?: number;

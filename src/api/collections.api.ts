@@ -18,8 +18,8 @@ export async function getByNameOrSlug(
   return get(`${MAGIC_EDEN_COLLECTIONS}${NAME}/${name}`);
 }
 
-export async function getListedNfts(
+export async function getSingleCollection(
   symbol: string
-): Promise<ICollectionData[]> {
+): Promise<ICollectionData> {
   return get(`${MAGIC_EDEN_COLLECTIONS}${SYMBOL}/${symbol}`);
 }
