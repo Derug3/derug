@@ -39,27 +39,85 @@ export const Proposals: FC<{
         {currentRequest?.title}
       </Dialog>
       <div className="w-full">
-        <div className="flex flex-col place-content-evenly justify-center w-full pl-5 font-mono">
+        <div className="flex flex-col gap-1 items-center justify-center pl-1 pr-3 py-3">
           {requests ? (
             requests.map((el, index) => (
-              <div className="flex gap-3 items-center justify-center py-2">
-                <Balancer
-                  className="text-lg cursor-pointer font-mono"
-                  onClick={() => {
-                    setIsOpen(true);
-                    setCurrentRequest(el);
-                  }}
-                >
-                  #{index} {el.title}{" "}
-                </Balancer>
-                <ProgressBar progress={50} inline sx={{ width: "200px" }} />
-                <Button>Vote</Button>
+              <div
+                className="flex  w-full items-center justify-around py-2"
+                style={{
+                  border: `2px solid rgb(9, 194, 246)`,
+                  borderRadius: "4px",
+                  padding: "10px",
+                  background: "rgb(9, 194, 246,.15)",
+                }}
+              >
+                <div className="flex gap-3 items-center">
+                  <Balancer
+                    className="text-lg cursor-pointer text-white font-mono"
+                    onClick={() => {
+                      setIsOpen(true);
+                      setCurrentRequest(el);
+                    }}
+                  >
+                    <span style={{ fontSize: "1em", opacity: 0.7 }}>
+                      #{index + 1}
+                    </span>{" "}
+                    {el.title}{" "}
+                  </Balancer>
+                  {el.utility &&
+                    el.utility.map((u, i) => (
+                      <div
+                        className="text-sm font-mono"
+                        style={{
+                          borderRightWidth:
+                            i !== el.utility.length - 1 ? "4px" : "0px",
+                          paddingRight:
+                            i !== el.utility.length - 1 ? "1em" : "0px",
+                          color: "rgb(9, 194, 246)",
+                          filter: "drop-shadow(white 0px 0px 3px)",
+                        }}
+                      >
+                        {u.name}
+                      </div>
+                    ))}
+                </div>
+                <div className="flex items-center">
+                  <Button variant="invisible" sx={{ color: "rgba(9,194,246)" }}>
+                    Vote
+                  </Button>
+                  <ProgressBar
+                    progress={50}
+                    bg="rgba(9,194,246)"
+                    sx={{
+                      width: "280px",
+                      filter: "drop-shadow(white 0px 0px 3px)",
+                      height: "16px",
+                      borderRadius: 0,
+                      color: "rgb(179, 255, 174)",
+                    }}
+                  />
+                  <Balancer
+                    className="text-lg cursor-pointer text-white font-mono px-5"
+                    style={{ fontSize: "1em", opacity: 0.2 }}
+                  >
+                    <span
+                      style={{
+                        borderRadius: "4px",
+                        padding: "10px",
+                        background: "rgb(9, 194, 246,.15)",
+                        filter: "drop-shadow(#2dd4bf 0px 0px 10px)",
+                      }}
+                    >
+                      Fri May 06
+                    </span>
+                  </Balancer>
+                </div>
               </div>
             ))
           ) : (
             <div
-              className="text-base font-mono mt-3"
-              style={{ filter: "drop-shadow(rgb(246, 242, 9) 0px 0px 15px)" }}
+              className="text-base font-mono mt-3 text-white"
+              style={{ filter: "drop-shadow(#2dd4bf 0px 0px 10px)" }}
             >
               There is no derug request yet.
             </div>

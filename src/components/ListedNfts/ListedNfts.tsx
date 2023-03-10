@@ -63,7 +63,7 @@ const ListedNfts: FC<{
   };
 
   return (
-    <div style={{ height: "27em", overflow: "scroll" }}>
+    <div style={{ height: "27em", overflowY: "scroll" }}>
       {listedNfts && (
         <InfiniteScroll
           style={{

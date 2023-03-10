@@ -17,31 +17,31 @@ export const StickyHeader: FC<{
     <Box className="flex flex-row gap-10">
       <HeadingItem
         amount={collection?.fp}
-        descColor="#B3FFAE"
+        descColor="#2dd4bf"
         title="FLOOR PRICE"
         desc="SOL"
       />
       <HeadingItem
         title="LISTED"
-        descColor="#FF7D7D"
+        descColor="#2dd4bf"
         desc="NFTs"
         amount={collection?.numListed}
       />
       <HeadingItem
-        descColor="#B3FFAE"
+        descColor="#2dd4bf"
         title="MARKET CAP"
         amount={collection?.marketCap}
         desc="SOL"
       />
 
       <HeadingItem
-        descColor="rgb(9, 194, 246)"
+        descColor="#2dd4bf"
         title="TOTAL SUPPLY"
         desc="NFTs"
         amount={collection?.numMints}
       />
       <HeadingItem
-        descColor="#F9D923"
+        descColor="#2dd4bf"
         title="FIRST LISTING"
         amount={collection?.firstListed.toDateString().slice(0, 10)}
         desc=""
@@ -50,10 +50,10 @@ export const StickyHeader: FC<{
     <Box className="flex flex-row gap-3 items-center">
       <div className="flex align-center">
         <div
-          className="cursor-pointer font-mono text-gray-700 leading-6 text-lg py-2 border-none"
+          className="cursor-pointer font-mono border-y-4  text-white leading-6 text-lg py-2 border-none"
           onClick={() => openDerugModal(true)}
           style={{
-            filter: "drop-shadow(rgb(246, 242, 9) 0px 0px 10px)",
+            filter: "drop-shadow(#2dd4bf 0px 0px 15px)",
             backgroundColor: "rgba(0,183,234,15px)",
             fontFamily: "monospace",
           }}

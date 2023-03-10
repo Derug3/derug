@@ -9,8 +9,7 @@ export const LeftPane: FC<{
   selectedInfo: string;
   description?: string;
   parentRef: any;
-  listings: IListed[] | undefined;
-}> = ({ selectedInfo, description, parentRef, listings }) => {
+}> = ({ selectedInfo, description, parentRef }) => {
   return (
     <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS}>
       <motion.div
@@ -30,7 +29,7 @@ export const LeftPane: FC<{
           )}
           {selectedInfo === "listed" && (
             <Box
-              className="flex flex-row flex-wrap mt-5 gap-1"
+              className="flex flex-row flex-wrap gap-1"
               style={{ overflow: "auto" }}
             >
               <ListedNfts parentRef={parentRef} />

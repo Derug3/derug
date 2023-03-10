@@ -9,7 +9,7 @@ const ListedNftItem: FC<{ listedNft: INftListing }> = ({ listedNft }) => {
       <img
         src={listedNft.imageUrl}
         alt="nftImg"
-        className="rounded-[4px] w-32 h-32"
+        className="rounded-[4px] w-48 "
       />
 
       <Box className="flex flex-col gap-2 items-start">
@@ -31,9 +31,9 @@ const ListedNftItem: FC<{ listedNft: INftListing }> = ({ listedNft }) => {
             <Button
               sx={{
                 bg: "transparent",
-                border: "1px solid cyan",
+                border: "1px solid rgb(45, 212, 191)",
                 fontFamily: "monospace",
-                color: "cyan",
+                color: "rgb(45, 212, 191)",
                 padding: "15px 0px",
               }}
             >
