@@ -4,6 +4,7 @@ import { divide, multiply, round } from "mathjs";
 import { ListingSource } from "../../enums/collections.enums";
 import {
   ICollectionData,
+  ICollectionRecentActivities,
   ICollectionStats,
   INftListing,
   ITrait,
@@ -97,4 +98,21 @@ export const mapNextData = (data: any) => {
       endCursor: undefined,
     };
   }
+};
+
+export const mapRecentActivities = (data: any) => {
+  const recentTransacions: ICollectionRecentActivities[] = [];
+  data.recentTransactions.txs.forEach((rt: any) => {
+    recentTransacions.push({
+      dateExecuted: dayjs.unix(rt.tx.txAt).toDate(),
+      txId: rt.tx.txId,
+      image: rt.mint.imageUri,
+      mint: rt.mint.onchainId,
+      price: +rt.tx.grossAmount / LAMPORTS_PER_SOL,
+      rarityRank: rt.mint.rarityRankStat,
+      source: rt.tx.source as ListingSource,
+    });
+  });
+
+  return recentTransacions;
 };

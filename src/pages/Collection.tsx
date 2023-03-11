@@ -6,6 +6,7 @@ import { header } from "./../components/CollectionLayout/Header";
 import {
   IChainCollectionData,
   ICollectionData,
+  ICollectionRecentActivities,
   ICollectionStats,
   INftListing,
   ITrait,
@@ -39,6 +40,8 @@ export const Collections: FC = () => {
   const [listings, setListings] = useState<INftListing[]>();
   const [chainCollectionData, setChainCollectionData] =
     useState<IChainCollectionData>();
+  const [recentActivities, setRecentActivities] =
+    useState<ICollectionRecentActivities[]>();
 
   const iframeRef = useRef(null);
   const slug = useSearchParams()[0].get("symbol");
@@ -119,6 +122,8 @@ export const Collections: FC = () => {
         setCollectionStats,
         traits,
         setTraits,
+        recentActivities,
+        setRecentActivities,
       }}
     >
       <Box className="overflow-y-auto">

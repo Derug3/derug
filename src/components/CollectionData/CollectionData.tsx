@@ -34,22 +34,26 @@ const CollectionData = () => {
           )}
           <Box className="flex flex-row gap-5">
             {collection?.discord && (
-              <FaDiscord
-                style={{
-                  cursor: "pointer",
-                  fontSize: "1.75em",
-                  color: "rgb(88 101 242)",
-                }}
-              />
+              <a href={collection.discord} target={"_blank"}>
+                <FaDiscord
+                  style={{
+                    cursor: "pointer",
+                    fontSize: "1.75em",
+                    color: "rgb(88 101 242)",
+                  }}
+                />
+              </a>
             )}
             {collection?.twitter && (
-              <FaTwitter
-                style={{
-                  cursor: "pointer",
-                  fontSize: "1.75em",
-                  color: "rgb(29 161 242)",
-                }}
-              />
+              <a href={collection.twitter} target={"_blank"}>
+                <FaTwitter
+                  style={{
+                    cursor: "pointer",
+                    fontSize: "1.75em",
+                    color: "rgb(29 161 242)",
+                  }}
+                />
+              </a>
             )}
           </Box>
         </Box>

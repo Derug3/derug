@@ -71,3 +71,13 @@ export interface IChainCollectionData {
   collectionMint: string;
   derugDataAddress?: PublicKey;
 }
+
+export interface ICollectionRecentActivities {
+  dateExecuted: Date;
+  price: number;
+  image: string;
+  mint: string;
+  rarityRank: number;
+  source: ListingSource;
+  txId: string;
+}
