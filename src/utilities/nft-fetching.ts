@@ -46,7 +46,5 @@ export const fetchWhileHasActivities = async (
     firstBatch = [...firstBatch, ...mapRecentActivities(response.data)];
   } while (response && response.data.recentTransactions.page.hasMore);
 
-  return firstBatch.sort((a, b) =>
-    dayjs(a.dateExecuted).isAfter(b.dateExecuted) ? 1 : -1
-  );
+  return firstBatch.reverse();
 };

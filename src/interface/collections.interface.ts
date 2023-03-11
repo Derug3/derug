@@ -73,7 +73,7 @@ export interface IChainCollectionData {
 }
 
 export interface ICollectionRecentActivities {
-  dateExecuted: Date;
+  dateExecuted: number;
   price: number;
   image: string;
   mint: string;

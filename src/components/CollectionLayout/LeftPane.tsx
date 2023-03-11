@@ -19,7 +19,11 @@ export const LeftPane: FC<{
     >
       <div className="">
         {(selectedInfo === "description" || selectedInfo === "") && (
-          <Text id="description" as="p" sx={{ p: 2 }}>
+          <Text
+            id="description"
+            as="p"
+            sx={{ p: 2, maxHeight: "32em", overflow: "none" }}
+          >
             <CollectionData />
           </Text>
         )}

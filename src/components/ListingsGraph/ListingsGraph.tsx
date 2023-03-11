@@ -14,6 +14,8 @@ import {
   Title,
   CategoryScale,
 } from "chart.js";
+import dayjs from "dayjs";
+import { splitTimestamps } from "../../common/helpers";
 const ListingsGraph = () => {
   const { collection, setRecentActivities, recentActivities } =
     useContext(CollectionContext);
@@ -35,23 +37,15 @@ const ListingsGraph = () => {
       );
 
       const chartContext = chartRef.current!.getContext("2d");
-      console.log(recentActivities.map((ra) => ra.price));
-
+      const sorted = recentActivities.sort((a, b) => a.price - b.price);
       myChart = new Chart(chartContext!, {
         type: "line",
         data: {
-          labels: [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-          ],
+          labels: recentActivities.map((ra) =>
+            dayjs.unix(ra.dateExecuted).toDate().getMonth()
+          ),
           datasets: [
             {
-              label: "My Dataset",
               data: recentActivities?.map((ra) => ra.price),
               fill: false,
               borderColor: "rgb(9, 194, 246)",
@@ -62,8 +56,8 @@ const ListingsGraph = () => {
         options: {
           scales: {
             y: {
-              min: 0,
-              max: 0.7,
+              min: sorted[0].price,
+              max: sorted[sorted.length - 1].price * 2,
             },
           },
         },
@@ -115,8 +109,9 @@ const ListingsGraph = () => {
         collection!.symbol,
         firstBatch.data.recentTransactions.page.endCursor.txAt
       );
-
-      setRecentActivities(collectionRecentListings);
+      setRecentActivities(
+        splitTimestamps(collectionRecentListings.filter((v) => v.price > 0))
+      );
     } catch (error) {
       console.log(error);
     }

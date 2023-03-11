@@ -1,5 +1,5 @@
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
-import dayjs from "dayjs";
+import dayjs, { unix } from "dayjs";
 import { divide, multiply, round } from "mathjs";
 import { ListingSource } from "../../enums/collections.enums";
 import {
@@ -104,7 +104,7 @@ export const mapRecentActivities = (data: any) => {
   const recentTransacions: ICollectionRecentActivities[] = [];
   data.recentTransactions.txs.forEach((rt: any) => {
     recentTransacions.push({
-      dateExecuted: dayjs.unix(rt.tx.txAt).toDate(),
+      dateExecuted: rt.tx.txAt,
       txId: rt.tx.txId,
       image: rt.mint.imageUri,
       mint: rt.mint.onchainId,
