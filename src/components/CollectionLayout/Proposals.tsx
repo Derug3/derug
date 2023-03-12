@@ -6,6 +6,7 @@ import {
   ProgressBar,
   TextInput,
 } from "@primer/react";
+import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import { FC, useRef, useState } from "react";
 import Balancer from "react-wrap-balancer";
@@ -108,7 +109,11 @@ export const Proposals: FC<{
                         filter: "drop-shadow(#2dd4bf 0px 0px 10px)",
                       }}
                     >
-                      Fri May 06
+                      {dayjs
+                        .unix(el.createdAt)
+                        .toDate()
+                        .toString()
+                        .slice(0, 10)}
                     </span>
                   </Balancer>
                 </div>
