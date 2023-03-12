@@ -95,6 +95,7 @@ const ListingsGraph = () => {
           },
         },
       });
+
       retrieveAllRecentListings(firstBatchOfListings);
     } catch (error) {
       console.log(error);
@@ -109,10 +110,7 @@ const ListingsGraph = () => {
         collection!.symbol,
         firstBatch.data.recentTransactions.page.endCursor.txAt
       );
-      const recentAct = splitTimestamps(collectionRecentListings).map((ra) => {
-        return ra.sort((a, b) => a.price - b.price)[0];
-      });
-      setRecentActivities(recentAct);
+      setRecentActivities(collectionRecentListings);
     } catch (error) {
       console.log(error);
     }

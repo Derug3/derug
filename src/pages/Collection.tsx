@@ -1,7 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { LeftPane } from "../components/CollectionLayout/LeftPane";
 import { RightPane } from "../components/CollectionLayout/RightPane";
-import { header } from "./../components/CollectionLayout/Header";
 // import { Proposals } from "./../components/CollectionLayout/Proposals";
 import {
   IChainCollectionData,
@@ -17,6 +16,9 @@ import {
   FP_QUERY,
   TRAITS_QUERY,
 } from "../api/graphql/query";
+
+import { StickyHeader } from "../components/CollectionLayout/StickyHeader";
+import { IRequest } from "../interface/collections.interface";
 import { useSearchParams } from "react-router-dom";
 import {
   mapCollectionListings,
@@ -25,13 +27,19 @@ import {
   mapTraitsQuery,
 } from "../api/graphql/mapper";
 import { Box } from "@primer/react";
-import { HeaderTabs } from "../components/CollectionLayout/HeaderTabs";
 import { CollectionContext } from "../stores/collectionContext";
 import { getSingleCollection } from "../api/collections.api";
 import { getCollectionChainData } from "../solana/collections";
+import { HeaderTabs } from "../components/CollectionLayout/HeaderTabs";
+import { Proposals } from "../components/CollectionLayout/Proposals";
+import { AddDerugRequst } from "../components/CollectionLayout/AddDerugRequest";
+import { collectionsStore } from "../stores/collectionsStore";
 
 export const Collections: FC = () => {
+  const [requests, setRequests] = useState<IRequest[]>();
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
+
+  const [derugRequestVisible, setDerugRequestVisible] = useState(false);
   const [traits, setTraits] = useState<ITrait[]>();
   const [selectedInfo, setSelectedInfo] = useState("description");
   const [selectedData, setSelectedData] = useState("traits");
@@ -75,6 +83,8 @@ export const Collections: FC = () => {
 
   useEffect(() => {
     if (collectionFpData.data) {
+      console.log(collectionFpData.data);
+
       setCollectionStats(mapCollectionStats(collectionFpData.data));
     }
   }, [collectionFpData]);
@@ -127,41 +137,54 @@ export const Collections: FC = () => {
       }}
     >
       <Box className="overflow-y-auto">
-        <Box className="sticky top-0 grid">
-          {header(true, collectionStats)}
-          <HeaderTabs
-            selectedInfo={selectedInfo}
-            setSelectedInfo={setSelectedInfo}
-            selectedData={selectedData}
-            setSelectedData={setSelectedData}
+        <Box className="sticky top-0 grid"></Box>
+        <Box className="overflow-y-clip">
+          <AddDerugRequst
+            isOpen={derugRequestVisible}
+            setIsOpen={setDerugRequestVisible}
+            derugRequests={requests}
+            setDerugRequest={setRequests}
           />
-        </Box>
-
-        <Box sx={{ display: "grid", gridTemplateColumns: "50% 50%" }}>
-          <div
-            ref={boxRef}
-            className="ASDSAD"
-            style={{
-              maxHeight: "270em",
-              overflow: "none",
-            }}
-          >
-            <LeftPane parentRef={boxRef} selectedInfo={selectedInfo} />
-          </div>
-          <Box
-            sx={{
-              maxHeight: "27em",
-              overflow: "scroll",
-            }}
-          >
-            <RightPane
-              selectedData={selectedData}
-              iframeRef={iframeRef}
-              traits={traits}
+          <Box className="sticky top-0 grid">
+            <StickyHeader
+              openDerugModal={setDerugRequestVisible}
+              collection={collectionStats}
             />
+            <HeaderTabs
+              selectedInfo={selectedInfo}
+              setSelectedInfo={setSelectedInfo}
+              selectedData={selectedData}
+              setSelectedData={setSelectedData}
+            />
+          </Box>
+
+          <Box sx={{ display: "grid", gridTemplateColumns: "50% 50%" }}>
+            <div
+              ref={boxRef}
+              className="ASDSAD"
+              style={{
+                maxHeight: "27em",
+                overflow: "none",
+              }}
+            >
+              <LeftPane parentRef={boxRef} selectedInfo={selectedInfo} />
+            </div>
+            <Box
+              sx={{
+                maxHeight: "27em",
+                overflowY: "scroll",
+              }}
+            >
+              <RightPane
+                selectedData={selectedData}
+                traits={traits}
+                iframeRef={undefined}
+              />
+            </Box>
           </Box>
         </Box>
       </Box>
+      <Proposals requests={requests} />
     </CollectionContext.Provider>
   );
 };

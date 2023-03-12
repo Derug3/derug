@@ -35,7 +35,7 @@ export const CollectionLayout: FC<ICollectionLayoutProps> = ({
           <Box
             sx={{
               maxHeight: "30em",
-              overflow: "scroll",
+              overflowY: "scroll",
             }}
           >
             {pane}{" "}

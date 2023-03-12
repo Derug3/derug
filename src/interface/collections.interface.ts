@@ -14,6 +14,14 @@ export interface ICollectionData {
   numMints?: number;
 }
 
+export interface IRequest {
+  title: string;
+  utility: IUtility[];
+}
+export interface IUtility {
+  name: string;
+  description: string;
+}
 export interface IListed {
   auctionHouse: string;
   price: number;
