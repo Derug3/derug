@@ -2,6 +2,7 @@ import React from "react";
 import {
   IChainCollectionData,
   ICollectionData,
+  ICollectionDerugData,
   ICollectionRecentActivities,
   ICollectionStats,
   INftListing,
@@ -15,6 +16,8 @@ export interface CollectionContext {
   collectionStats: ICollectionStats | undefined;
   chainCollectionData: IChainCollectionData | undefined;
   recentActivities: ICollectionRecentActivities[] | undefined;
+  collectionDerug: ICollectionDerugData | undefined;
+  setCollectionDerug: (derug: ICollectionDerugData) => void;
   setRecentActivities: (activities: ICollectionRecentActivities[]) => void;
   setCollection: (collection: ICollectionData) => void;
   setChainCollectionData: (data: IChainCollectionData) => void;

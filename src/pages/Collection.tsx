@@ -5,6 +5,7 @@ import { RightPane } from "../components/CollectionLayout/RightPane";
 import {
   IChainCollectionData,
   ICollectionData,
+  ICollectionDerugData,
   ICollectionRecentActivities,
   ICollectionStats,
   INftListing,
@@ -34,6 +35,7 @@ import { HeaderTabs } from "../components/CollectionLayout/HeaderTabs";
 import { Proposals } from "../components/CollectionLayout/Proposals";
 import { AddDerugRequst } from "../components/CollectionLayout/AddDerugRequest";
 import { collectionsStore } from "../stores/collectionsStore";
+import { getCollectionDerugData } from "../solana/methods/derug";
 
 export const Collections: FC = () => {
   const [requests, setRequests] = useState<IRequest[]>();
@@ -50,7 +52,8 @@ export const Collections: FC = () => {
     useState<IChainCollectionData>();
   const [recentActivities, setRecentActivities] =
     useState<ICollectionRecentActivities[]>();
-
+  const [collectionDerug, setCollectionDerug] =
+    useState<ICollectionDerugData>();
   const iframeRef = useRef(null);
   const slug = useSearchParams()[0].get("symbol");
 
@@ -109,9 +112,16 @@ export const Collections: FC = () => {
 
   const getChainCollectionDetails = async () => {
     try {
-      setChainCollectionData(
-        await getCollectionChainData(basicCollectionData!, listings?.at(0))
+      const chainDetails = await getCollectionChainData(
+        basicCollectionData!,
+        listings?.at(0)
       );
+      setChainCollectionData(chainDetails);
+      if (chainDetails.hasActiveDerugData) {
+        setCollectionDerug(
+          await getCollectionDerugData(chainDetails.derugDataAddress)
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -134,6 +144,8 @@ export const Collections: FC = () => {
         setTraits,
         recentActivities,
         setRecentActivities,
+        collectionDerug,
+        setCollectionDerug,
       }}
     >
       <Box className="overflow-y-auto">
@@ -149,6 +161,7 @@ export const Collections: FC = () => {
             <StickyHeader
               openDerugModal={setDerugRequestVisible}
               collection={collectionStats}
+              collectionDerug={collectionDerug}
             />
             <HeaderTabs
               selectedInfo={selectedInfo}

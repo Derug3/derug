@@ -1,12 +1,13 @@
 import { SystemProgram, TransactionInstruction } from "@solana/web3.js";
 import {
   IChainCollectionData,
+  ICollectionDerugData,
   INftListing,
 } from "../../interface/collections.interface";
 import { PublicKey } from "@solana/web3.js";
 import { derugDataSeed, metadataSeed } from "../seeds";
 import { derugProgramFactory } from "../utilities";
-import { AnchorWallet, WalletContextState } from "@solana/wallet-adapter-react";
+import { WalletContextState } from "@solana/wallet-adapter-react";
 import {
   MAINNET_RPC_CONNECTION,
   METAPLEX_PROGRAM,
@@ -19,6 +20,7 @@ import {
 } from "../../interface/derug.interface";
 import { mapUtilityAction } from "../helpers";
 import { sendTransaction } from "../sendTransaction";
+import { DerugStatus } from "../../enums/collections.enums";
 
 export const createDerugDataIx = async (
   collection: IChainCollectionData,
@@ -60,51 +62,28 @@ export const createDerugDataIx = async (
   return ix;
 };
 
-export const createOrUpdateDerugRequest = async (
-  name: string,
-  wallet: WalletContextState,
-  utilities: IUtilityData[],
-  collection: IChainCollectionData,
-  listedNft?: INftListing
-) => {
-  const instructions: TransactionInstruction[] = [];
+export const getCollectionDerugData = async (
+  derugDataAddress: PublicKey
+): Promise<ICollectionDerugData> => {
+  try {
+    const derugProgram = derugProgramFactory();
+    const derugDataAccount = await derugProgram.account.derugData.fetch(
+      derugDataAddress
+    );
+    return {
+      collection: derugDataAccount.collection,
+      createdAt: derugDataAccount.createdAt.toNumber(),
+      status: Object.keys(derugDataAccount.derugStatus)[0] as DerugStatus,
+      totalReminted: derugDataAccount.totalReminted,
+      totalSuggestionCount: derugDataAccount.totalSuggestionCount,
+      totalSupply: derugDataAccount.totalSupply,
+      votingStartedAt: derugDataAccount.votingStartedAt.toNumber(),
+      newCollection: derugDataAccount.newCollection,
+      winningRequest: derugDataAccount.winningRequest,
+    };
+  } catch (error) {
+    console.log(error);
 
-  const derugProgram = derugProgramFactory();
-
-  if (!collection.hasActiveDerugData) {
-    instructions.push(await createDerugDataIx(collection, wallet, listedNft));
+    throw error;
   }
-
-  const [derugRequest] = PublicKey.findProgramAddressSync(
-    [
-      derugDataSeed,
-      collection.derugDataAddress.toBuffer(),
-      wallet.publicKey!.toBuffer(),
-    ],
-    derugProgram.programId
-  );
-
-  const initalizeDerugRequest = await derugProgram.methods
-    .createOrUpdateDerugRequest(
-      utilities.map((ut) => {
-        return { ...ut, action: mapUtilityAction(ut.action) };
-      })
-    )
-    .accounts({
-      derugData: collection.derugDataAddress,
-      derugRequest,
-      payer: wallet.publicKey!,
-      systemProgram: SystemProgram.programId,
-    })
-    .instruction();
-
-  instructions.push(initalizeDerugRequest);
-
-  const derugInstruction: IDerugInstruction = {
-    instructions,
-    pendingDescription: "Creating derug request",
-    successDescription: "Successfully created derug request!",
-  };
-
-  await sendTransaction(RPC_CONNECTION, [derugInstruction], wallet);
 };

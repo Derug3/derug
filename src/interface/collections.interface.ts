@@ -1,5 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
-import { ListingSource } from "../enums/collections.enums";
+import { DerugStatus, ListingSource } from "../enums/collections.enums";
 
 export interface ICollectionData {
   symbol: string;
@@ -15,12 +15,15 @@ export interface ICollectionData {
 }
 
 export interface IRequest {
-  title: string;
+  derugger: PublicKey;
+  createdAt: number;
+  voteCount: number;
   utility: IUtility[];
 }
 export interface IUtility {
-  name: string;
+  title: string;
   description: string;
+  isActive: boolean;
 }
 export interface IListed {
   auctionHouse: string;
@@ -90,4 +93,16 @@ export interface ICollectionRecentActivities {
   rarityRank: number;
   source: ListingSource;
   txId: string;
+}
+
+export interface ICollectionDerugData {
+  collection: PublicKey;
+  totalSupply: number;
+  createdAt: number;
+  newCollection: PublicKey | null;
+  winningRequest: PublicKey | null;
+  votingStartedAt: number;
+  totalReminted: number;
+  totalSuggestionCount: number;
+  status: DerugStatus;
 }

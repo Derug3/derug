@@ -36,7 +36,7 @@ export const Proposals: FC<{
         aria-labelledby="header-id"
       >
         <Dialog.Header id="header-id">Derug request</Dialog.Header>
-        {currentRequest?.title}
+        {currentRequest?.derugger.toString()}
       </Dialog>
       <div className="w-full">
         <div className="flex flex-col gap-1 items-center justify-center pl-1 pr-3 py-3">
@@ -62,7 +62,7 @@ export const Proposals: FC<{
                     <span style={{ fontSize: "1em", opacity: 0.7 }}>
                       #{index + 1}
                     </span>{" "}
-                    {el.title}{" "}
+                    {""}{" "}
                   </Balancer>
                   {el.utility &&
                     el.utility.map((u, i) => (
@@ -77,7 +77,7 @@ export const Proposals: FC<{
                           filter: "drop-shadow(white 0px 0px 3px)",
                         }}
                       >
-                        {u.name}
+                        {u.title}
                       </div>
                     ))}
                 </div>
