@@ -9,7 +9,10 @@ import {
 import {
   MAINNET_RPC_CONNECTION,
   METAPLEX_PROGRAM,
+  RPC_CONNECTION,
 } from "../utilities/utilities";
+import { derugDataSeed } from "./seeds";
+import { derugProgramFactory } from "./utilities";
 
 export async function getCollectionChainData(
   collection: ICollectionData,
@@ -20,6 +23,8 @@ export async function getCollectionChainData(
     const listings = await getMagicEdenListingsBySlug(collection.symbol);
     mint = listings[0].tokenMint;
   }
+
+  const derugProgram = derugProgramFactory();
 
   if (!mint) {
     throw new Error("Failed to retrieve collection Metalpex data!");
@@ -42,14 +47,35 @@ export async function getCollectionChainData(
   if (!metadataAccount || !metadataAccount.data.creators)
     throw new Error("Failed to retrieve collection Metalpex data!");
 
+  const derugCollection = metadataAccount.collection
+    ? metadataAccount.collection.key.toString()
+    : metadataAccount?.data.creators
+        .find((c) => c.share > 0)
+        ?.address.toString() ??
+      metadataAccount.data.creators[0].address.toString();
+
+  const [derugData] = PublicKey.findProgramAddressSync(
+    [derugDataSeed, new PublicKey(derugCollection).toBuffer()],
+    derugProgram.programId
+  );
+
+  let hasActiveDerugData = false;
+
+  try {
+    const derugDataAccount = await RPC_CONNECTION.getAccountInfo(derugData);
+    if (derugDataAccount && derugDataAccount.data.length > 0) {
+      hasActiveDerugData = true;
+    }
+  } catch (error) {
+    hasActiveDerugData = false;
+  }
+
   return {
-    collectionMint: metadataAccount.collection
-      ? metadataAccount.collection.key.toString()
-      : metadataAccount?.data.creators
-          .find((c) => c.share > 0)
-          ?.address.toString() ??
-        metadataAccount.data.creators[0].address.toString(),
+    collectionMint: derugCollection,
     rugUpdateAuthority: metadataAccount.updateAuthority.toString(),
     slug: collection.symbol,
+    totalSupply: collection.numMints!,
+    derugDataAddress: derugData,
+    hasActiveDerugData,
   };
 }

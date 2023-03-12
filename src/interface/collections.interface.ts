@@ -77,7 +77,9 @@ export interface IChainCollectionData {
   slug: string;
   rugUpdateAuthority: string;
   collectionMint: string;
-  derugDataAddress?: PublicKey;
+  derugDataAddress: PublicKey;
+  totalSupply: number;
+  hasActiveDerugData: boolean;
 }
 
 export interface ICollectionRecentActivities {

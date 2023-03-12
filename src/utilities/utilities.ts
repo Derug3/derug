@@ -18,3 +18,7 @@ export const METAPLEX_PROGRAM = new PublicKey(
 );
 
 export const MAGIC_EDEN_URL = "https://api-mainnet.magiceden.dev/v2";
+
+export const DERUG_PROGRAM_ID = process.env.REACT_APP_DERUG_PROGRAM as string;
+
+export const RPC_CONNECTION = new Connection("https://api.devnet.solana.com");
