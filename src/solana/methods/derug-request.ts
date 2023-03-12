@@ -4,19 +4,22 @@ import {
   PublicKey,
   SystemProgram,
   GetProgramAccountsFilter,
+  AccountMeta,
 } from "@solana/web3.js";
 import {
   IChainCollectionData,
+  ICollectionDerugData,
   INftListing,
   IRequest,
 } from "../../interface/collections.interface";
 import {
   IUtilityData,
   IDerugInstruction,
+  IDerugCollectionNft,
 } from "../../interface/derug.interface";
 import { RPC_CONNECTION } from "../../utilities/utilities";
 import { mapUtilityAction } from "../helpers";
-import { derugDataSeed } from "../seeds";
+import { derugDataSeed, voteRecordSeed } from "../seeds";
 import { sendTransaction } from "../sendTransaction";
 import { derugProgramFactory } from "../utilities";
 import { createDerugDataIx } from "./derug";
@@ -95,6 +98,7 @@ export const getAllDerugRequest = async (
         derugger: derug.account.derugger,
         voteCount: derug.account.voteCount,
         utility: derug.account.utilityData,
+        address: derug.publicKey,
       });
     }
 
@@ -115,9 +119,69 @@ export const getSingleDerugRequest = async (
   );
 
   return {
+    address: derugRequestAddress,
     createdAt: derugAccount.createdAt.toNumber(),
     derugger: derugAccount.derugger,
     voteCount: derugAccount.voteCount,
     utility: derugAccount.utilityData,
   };
+};
+
+export const castDerugRequestVote = async (
+  derugRequest: IRequest,
+  wallet: WalletContextState,
+  collectionDerug: ICollectionDerugData,
+  derugNfts: IDerugCollectionNft[]
+) => {
+  const derugProgram = derugProgramFactory();
+  const derugInstructions: IDerugInstruction[] = [];
+
+  for (const derugNft of derugNfts) {
+    const remainingAccounts: AccountMeta[] = [];
+
+    const [voteRecordPda] = PublicKey.findProgramAddressSync(
+      [derugDataSeed, derugNft.mint.toBuffer(), voteRecordSeed],
+      derugProgram.programId
+    );
+
+    remainingAccounts.push({
+      isSigner: false,
+      isWritable: true,
+      pubkey: voteRecordPda,
+    });
+
+    remainingAccounts.push({
+      isSigner: false,
+      isWritable: false,
+      pubkey: derugNft.mint,
+    });
+    remainingAccounts.push({
+      isSigner: false,
+      isWritable: false,
+      pubkey: derugNft.metadataAddress,
+    });
+    remainingAccounts.push({
+      isSigner: false,
+      isWritable: false,
+      pubkey: derugNft.tokenAccount,
+    });
+
+    const castVoteIx = await derugProgram.methods
+      .vote()
+      .accounts({
+        derugData: collectionDerug.address,
+        payer: wallet.publicKey!,
+        derugRequest: derugRequest.address,
+        systemProgram: SystemProgram.programId,
+      })
+      .remainingAccounts(remainingAccounts)
+      .instruction();
+
+    derugInstructions.push({
+      instructions: [castVoteIx],
+      pendingDescription: "Casting vote...",
+      successDescription: "Successfully voted",
+    });
+  }
+  await sendTransaction(RPC_CONNECTION, derugInstructions, wallet);
 };

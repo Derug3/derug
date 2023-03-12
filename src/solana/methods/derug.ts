@@ -82,6 +82,7 @@ export const getCollectionDerugData = async (
       votingStartedAt: derugDataAccount.votingStartedAt.toNumber(),
       newCollection: derugDataAccount.newCollection,
       winningRequest: derugDataAccount.winningRequest,
+      address: derugDataAddress,
     };
   } catch (error) {
     console.log(error);
