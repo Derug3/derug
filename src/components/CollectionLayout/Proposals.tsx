@@ -45,7 +45,6 @@ export const Proposals: FC<{
               <div
                 className="flex  w-full items-center justify-around py-2"
                 style={{
-                  border: `2px solid rgb(9, 194, 246)`,
                   borderRadius: "4px",
                   padding: "10px",
                   background: "rgb(9, 194, 246,.15)",

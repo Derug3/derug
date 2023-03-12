@@ -36,6 +36,7 @@ const HomePage = () => {
       toggleSearchLoading(true);
       setSearchValue(e);
     } else {
+      toggleSearchLoading(false);
       setFilteredCollections(collections);
     }
   };
@@ -43,6 +44,8 @@ const HomePage = () => {
   const searchByName = async () => {
     try {
       const collectionsByName = await getByNameOrSlug(name!);
+      console.log(collectionsByName, "collectionsByName");
+
       setFilteredCollections(collectionsByName);
       toggleSearchLoading(false);
     } catch (error) {
@@ -72,6 +75,8 @@ const HomePage = () => {
         styles={selectStyles}
         options={filteredCollections}
         onChange={(e) => navigate(`collection?symbol=${e.symbol}`)}
+        getOptionLabel={(option) => option.name}
+        getOptionValue={(option) => option.symbol}
         formatOptionLabel={(e: any) => (
           <Box
             sx={{
