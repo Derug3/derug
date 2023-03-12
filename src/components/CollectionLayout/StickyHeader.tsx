@@ -129,7 +129,7 @@ font-mono text-gray-700 leading-6 justify-between px-10 py-2 border-none mb-10"
                 lineHeight: "48px",
                 filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 5px)",
               }}
-              // onClick={() => openDerugModal(true)}
+              onClick={() => openDerugModal(true)}
             >
               Add derug request
             </Button>
