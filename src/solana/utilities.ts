@@ -7,6 +7,8 @@ export const derugProgramFactory = () => {
   return new Program<DerugProgram>(
     IDL,
     new PublicKey(DERUG_PROGRAM_ID),
-    new AnchorProvider(RPC_CONNECTION, new NodeWallet(Keypair.generate()), {})
+    new AnchorProvider(RPC_CONNECTION, new NodeWallet(Keypair.generate()), {
+      commitment: "confirmed",
+    })
   );
 };

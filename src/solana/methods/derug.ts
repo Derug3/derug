@@ -2,29 +2,22 @@ import { SystemProgram, TransactionInstruction } from "@solana/web3.js";
 import {
   IChainCollectionData,
   ICollectionDerugData,
+  ICollectionStats,
   INftListing,
 } from "../../interface/collections.interface";
 import { PublicKey } from "@solana/web3.js";
-import { derugDataSeed, metadataSeed } from "../seeds";
+import { metadataSeed } from "../seeds";
 import { derugProgramFactory } from "../utilities";
 import { WalletContextState } from "@solana/wallet-adapter-react";
-import {
-  MAINNET_RPC_CONNECTION,
-  METAPLEX_PROGRAM,
-  RPC_CONNECTION,
-} from "../../utilities/utilities";
+import { METAPLEX_PROGRAM, RPC_CONNECTION } from "../../utilities/utilities";
 import { TOKEN_PROGRAM_ID } from "@project-serum/anchor/dist/cjs/utils/token";
-import {
-  IDerugInstruction,
-  IUtilityData,
-} from "../../interface/derug.interface";
-import { mapUtilityAction } from "../helpers";
-import { sendTransaction } from "../sendTransaction";
+
 import { DerugStatus } from "../../enums/collections.enums";
 
 export const createDerugDataIx = async (
   collection: IChainCollectionData,
   wallet: WalletContextState,
+  collectionStats: ICollectionStats,
   listedNfts?: INftListing
 ) => {
   const derugProgram = derugProgramFactory();
@@ -49,7 +42,7 @@ export const createDerugDataIx = async (
   );
 
   const ix = await derugProgram.methods
-    .initializeDerug(collection.totalSupply)
+    .initializeDerug(collectionStats.numMints)
     .accounts({
       collectionKey,
       derugData: collection.derugDataAddress,
@@ -70,7 +63,6 @@ export const getCollectionDerugData = async (
     const derugDataAccount = await derugProgram.account.derugData.fetch(
       derugDataAddress
     );
-    console.log(derugDataAccount, "DDA");
 
     return {
       collection: derugDataAccount.collection,
@@ -82,6 +74,7 @@ export const getCollectionDerugData = async (
       votingStartedAt: derugDataAccount.votingStartedAt.toNumber(),
       newCollection: derugDataAccount.newCollection,
       winningRequest: derugDataAccount.winningRequest,
+      address: derugDataAddress,
     };
   } catch (error) {
     console.log(error);

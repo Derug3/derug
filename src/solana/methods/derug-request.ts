@@ -4,19 +4,23 @@ import {
   PublicKey,
   SystemProgram,
   GetProgramAccountsFilter,
+  AccountMeta,
 } from "@solana/web3.js";
 import {
   IChainCollectionData,
+  ICollectionDerugData,
+  ICollectionStats,
   INftListing,
   IRequest,
 } from "../../interface/collections.interface";
 import {
   IUtilityData,
   IDerugInstruction,
+  IDerugCollectionNft,
 } from "../../interface/derug.interface";
-import { RPC_CONNECTION } from "../../utilities/utilities";
+import { METAPLEX_PROGRAM, RPC_CONNECTION } from "../../utilities/utilities";
 import { mapUtilityAction } from "../helpers";
-import { derugDataSeed } from "../seeds";
+import { derugDataSeed, metadataSeed, voteRecordSeed } from "../seeds";
 import { sendTransaction } from "../sendTransaction";
 import { derugProgramFactory } from "../utilities";
 import { createDerugDataIx } from "./derug";
@@ -25,6 +29,7 @@ export const createOrUpdateDerugRequest = async (
   wallet: WalletContextState,
   utilities: IUtilityData[],
   collection: IChainCollectionData,
+  collectionStats: ICollectionStats,
   listedNft?: INftListing
 ) => {
   const instructions: TransactionInstruction[] = [];
@@ -32,7 +37,9 @@ export const createOrUpdateDerugRequest = async (
   const derugProgram = derugProgramFactory();
 
   if (!collection.hasActiveDerugData) {
-    instructions.push(await createDerugDataIx(collection, wallet, listedNft));
+    instructions.push(
+      await createDerugDataIx(collection, wallet, collectionStats, listedNft)
+    );
   }
 
   const [derugRequest] = PublicKey.findProgramAddressSync(
@@ -95,6 +102,7 @@ export const getAllDerugRequest = async (
         derugger: derug.account.derugger,
         voteCount: derug.account.voteCount,
         utility: derug.account.utilityData,
+        address: derug.publicKey,
       });
     }
 
@@ -115,9 +123,75 @@ export const getSingleDerugRequest = async (
   );
 
   return {
+    address: derugRequestAddress,
     createdAt: derugAccount.createdAt.toNumber(),
     derugger: derugAccount.derugger,
     voteCount: derugAccount.voteCount,
     utility: derugAccount.utilityData,
   };
+};
+
+export const castDerugRequestVote = async (
+  derugRequest: IRequest,
+  wallet: WalletContextState,
+  collectionDerug: ICollectionDerugData,
+  derugNfts: IDerugCollectionNft[]
+) => {
+  const derugProgram = derugProgramFactory();
+  const derugInstructions: IDerugInstruction[] = [];
+
+  for (const derugNft of derugNfts) {
+    const remainingAccounts: AccountMeta[] = [];
+    console.log(derugNft);
+
+    const [voteRecordPda] = PublicKey.findProgramAddressSync(
+      [derugDataSeed, derugNft.mint.toBuffer(), voteRecordSeed],
+      derugProgram.programId
+    );
+
+    const [metadataAddr] = PublicKey.findProgramAddressSync(
+      [metadataSeed, METAPLEX_PROGRAM.toBuffer(), derugNft.mint.toBuffer()],
+      METAPLEX_PROGRAM
+    );
+
+    remainingAccounts.push({
+      isSigner: false,
+      isWritable: true,
+      pubkey: voteRecordPda,
+    });
+
+    remainingAccounts.push({
+      isSigner: false,
+      isWritable: false,
+      pubkey: derugNft.mint,
+    });
+    remainingAccounts.push({
+      isSigner: false,
+      isWritable: false,
+      pubkey: metadataAddr,
+    });
+    remainingAccounts.push({
+      isSigner: false,
+      isWritable: false,
+      pubkey: derugNft.tokenAccount,
+    });
+
+    const castVoteIx = await derugProgram.methods
+      .vote()
+      .accounts({
+        derugData: collectionDerug.address,
+        payer: wallet.publicKey!,
+        derugRequest: derugRequest.address,
+        systemProgram: SystemProgram.programId,
+      })
+      .remainingAccounts(remainingAccounts)
+      .instruction();
+
+    derugInstructions.push({
+      instructions: [castVoteIx],
+      pendingDescription: "Casting vote...",
+      successDescription: "Successfully voted",
+    });
+  }
+  await sendTransaction(RPC_CONNECTION, derugInstructions, wallet);
 };

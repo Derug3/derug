@@ -9,7 +9,6 @@ import { useNavigate } from "react-router";
 const settings = ["Twitter", "Discord"];
 
 const HeaderNav: FC = () => {
-  const [isSettingsOpen, toggleIsSettingsOpen] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -24,7 +23,7 @@ const HeaderNav: FC = () => {
             width: "12em",
             paddingLeft: "1em",
             cursor: "pointer",
-            filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 1px)",
+            filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 10px)",
           }}
         />
       </Header.Item>

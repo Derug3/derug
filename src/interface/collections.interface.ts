@@ -15,6 +15,7 @@ export interface ICollectionData {
 }
 
 export interface IRequest {
+  address: PublicKey;
   derugger: PublicKey;
   createdAt: number;
   voteCount: number;
@@ -96,6 +97,7 @@ export interface ICollectionRecentActivities {
 }
 
 export interface ICollectionDerugData {
+  address: PublicKey;
   collection: PublicKey;
   totalSupply: number;
   createdAt: number;
