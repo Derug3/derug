@@ -45,18 +45,18 @@ export const Proposals: FC<{
         {currentRequest?.derugger.toString()}
       </Dialog>
       <div className="w-full">
-        <div className="flex flex-col gap-1 items-center justify-center pl-1 pr-3 py-3">
+        <div className="flex flex-col gap-1 items-center justify-center pl-1 pr-3 py-3 ">
           {requests ? (
             requests.map((el, index) => (
               <div
-                className="flex  w-full items-center justify-around py-2"
+                className="flex w-full items-center justify-around py-2"
                 style={{
                   borderRadius: "4px",
                   padding: "10px",
                   background: "rgb(9, 194, 246,.15)",
                 }}
               >
-                <div className="flex gap-3 items-center">
+                <div className="flex gap-3 items-center justify-start w-1/2	ml-7">
                   <Balancer
                     className="text-lg cursor-pointer text-white font-mono"
                     onClick={() => {
@@ -86,9 +86,15 @@ export const Proposals: FC<{
                       </div>
                     ))}
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center justify-start w-1/2">
                   <Button variant="invisible" sx={{ color: "rgba(9,194,246)" }}>
                     Vote
+                  </Button>
+                  <Button variant="invisible" sx={{ color: "rgba(9,194,246)" }}>
+                    Claim victory
+                  </Button>
+                  <Button variant="invisible" sx={{ color: "rgba(9,194,246)" }}>
+                    Remint
                   </Button>
                   <ProgressBar
                     progress={el.voteCount / (collection?.numMints ?? 1)}
@@ -99,6 +105,7 @@ export const Proposals: FC<{
                       height: "16px",
                       borderRadius: 0,
                       color: "rgb(179, 255, 174)",
+                      marginLeft: "1em",
                     }}
                   />
                   <Balancer
@@ -107,9 +114,7 @@ export const Proposals: FC<{
                   >
                     <span
                       style={{
-                        borderRadius: "4px",
                         padding: "10px",
-                        background: "rgb(9, 194, 246,.15)",
                         filter: "drop-shadow(#2dd4bf 0px 0px 10px)",
                       }}
                     >
