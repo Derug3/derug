@@ -74,31 +74,35 @@ export const createOrUpdateDerugRequest = async (
 export const getAllDerugRequest = async (
   derugDataAddress: PublicKey
 ): Promise<IRequest[]> => {
-  const filters: GetProgramAccountsFilter = {
-    memcmp: {
-      offset: 8,
-      bytes: derugDataAddress.toBase58(),
-    },
-  };
+  try {
+    const filters: GetProgramAccountsFilter = {
+      memcmp: {
+        offset: 8,
+        bytes: derugDataAddress.toBase58(),
+      },
+    };
 
-  const derugProgram = derugProgramFactory();
+    const derugProgram = derugProgramFactory();
 
-  const allRequestsForCollection = await derugProgram.account.derugRequest.all([
-    filters,
-  ]);
+    const allRequestsForCollection =
+      await derugProgram.account.derugRequest.all([filters]);
 
-  const requests: IRequest[] = [];
+    const requests: IRequest[] = [];
 
-  for (const derug of allRequestsForCollection) {
-    requests.push({
-      createdAt: derug.account.createdAt.toNumber(),
-      derugger: derug.account.derugger,
-      voteCount: derug.account.voteCount,
-      utility: derug.account.utilityData,
-    });
+    for (const derug of allRequestsForCollection) {
+      requests.push({
+        createdAt: derug.account.createdAt.toNumber(),
+        derugger: derug.account.derugger,
+        voteCount: derug.account.voteCount,
+        utility: derug.account.utilityData,
+      });
+    }
+
+    return requests;
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
-
-  return requests;
 };
 
 export const getSingleDerugRequest = async (

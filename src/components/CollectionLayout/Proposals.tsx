@@ -48,7 +48,6 @@ export const Proposals: FC<{
               <div
                 className="flex  w-full items-center justify-around py-2"
                 style={{
-                  border: `2px solid rgb(9, 194, 246)`,
                   borderRadius: "4px",
                   padding: "10px",
                   background: "rgb(9, 194, 246,.15)",
@@ -73,7 +72,7 @@ export const Proposals: FC<{
                         className="text-sm font-mono"
                         style={{
                           borderRightWidth:
-                            i !== el.utility.length - 1 ? "4px" : "0px",
+                            i !== el.utility.length - 1 ? "1px" : "0px",
                           paddingRight:
                             i !== el.utility.length - 1 ? "1em" : "0px",
                           color: "rgb(9, 194, 246)",
