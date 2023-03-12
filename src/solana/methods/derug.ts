@@ -30,7 +30,7 @@ export const createDerugDataIx = async (
   const derugProgram = derugProgramFactory();
   const collectionKey = new PublicKey(collection.collectionMint);
 
-  const collectionAccountInf = await MAINNET_RPC_CONNECTION.getAccountInfo(
+  const collectionAccountInf = await RPC_CONNECTION.getAccountInfo(
     collectionKey
   );
 
@@ -70,9 +70,11 @@ export const getCollectionDerugData = async (
     const derugDataAccount = await derugProgram.account.derugData.fetch(
       derugDataAddress
     );
+    console.log(derugDataAccount, "DDA");
+
     return {
       collection: derugDataAccount.collection,
-      createdAt: derugDataAccount.createdAt.toNumber(),
+      createdAt: derugDataAccount.dateAdded.toNumber(),
       status: Object.keys(derugDataAccount.derugStatus)[0] as DerugStatus,
       totalReminted: derugDataAccount.totalReminted,
       totalSuggestionCount: derugDataAccount.totalSuggestionCount,
@@ -83,7 +85,6 @@ export const getCollectionDerugData = async (
     };
   } catch (error) {
     console.log(error);
-
     throw error;
   }
 };

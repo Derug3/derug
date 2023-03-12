@@ -10,6 +10,7 @@ import HeadingItem from "./HeadingItem";
 import { FC } from "react";
 import { DerugStatus } from "../../enums/collections.enums";
 import { WalletContextState } from "@solana/wallet-adapter-react";
+import dayjs from "dayjs";
 
 export const StickyHeader: FC<{
   openDerugModal: (value: boolean) => void;
@@ -72,8 +73,9 @@ export const StickyHeader: FC<{
           />
           <HeadingItem
             descColor="#2dd4bf"
-            title="TOTAL REQUESTS"
-            amount={collectionDerug.votingStartedAt}
+            title="REMAINING TIME"
+            amount={collectionDerug.createdAt}
+            isCounter
             desc=""
           />
           {collectionDerug.status === DerugStatus.Reminting && (

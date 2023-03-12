@@ -8,9 +8,10 @@ import {
 } from "@primer/react";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
-import { FC, useRef, useState } from "react";
+import { FC, useContext, useRef, useState } from "react";
 import Balancer from "react-wrap-balancer";
 import { IRequest } from "../../interface/collections.interface";
+import { CollectionContext } from "../../stores/collectionContext";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 
 export const Proposals: FC<{
@@ -19,6 +20,7 @@ export const Proposals: FC<{
   const [isOpen, setIsOpen] = useState(false);
   const [currentRequest, setCurrentRequest] = useState<IRequest>();
   const returnFocusRef = useRef(null);
+  const { collection } = useContext(CollectionContext);
 
   return (
     <motion.div
@@ -87,7 +89,7 @@ export const Proposals: FC<{
                     Vote
                   </Button>
                   <ProgressBar
-                    progress={50}
+                    progress={el.voteCount / (collection?.numMints ?? 1)}
                     bg="rgba(9,194,246)"
                     sx={{
                       width: "280px",

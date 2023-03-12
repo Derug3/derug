@@ -4,7 +4,11 @@ import { motion } from "framer-motion";
 import { FC, useContext, useRef, useState } from "react";
 import { IRequest, IUtility } from "../../interface/collections.interface";
 import { UtilityAction } from "../../interface/derug.interface";
-import { createOrUpdateDerugRequest } from "../../solana/methods/derug-request";
+import { getCollectionDerugData } from "../../solana/methods/derug";
+import {
+  createOrUpdateDerugRequest,
+  getSingleDerugRequest,
+} from "../../solana/methods/derug-request";
 import { CollectionContext } from "../../stores/collectionContext";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 
@@ -17,8 +21,13 @@ export const AddDerugRequst: FC<{
   const returnFocusRef = useRef(null);
   const [utility, setUtility] = useState<IUtility[]>();
 
-  const { chainCollectionData, activeListings, setCollectionDerug } =
-    useContext(CollectionContext);
+  const {
+    chainCollectionData,
+    activeListings,
+    setCollectionDerug,
+    setRequests,
+    derugRequests,
+  } = useContext(CollectionContext);
 
   const wallet = useWallet();
 
@@ -65,7 +74,7 @@ export const AddDerugRequst: FC<{
   const submitRequest = async () => {
     try {
       if (wallet && chainCollectionData && utility) {
-        await createOrUpdateDerugRequest(
+        const requestAddress = await createOrUpdateDerugRequest(
           wallet,
           utility.map((ut) => {
             return {
@@ -77,9 +86,16 @@ export const AddDerugRequst: FC<{
           chainCollectionData,
           activeListings ? activeListings[0] : undefined
         );
+        const addedRequests = [...(derugRequests ?? [])];
+        addedRequests.push(await getSingleDerugRequest(requestAddress));
       }
-      if (!chainCollectionData?.hasActiveDerugData) {
+      if (chainCollectionData && !chainCollectionData?.hasActiveDerugData) {
+        const derugData = await getCollectionDerugData(
+          chainCollectionData?.derugDataAddress
+        );
+        setCollectionDerug(derugData);
       }
+      setIsOpen(false);
     } catch (error) {
       console.log(error);
     }
