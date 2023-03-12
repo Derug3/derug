@@ -1,5 +1,5 @@
 import derugPfp from "../../assets/derugPfp.png";
-import { Header } from "@primer/react";
+import { Button, Header } from "@primer/react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { FC, useState } from "react";
 import { motion } from "framer-motion";
@@ -12,7 +12,10 @@ const HeaderNav: FC = () => {
   const navigate = useNavigate();
 
   return (
-    <Header sx={{ p: 0, padding: "0.5em 1.5em" }}>
+    <Header
+      className="flex items-center w-full justify-between"
+      sx={{ p: 0, padding: "0.5em 1.5em" }}
+    >
       <Header.Item onClick={() => navigate(HOME)}>
         <img
           src={derugPfp}
@@ -24,19 +27,38 @@ const HeaderNav: FC = () => {
           }}
         />
       </Header.Item>
-
-      <Header.Item full sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <motion.button className="font-mono" {...FADE_IN_ANIMATION_SETTINGS}>
-          <WalletMultiButton
-            style={{
-              // backgroundColor: "rgba(0,183,234,15px)",
-              fontSize: "1em",
-              fontFamily: "monospace",
-              filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 15px)",
-            }}
-          />
-        </motion.button>
-      </Header.Item>
+      <div className="flex">
+        {/* <Header.Item full>
+          <motion.button className="font-mono" {...FADE_IN_ANIMATION_SETTINGS}>
+            <Button
+              className="bg-transparent w-full font-mono font-bold text-lg p-10"
+              style={{
+                fontSize: "1em",
+                fontFamily: "monospace",
+                height: "48px",
+                padding: "0 24px",
+                lineHeight: "48px",
+                filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 5px)",
+              }}
+              // onClick={() => openDerugModal(true)}
+            >
+              Add derug request
+            </Button>
+          </motion.button>
+        </Header.Item> */}
+        <Header.Item full>
+          <motion.button className="font-mono" {...FADE_IN_ANIMATION_SETTINGS}>
+            <WalletMultiButton
+              style={{
+                // backgroundColor: "rgba(0,183,234,15px)",
+                fontSize: "1em",
+                fontFamily: "monospace",
+                filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 15px)",
+              }}
+            />
+          </motion.button>
+        </Header.Item>
+      </div>
     </Header>
   );
 };

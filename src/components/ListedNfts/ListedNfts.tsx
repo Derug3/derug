@@ -10,12 +10,8 @@ import React, {
 } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import { useSearchParams } from "react-router-dom";
-import { mapCollectionListings, mapNextData } from "../../api/graphql/mapper";
 import { ACTIVE_LISTINGS_QUERY, makeNextQuery } from "../../api/graphql/query";
-import { INftListing } from "../../interface/collections.interface";
 import { CollectionContext } from "../../stores/collectionContext";
-import { collectionsStore } from "../../stores/collectionsStore";
-import { NFTS_PER_PAGE } from "../../utilities/constants";
 import ListedNftItem from "./ListedNftItem";
 
 const ListedNfts: FC<{

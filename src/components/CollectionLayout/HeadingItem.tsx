@@ -12,14 +12,16 @@ const HeadingItem: FC<{
   return (
     <Heading className="flex flex-col items-center gap-2">
       <Text
-        className="text-base"
+        className="text-sm
+"
         style={{ fontFamily: "monospace", color: "white" }}
       >
         {title}
       </Text>
       {!isCounter ? (
         <Text
-          className="text-base"
+          className="text-sm
+"
           style={{
             color: `white`,
             filter: `${`drop-shadow(white 0px 0px 10px)`}`,
@@ -29,7 +31,8 @@ const HeadingItem: FC<{
         </Text>
       ) : (
         <Countdown
-          className="text-md"
+          className="font-mono text-sm
+ text-orange-800 drop-shadow-3xl"
           date={dayjs
             .unix(amount as number)
             .add(3, "days")

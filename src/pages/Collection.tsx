@@ -37,7 +37,6 @@ import { getDummyCollectionData } from "../solana/dummy";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { getAllDerugRequest } from "../solana/methods/derug-request";
 import DerugRequest from "../components/DerugRequest/DerugRequest";
-
 export const Collections: FC = () => {
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
 
@@ -167,10 +166,10 @@ export const Collections: FC = () => {
           />
           <Box className="sticky top-0 grid">
             <StickyHeader
-              openDerugModal={setDerugRequestVisible}
               collection={collectionStats}
               collectionDerug={collectionDerug}
               wallet={wallet}
+              openDerugModal={setDerugRequestVisible}
             />
             <HeaderTabs
               selectedInfo={selectedInfo}
@@ -180,7 +179,13 @@ export const Collections: FC = () => {
             />
           </Box>
 
-          <Box sx={{ display: "grid", gridTemplateColumns: "50% 50%" }}>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "50% 50%",
+              height: "400px",
+            }}
+          >
             <div
               ref={boxRef}
               className="ASDSAD"
@@ -207,7 +212,7 @@ export const Collections: FC = () => {
           </Box>
         </Box>
       </Box>
-      <DerugRequest />
+      <DerugRequest openDerugModal={setDerugRequestVisible} />
     </CollectionContext.Provider>
   );
 };

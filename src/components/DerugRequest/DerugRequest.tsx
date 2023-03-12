@@ -1,4 +1,6 @@
-import { Box, Dialog } from "@primer/react";
+import { Button, Dialog } from "@primer/react";
+import { useWallet, WalletContextState } from "@solana/wallet-adapter-react";
+import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import { FC, useContext, useMemo, useRef, useState } from "react";
 import { IRequest } from "../../interface/collections.interface";
@@ -6,12 +8,16 @@ import { CollectionContext } from "../../stores/collectionContext";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 import DerugRequestItem from "./DerugRequestItem";
 
-export const DerugRequest: FC<{}> = ({}) => {
+export const DerugRequest: FC<{
+  openDerugModal: (value: boolean) => void;
+}> = ({ openDerugModal }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [currentRequest, setCurrentRequest] = useState<IRequest>();
   const returnFocusRef = useRef(null);
 
   const { derugRequests } = useContext(CollectionContext);
 
+  const wallet = useWallet();
   const renderDerugRequests = useMemo(() => {
     return derugRequests?.map((dr, index) => {
       return (
@@ -41,18 +47,29 @@ export const DerugRequest: FC<{}> = ({}) => {
         aria-labelledby="header-id"
       >
         <Dialog.Header id="header-id">Derug request</Dialog.Header>
-        {/* {currentRequest?.derugger.toString()} */}
+        {currentRequest?.derugger.toString()}
       </Dialog>
       <div className="w-full">
-        <div className="flex flex-col gap-1 items-center justify-center pl-1 pr-3 py-3">
+        <div className="flex w-full flex-col gap-1 items-center justify-around p-3">
           {derugRequests ? (
             <>{renderDerugRequests}</>
           ) : (
-            <div
-              className="text-base font-mono mt-3 text-white"
-              style={{ filter: "drop-shadow(#2dd4bf 0px 0px 10px)" }}
-            >
+            <div className="text-base font-mono mt-3 text-white">
               There is no derug request yet.
+              {wallet && (
+                <Button
+                  className="bg-transparent w-full font-mono font-bold text-lg mt-5"
+                  style={{
+                    filter: "drop-shadow(#2dd4bf 0px 0px 3px)",
+                    backgroundColor: "rgba(0,183,234,15px)",
+                    fontFamily: "monospace",
+                    borderColor: "rgba(9,194,246)",
+                  }}
+                  onClick={() => openDerugModal(true)}
+                >
+                  Add derug request
+                </Button>
+              )}
             </div>
           )}
         </div>
