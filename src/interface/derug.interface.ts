@@ -20,7 +20,6 @@ export interface IDerugInstruction {
 
 export interface IDerugCollectionNft {
   mint: PublicKey;
-  metadataAddress: PublicKey;
   metadata: Metadata;
   tokenAccount: PublicKey;
 }

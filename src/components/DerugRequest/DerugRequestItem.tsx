@@ -1,16 +1,57 @@
 import { Button, ProgressBar } from "@primer/react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import dayjs from "dayjs";
 import { index } from "mathjs";
 import React, { FC, useContext } from "react";
 import Balancer from "react-wrap-balancer";
 import { IRequest } from "../../interface/collections.interface";
+import {
+  castDerugRequestVote,
+  getSingleDerugRequest,
+} from "../../solana/methods/derug-request";
 import { CollectionContext } from "../../stores/collectionContext";
-
+import { getAllNftsFromCollection } from "../../utilities/nft-fetching";
+import { toast } from "react-hot-toast";
 const DerugRequestItem: FC<{ derugRequest: IRequest; index: number }> = ({
   index,
   derugRequest,
 }) => {
-  const { collection } = useContext(CollectionContext);
+  const {
+    collection,
+    derugRequests,
+    setRequests,
+    collectionDerug,
+    chainCollectionData,
+  } = useContext(CollectionContext);
+
+  const wallet = useWallet();
+
+  const voteToDerugRequest = async () => {
+    try {
+      if (wallet && collectionDerug && chainCollectionData) {
+        const nfts = await getAllNftsFromCollection(
+          wallet,
+          collectionDerug,
+          chainCollectionData
+        );
+
+        await castDerugRequestVote(derugRequest, wallet, collectionDerug, nfts);
+      }
+      const updatedDerugRequest = await getSingleDerugRequest(
+        derugRequest.address
+      );
+      const addedRequests = [...(derugRequests ?? [])];
+      const index = addedRequests.findIndex(
+        (dr) => dr.address.toString() === derugRequest.address.toString()
+      );
+      addedRequests[index] = { ...updatedDerugRequest };
+      setRequests(addedRequests);
+    } catch (error: any) {
+      console.log(error);
+
+      toast.error("Failed to vote:", error.message);
+    }
+  };
 
   return (
     <div
@@ -50,9 +91,15 @@ const DerugRequestItem: FC<{ derugRequest: IRequest; index: number }> = ({
           ))}
       </div>
       <div className="flex items-center">
-        <Button variant="invisible" sx={{ color: "rgba(9,194,246)" }}>
-          Vote
-        </Button>
+        {wallet.publicKey && (
+          <Button
+            variant="invisible"
+            sx={{ color: "rgba(9,194,246)" }}
+            onClick={voteToDerugRequest}
+          >
+            Vote
+          </Button>
+        )}
         <ProgressBar
           progress={derugRequest.voteCount / (collection?.numMints ?? 1)}
           bg="rgba(9,194,246)"
@@ -83,6 +130,9 @@ const DerugRequestItem: FC<{ derugRequest: IRequest; index: number }> = ({
               .slice(0, 10)}
           </span>
         </Balancer>
+        <p className="font-bold font-white-500 font-sm">
+          {derugRequest.voteCount}/{chainCollectionData?.totalSupply}
+        </p>
       </div>
     </div>
   );

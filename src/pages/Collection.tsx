@@ -89,8 +89,6 @@ export const Collections: FC = () => {
 
   useEffect(() => {
     if (collectionFpData.data) {
-      console.log(collectionFpData.data);
-
       setCollectionStats(mapCollectionStats(collectionFpData.data));
     }
   }, [collectionFpData]);

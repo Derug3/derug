@@ -9,6 +9,7 @@ import {
 import {
   IChainCollectionData,
   ICollectionDerugData,
+  ICollectionStats,
   INftListing,
   IRequest,
 } from "../../interface/collections.interface";
@@ -17,9 +18,9 @@ import {
   IDerugInstruction,
   IDerugCollectionNft,
 } from "../../interface/derug.interface";
-import { RPC_CONNECTION } from "../../utilities/utilities";
+import { METAPLEX_PROGRAM, RPC_CONNECTION } from "../../utilities/utilities";
 import { mapUtilityAction } from "../helpers";
-import { derugDataSeed, voteRecordSeed } from "../seeds";
+import { derugDataSeed, metadataSeed, voteRecordSeed } from "../seeds";
 import { sendTransaction } from "../sendTransaction";
 import { derugProgramFactory } from "../utilities";
 import { createDerugDataIx } from "./derug";
@@ -28,6 +29,7 @@ export const createOrUpdateDerugRequest = async (
   wallet: WalletContextState,
   utilities: IUtilityData[],
   collection: IChainCollectionData,
+  collectionStats: ICollectionStats,
   listedNft?: INftListing
 ) => {
   const instructions: TransactionInstruction[] = [];
@@ -35,7 +37,9 @@ export const createOrUpdateDerugRequest = async (
   const derugProgram = derugProgramFactory();
 
   if (!collection.hasActiveDerugData) {
-    instructions.push(await createDerugDataIx(collection, wallet, listedNft));
+    instructions.push(
+      await createDerugDataIx(collection, wallet, collectionStats, listedNft)
+    );
   }
 
   const [derugRequest] = PublicKey.findProgramAddressSync(
@@ -138,10 +142,16 @@ export const castDerugRequestVote = async (
 
   for (const derugNft of derugNfts) {
     const remainingAccounts: AccountMeta[] = [];
+    console.log(derugNft);
 
     const [voteRecordPda] = PublicKey.findProgramAddressSync(
       [derugDataSeed, derugNft.mint.toBuffer(), voteRecordSeed],
       derugProgram.programId
+    );
+
+    const [metadataAddr] = PublicKey.findProgramAddressSync(
+      [metadataSeed, METAPLEX_PROGRAM.toBuffer(), derugNft.mint.toBuffer()],
+      METAPLEX_PROGRAM
     );
 
     remainingAccounts.push({
@@ -158,7 +168,7 @@ export const castDerugRequestVote = async (
     remainingAccounts.push({
       isSigner: false,
       isWritable: false,
-      pubkey: derugNft.metadataAddress,
+      pubkey: metadataAddr,
     });
     remainingAccounts.push({
       isSigner: false,

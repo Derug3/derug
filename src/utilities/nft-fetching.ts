@@ -55,16 +55,17 @@ export const getAllNftsFromCollection = async (
   derug: ICollectionDerugData,
   chainCollectionData: IChainCollectionData
 ) => {
-  const walletNfts = await RPC_CONNECTION.getParsedTokenAccountsByOwner(
-    wallet.publicKey!,
-    { programId: TOKEN_PROGRAM_ID }
-  );
+  const walletNfts = (
+    await RPC_CONNECTION.getParsedTokenAccountsByOwner(wallet.publicKey!, {
+      programId: TOKEN_PROGRAM_ID,
+    })
+  ).value.filter((ta) => ta.account.data.parsed.info.tokenAmount.uiAmount > 0);
 
   const allMetadataAddresses: PublicKey[] = [];
 
   const derugNfts: IDerugCollectionNft[] = [];
 
-  for (const walletNft of walletNfts.value) {
+  for (const walletNft of walletNfts) {
     const [metadataAddress] = PublicKey.findProgramAddressSync(
       [
         metadataSeed,
@@ -91,9 +92,8 @@ export const getAllNftsFromCollection = async (
       ) {
         derugNfts.push({
           metadata,
-          metadataAddress: metadataAddressesBatch[index],
           mint: metadata.mint,
-          tokenAccount: walletNfts.value.find(
+          tokenAccount: walletNfts.find(
             (v) => v.account.data.parsed.info.mint === metadata.mint.toString()
           )?.pubkey!,
         });

@@ -25,7 +25,7 @@ export const AddDerugRequst: FC<{
     chainCollectionData,
     activeListings,
     setCollectionDerug,
-    setRequests,
+    collectionStats,
     derugRequests,
   } = useContext(CollectionContext);
 
@@ -73,7 +73,7 @@ export const AddDerugRequst: FC<{
 
   const submitRequest = async () => {
     try {
-      if (wallet && chainCollectionData && utility) {
+      if (wallet && chainCollectionData && utility && collectionStats) {
         const requestAddress = await createOrUpdateDerugRequest(
           wallet,
           utility.map((ut) => {
@@ -84,6 +84,7 @@ export const AddDerugRequst: FC<{
             };
           }),
           chainCollectionData,
+          collectionStats,
           activeListings ? activeListings[0] : undefined
         );
         const addedRequests = [...(derugRequests ?? [])];
