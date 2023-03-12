@@ -22,7 +22,11 @@ export const selectStyles = {
     };
   },
   menu(base: any, props: any) {
-    return { ...base, border: "1px solid cyan", borderRadius: "4px" };
+    return {
+      ...base,
+      border: "1px solid rgba(9, 194, 246, 0.5)",
+      borderRadius: "4px",
+    };
   },
   menuList(base: any, props: any) {
     return {
@@ -34,9 +38,9 @@ export const selectStyles = {
   },
   option(base: any, props: any) {
     return {
-      ...base,
       ":hover": {
-        background: "#161b22",
+        width: "100%",
+        background: "rgba(9, 194, 246, 0.5)",
         cursor: "pointer",
       },
     };
