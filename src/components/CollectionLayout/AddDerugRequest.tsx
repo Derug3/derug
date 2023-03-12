@@ -1,7 +1,15 @@
 import { Box, Button, Dialog, FormControl, TextInput } from "@primer/react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { motion } from "framer-motion";
-import { FC, useRef, useState } from "react";
+import { FC, useContext, useRef, useState } from "react";
 import { IRequest, IUtility } from "../../interface/collections.interface";
+import { UtilityAction } from "../../interface/derug.interface";
+import { getCollectionDerugData } from "../../solana/methods/derug";
+import {
+  createOrUpdateDerugRequest,
+  getSingleDerugRequest,
+} from "../../solana/methods/derug-request";
+import { CollectionContext } from "../../stores/collectionContext";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 
 export const AddDerugRequst: FC<{
@@ -9,15 +17,25 @@ export const AddDerugRequst: FC<{
   setIsOpen: (isOpen: boolean) => void;
   derugRequests: IRequest[] | undefined;
   setDerugRequest: (derugRequest: IRequest[] | undefined) => void;
-}> = ({ isOpen, setIsOpen, derugRequests, setDerugRequest }) => {
-  const [title, setTitle] = useState("");
+}> = ({ isOpen, setIsOpen }) => {
   const returnFocusRef = useRef(null);
   const [utility, setUtility] = useState<IUtility[]>();
 
+  const {
+    chainCollectionData,
+    activeListings,
+    setCollectionDerug,
+    setRequests,
+    derugRequests,
+  } = useContext(CollectionContext);
+
+  const wallet = useWallet();
+
   const addUtility = () => {
     const newElement = {
-      name: "",
+      title: "",
       description: "",
+      isActive: true,
     };
     const oldValue = utility || [];
     setUtility([...oldValue, newElement]);
@@ -25,7 +43,7 @@ export const AddDerugRequst: FC<{
 
   const handleUtilityNameChange = (value: string, index: number) => {
     if (!utility) return;
-    const updatedTodo = { ...utility[index], name: value };
+    const updatedTodo = { ...utility[index], title: value };
     const newUtility = [
       ...utility.slice(0, index),
       updatedTodo,
@@ -53,14 +71,34 @@ export const AddDerugRequst: FC<{
     setUtility(temp);
   };
 
-  const submitRequest = () => {
-    const newElement: IRequest = {
-      title: title,
-      utility: utility!,
-    };
-    const oldValue = derugRequests || [];
-    setDerugRequest([...oldValue, newElement]);
-    setIsOpen(false);
+  const submitRequest = async () => {
+    try {
+      if (wallet && chainCollectionData && utility) {
+        const requestAddress = await createOrUpdateDerugRequest(
+          wallet,
+          utility.map((ut) => {
+            return {
+              action: UtilityAction.Add,
+              description: ut.description,
+              title: ut.title,
+            };
+          }),
+          chainCollectionData,
+          activeListings ? activeListings[0] : undefined
+        );
+        const addedRequests = [...(derugRequests ?? [])];
+        addedRequests.push(await getSingleDerugRequest(requestAddress));
+      }
+      if (chainCollectionData && !chainCollectionData?.hasActiveDerugData) {
+        const derugData = await getCollectionDerugData(
+          chainCollectionData?.derugDataAddress
+        );
+        setCollectionDerug(derugData);
+      }
+      setIsOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -81,13 +119,13 @@ export const AddDerugRequst: FC<{
         <Dialog.Header id="header-id">Derug request</Dialog.Header>
         <Box p={3} className="flex justify-center flex-col gap-3">
           <FormControl sx={{ display: "flex" }}>
-            <FormControl.Label>Request name</FormControl.Label>
+            <FormControl.Label>Wallet</FormControl.Label>
             <div className="flex w-full">
               <TextInput
                 placeholder="title"
-                value={title}
+                value={wallet.publicKey?.toString()}
                 sx={{ width: "100%", marginRight: "10px" }}
-                onChange={(e) => setTitle(e.target.value)}
+                disabled
               />
               <Button
                 size="large"
@@ -105,7 +143,7 @@ export const AddDerugRequst: FC<{
                 <div className="flex w-full">
                   <TextInput
                     placeholder="Utility"
-                    value={u.name}
+                    value={u.title}
                     sx={{ width: "100%" }}
                     onChange={(e) => handleUtilityNameChange(e.target.value, i)}
                   />

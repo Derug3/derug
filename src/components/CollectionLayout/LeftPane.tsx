@@ -1,42 +1,32 @@
 import { Box, Text } from "@primer/react";
 import { motion } from "framer-motion";
 import { FC } from "react";
-import { IListed } from "../../interface/collections.interface";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
+import CollectionData from "../CollectionData/CollectionData";
 import ListedNfts from "../ListedNfts/ListedNfts";
 
 export const LeftPane: FC<{
   selectedInfo: string;
-  description?: string;
-  parentRef: any;
-}> = ({ selectedInfo, description, parentRef }) => {
-  return (
-    <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS}>
-      <motion.div
-        variants={FADE_DOWN_ANIMATION_VARIANTS}
-        className="pl-10 sticky"
-      >
-        <div className="">
-          {(selectedInfo === "description" || selectedInfo === "") && (
-            <Text
-              id="description"
-              as="p"
-              sx={{ p: 2 }}
-              className="text-white text-left"
-            >
-              {description}
-            </Text>
-          )}
-          {selectedInfo === "listed" && (
-            <Box
-              className="flex flex-row flex-wrap gap-1"
-              style={{ overflow: "auto" }}
-            >
-              <ListedNfts parentRef={parentRef} />
-            </Box>
-          )}
-        </div>
-      </motion.div>
+}> = ({ selectedInfo }) => (
+  <motion.div
+    variants={FADE_DOWN_ANIMATION_VARIANTS}
+    style={{ overflow: "auto" }}
+  >
+    <motion.div
+      variants={FADE_DOWN_ANIMATION_VARIANTS}
+      className="pl-10 sticky"
+    >
+      <div className="">
+        {(selectedInfo === "description" || selectedInfo === "") && (
+          <Text
+            id="description"
+            as="p"
+            sx={{ p: 2, maxHeight: "32em", overflow: "none" }}
+          >
+            <CollectionData />
+          </Text>
+        )}
+      </div>
     </motion.div>
-  );
-};
+  </motion.div>
+);

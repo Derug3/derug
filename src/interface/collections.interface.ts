@@ -1,4 +1,5 @@
-import { ListingSource } from "../enums/collections.enums";
+import { PublicKey } from "@solana/web3.js";
+import { DerugStatus, ListingSource } from "../enums/collections.enums";
 
 export interface ICollectionData {
   symbol: string;
@@ -7,18 +8,22 @@ export interface ICollectionData {
   image: string;
   twitter?: string;
   discord?: string;
+  description: string;
   isFlagged: boolean;
   type?: string[];
   numMints?: number;
 }
 
 export interface IRequest {
-  title: string;
+  derugger: PublicKey;
+  createdAt: number;
+  voteCount: number;
   utility: IUtility[];
 }
 export interface IUtility {
-  name: string;
+  title: string;
   description: string;
+  isActive: boolean;
 }
 export interface IListed {
   auctionHouse: string;
@@ -71,10 +76,33 @@ export interface INftListing {
   name: string;
 }
 
-// export interface IListedNft {
-//   mint: string;
-//   soruce: ListingSource;
-//   name: string;
-//   imageUrl: string;
-//   price: number;
-// }
+export interface IChainCollectionData {
+  slug: string;
+  rugUpdateAuthority: string;
+  collectionMint: string;
+  derugDataAddress: PublicKey;
+  totalSupply: number;
+  hasActiveDerugData: boolean;
+}
+
+export interface ICollectionRecentActivities {
+  dateExecuted: number;
+  price: number;
+  image: string;
+  mint: string;
+  rarityRank: number;
+  source: ListingSource;
+  txId: string;
+}
+
+export interface ICollectionDerugData {
+  collection: PublicKey;
+  totalSupply: number;
+  createdAt: number;
+  newCollection: PublicKey | null;
+  winningRequest: PublicKey | null;
+  votingStartedAt: number;
+  totalReminted: number;
+  totalSuggestionCount: number;
+  status: DerugStatus;
+}

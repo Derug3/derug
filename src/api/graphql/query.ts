@@ -199,6 +199,95 @@ export const ACTIVE_LISTINGS_QUERY = gql`
   }
 `;
 
+export const RECENT_ACTIVITIES_QUERY = gql`
+  query RecentTransactions(
+    $slug: String!
+    $filters: TransactionsFilters
+    $cursor: TransactionsCursorInput
+    $limit: Int
+  ) {
+    recentTransactions(
+      slug: $slug
+      filters: $filters
+      cursor: $cursor
+      limit: $limit
+    ) {
+      txs {
+        ...ReducedLinkedTx
+        __typename
+      }
+      page {
+        endCursor {
+          txAt
+          txKey
+          __typename
+        }
+        hasMore
+        __typename
+      }
+      __typename
+    }
+  }
+
+  fragment ReducedLinkedTx on LinkedTransactionTV2 {
+    tx {
+      ...ReducedParsedTx
+      __typename
+    }
+    mint {
+      ...ReducedMint
+      __typename
+    }
+    __typename
+  }
+
+  fragment ReducedParsedTx on ParsedTransaction {
+    source
+    txKey
+    txId
+    grossAmount
+    grossAmountUnit
+    sellerId
+    buyerId
+    txAt
+    txMetadata {
+      auctionHouse
+      urlId
+      sellerRef
+      tokenAcc
+      __typename
+    }
+    poolOnchainId
+    __typename
+  }
+
+  fragment ReducedMint on LinkedTxMintTV2 {
+    onchainId
+    name
+    imageUri
+    metadataUri
+    metadataFetchedAt
+    sellRoyaltyFeeBPS
+    tokenStandard
+    tokenEdition
+    attributes
+    rarityRankTT
+    rarityRankTTStat
+    rarityRankHR
+    rarityRankTeam
+    rarityRankStat
+    rarityRankTN
+    lastSale {
+      price
+      priceUnit
+      txAt
+      __typename
+    }
+    accState
+    __typename
+  }
+`;
+
 export const MINTS_QUERY = gql`
   query Mints($tokenMints: [String!]!) {
     mints(tokenMints: $tokenMints) {

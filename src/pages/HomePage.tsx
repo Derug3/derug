@@ -106,8 +106,6 @@ const HomePage = () => {
         margin: "auto",
         display: "flex",
         flexDirection: "column",
-        gap: "6em",
-        marginTop: "80px",
       }}
     >
       <Box
@@ -125,9 +123,16 @@ const HomePage = () => {
             Getting rugged collections back to life
           </Balancer>
         </motion.h1>
-        <Box sx={{ width: "50%", margin: "auto", position: "relative" }}>
-          {renderSelect}
-        </Box>
+      </Box>
+      <Box
+        sx={{
+          width: "50%",
+          margin: "auto",
+          position: "relative",
+          marginBottom: "120px",
+        }}
+      >
+        {renderSelect}
       </Box>
       {!loading && <CollectionsSlider />}
     </Box>
