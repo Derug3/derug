@@ -13,12 +13,12 @@ export const AddDerugRequst: FC<{
   setIsOpen: (isOpen: boolean) => void;
   derugRequests: IRequest[] | undefined;
   setDerugRequest: (derugRequest: IRequest[] | undefined) => void;
-}> = ({ isOpen, setIsOpen, derugRequests, setDerugRequest }) => {
-  const [title, setTitle] = useState("");
+}> = ({ isOpen, setIsOpen }) => {
   const returnFocusRef = useRef(null);
   const [utility, setUtility] = useState<IUtility[]>();
 
-  const { chainCollectionData, activeListings } = useContext(CollectionContext);
+  const { chainCollectionData, activeListings, setCollectionDerug } =
+    useContext(CollectionContext);
 
   const wallet = useWallet();
 
@@ -78,7 +78,11 @@ export const AddDerugRequst: FC<{
           activeListings ? activeListings[0] : undefined
         );
       }
-    } catch (error) {}
+      if (!chainCollectionData?.hasActiveDerugData) {
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -99,13 +103,13 @@ export const AddDerugRequst: FC<{
         <Dialog.Header id="header-id">Derug request</Dialog.Header>
         <Box p={3} className="flex justify-center flex-col gap-3">
           <FormControl sx={{ display: "flex" }}>
-            <FormControl.Label>Request name</FormControl.Label>
+            <FormControl.Label>Wallet</FormControl.Label>
             <div className="flex w-full">
               <TextInput
                 placeholder="title"
-                value={title}
+                value={wallet.publicKey?.toString()}
                 sx={{ width: "100%", marginRight: "10px" }}
-                onChange={(e) => setTitle(e.target.value)}
+                disabled
               />
               <Button
                 size="large"

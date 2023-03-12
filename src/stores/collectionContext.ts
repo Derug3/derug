@@ -6,6 +6,7 @@ import {
   ICollectionRecentActivities,
   ICollectionStats,
   INftListing,
+  IRequest,
   ITrait,
 } from "../interface/collections.interface";
 
@@ -17,6 +18,8 @@ export interface CollectionContext {
   chainCollectionData: IChainCollectionData | undefined;
   recentActivities: ICollectionRecentActivities[] | undefined;
   collectionDerug: ICollectionDerugData | undefined;
+  derugRequests: IRequest[] | undefined;
+  setRequests: (requests: IRequest[]) => void;
   setCollectionDerug: (derug: ICollectionDerugData) => void;
   setRecentActivities: (activities: ICollectionRecentActivities[]) => void;
   setCollection: (collection: ICollectionData) => void;

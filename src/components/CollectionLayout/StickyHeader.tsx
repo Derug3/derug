@@ -9,12 +9,14 @@ import magicEdenLogo from "../../assets/magicEdenLogo.png";
 import HeadingItem from "./HeadingItem";
 import { FC } from "react";
 import { DerugStatus } from "../../enums/collections.enums";
+import { WalletContextState } from "@solana/wallet-adapter-react";
 
 export const StickyHeader: FC<{
   openDerugModal: (value: boolean) => void;
   collection?: ICollectionStats;
   collectionDerug?: ICollectionDerugData;
-}> = ({ openDerugModal, collection, collectionDerug }) => (
+  wallet: WalletContextState;
+}> = ({ openDerugModal, collection, collectionDerug, wallet }) => (
   <div
     className="flex w-full self-start bg-gradient-to-r 
   font-mono text-gray-700 leading-6 justify-between px-10 py-2 border-none mb-10"
@@ -86,20 +88,22 @@ export const StickyHeader: FC<{
       )}
     </Box>
     <Box className="flex flex-row gap-3 items-center">
-      <div className="flex align-center">
-        <div
-          className="cursor-pointer font-mono border-y-4  text-white leading-6 text-lg py-2 border-none"
-          onClick={() => openDerugModal(true)}
-          style={{
-            filter: "drop-shadow(#2dd4bf 0px 0px 15px)",
-            backgroundColor: "rgba(0,183,234,15px)",
-            fontFamily: "monospace",
-          }}
-        >
-          {" "}
-          Add derug request
+      {wallet && (
+        <div className="flex align-center">
+          <div
+            className="cursor-pointer font-mono border-y-4  text-white leading-6 text-lg py-2 border-none"
+            onClick={() => openDerugModal(true)}
+            style={{
+              filter: "drop-shadow(#2dd4bf 0px 0px 15px)",
+              backgroundColor: "rgba(0,183,234,15px)",
+              fontFamily: "monospace",
+            }}
+          >
+            {" "}
+            Add derug request
+          </div>
         </div>
-      </div>
+      )}
       <AiOutlineStar className="text-4xl cursor-pointer" />
       <img
         src={tensorLogo}
