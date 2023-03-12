@@ -30,15 +30,13 @@ import {
 import { Box } from "@primer/react";
 import { CollectionContext } from "../stores/collectionContext";
 import { getSingleCollection } from "../api/collections.api";
-import { getCollectionChainData } from "../solana/collections";
 import { HeaderTabs } from "../components/CollectionLayout/HeaderTabs";
-import { Proposals } from "../components/CollectionLayout/Proposals";
 import { AddDerugRequst } from "../components/CollectionLayout/AddDerugRequest";
-import { collectionsStore } from "../stores/collectionsStore";
 import { getCollectionDerugData } from "../solana/methods/derug";
 import { getDummyCollectionData } from "../solana/dummy";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { getAllDerugRequest } from "../solana/methods/derug-request";
+import DerugRequest from "../components/DerugRequest/DerugRequest";
 
 export const Collections: FC = () => {
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
@@ -211,7 +209,7 @@ export const Collections: FC = () => {
           </Box>
         </Box>
       </Box>
-      <Proposals requests={derugRequests} />
+      <DerugRequest />
     </CollectionContext.Provider>
   );
 };
