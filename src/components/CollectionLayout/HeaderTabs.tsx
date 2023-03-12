@@ -47,13 +47,6 @@ export const HeaderTabs: FC<{
           >
             DETAILS
           </TabNav.Link>
-
-          <TabNav.Link
-            onClick={() => setSelectedInfo("listed")}
-            sx={getNavStyling(selectedInfo, "listed")}
-          >
-            NFTS
-          </TabNav.Link>
         </TabNav>
       </div>
       <div className="w-1/2">
@@ -65,6 +58,12 @@ export const HeaderTabs: FC<{
             position: "sticky",
           }}
         >
+          <TabNav.Link
+            onClick={() => setSelectedData("listed")}
+            sx={getNavStyling(selectedData, "listed")}
+          >
+            NFTS
+          </TabNav.Link>
           {traits && traits.length > 0 && (
             <TabNav.Link
               onClick={() => setSelectedData("traits")}

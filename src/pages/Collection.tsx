@@ -47,7 +47,7 @@ export const Collections: FC = () => {
   const [derugRequestVisible, setDerugRequestVisible] = useState(false);
   const [traits, setTraits] = useState<ITrait[]>();
   const [selectedInfo, setSelectedInfo] = useState("description");
-  const [selectedData, setSelectedData] = useState("traits");
+  const [selectedData, setSelectedData] = useState("listed");
   const [basicCollectionData, setBasicCollectionData] =
     useState<ICollectionData>();
   const [listings, setListings] = useState<INftListing[]>();
@@ -194,7 +194,7 @@ export const Collections: FC = () => {
                 overflow: "none",
               }}
             >
-              <LeftPane parentRef={boxRef} selectedInfo={selectedInfo} />
+              <LeftPane selectedInfo={selectedInfo} />
             </div>
             <Box
               sx={{
@@ -204,6 +204,7 @@ export const Collections: FC = () => {
             >
               <RightPane
                 selectedData={selectedData}
+                parentRef={boxRef}
                 traits={traits}
                 iframeRef={undefined}
               />
