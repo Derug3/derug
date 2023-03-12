@@ -5,25 +5,46 @@ import {
   FormControl,
   ProgressBar,
   TextInput,
+  Tooltip,
 } from "@primer/react";
 import { WalletContextState } from "@solana/wallet-adapter-react";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import { FC, useContext, useRef, useState } from "react";
 import Balancer from "react-wrap-balancer";
-import { IRequest } from "../../interface/collections.interface";
+import { DerugStatus } from "../../enums/collections.enums";
+import {
+  ICollectionDerugData,
+  IRequest,
+} from "../../interface/collections.interface";
 import { CollectionContext } from "../../stores/collectionContext";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 
 export const Proposals: FC<{
   requests?: IRequest[];
   wallet: WalletContextState;
+  collectionDerug?: ICollectionDerugData;
   openDerugModal: (value: boolean) => void;
-}> = ({ requests, wallet, openDerugModal }) => {
+}> = ({ requests, wallet, openDerugModal, collectionDerug }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentRequest, setCurrentRequest] = useState<IRequest>();
   const returnFocusRef = useRef(null);
   const { collection } = useContext(CollectionContext);
+
+  const showVoteButton = () => {
+    return (
+      collectionDerug?.status === DerugStatus.Initialized ||
+      collectionDerug?.status === DerugStatus.Voting
+    );
+  };
+
+  function showClaimButton() {
+    return collectionDerug?.status === DerugStatus.Completed;
+  }
+
+  function showRemintButton() {
+    return collectionDerug?.status === DerugStatus.Reminting;
+  }
 
   return (
     <motion.div
@@ -45,11 +66,11 @@ export const Proposals: FC<{
         {currentRequest?.derugger.toString()}
       </Dialog>
       <div className="w-full">
-        <div className="flex flex-col gap-1 items-center justify-center pl-1 pr-3 py-3 ">
+        <div className="flex w-full flex-col gap-1 items-center justify-around p-3">
           {requests ? (
             requests.map((el, index) => (
               <div
-                className="flex w-full items-center justify-around py-2"
+                className="flex w-full items-center py-2"
                 style={{
                   borderRadius: "4px",
                   padding: "10px",
@@ -71,31 +92,61 @@ export const Proposals: FC<{
                   </Balancer>
                   {el.utility &&
                     el.utility.map((u, i) => (
-                      <div
-                        className="text-sm font-mono"
-                        style={{
-                          borderRightWidth:
-                            i !== el.utility.length - 1 ? "1px" : "0px",
-                          paddingRight:
-                            i !== el.utility.length - 1 ? "1em" : "0px",
-                          color: "rgb(9, 194, 246)",
-                          filter: "drop-shadow(white 0px 0px 3px)",
+                      <Tooltip
+                        sx={{
+                          "::after": {
+                            fontSize: "1em",
+                            backgroundColor: "#282C34",
+                          },
                         }}
+                        direction="e"
+                        aria-label={u.description}
+                        noDelay={true}
                       >
-                        {u.title}
-                      </div>
+                        <div
+                          className="text-sm font-mono cursor-help"
+                          style={{
+                            borderRightWidth:
+                              i !== el.utility.length - 1 ? "1px" : "0px",
+                            paddingRight:
+                              i !== el.utility.length - 1 ? "1em" : "0px",
+                            color: "rgb(9, 194, 246)",
+                            filter: "drop-shadow(white 0px 0px 3px)",
+                          }}
+                        >
+                          {" "}
+                          {u.title}
+                        </div>
+                      </Tooltip>
                     ))}
                 </div>
-                <div className="flex items-center justify-start w-1/2">
-                  <Button variant="invisible" sx={{ color: "rgba(9,194,246)" }}>
-                    Vote
-                  </Button>
-                  <Button variant="invisible" sx={{ color: "rgba(9,194,246)" }}>
-                    Claim victory
-                  </Button>
-                  <Button variant="invisible" sx={{ color: "rgba(9,194,246)" }}>
-                    Remint
-                  </Button>
+                <div className="flex items-center justify-end w-1/2">
+                  {showVoteButton() && (
+                    <Button
+                      variant="invisible"
+                      sx={{ color: "rgba(9,194,246)" }}
+                    >
+                      Vote
+                    </Button>
+                  )}
+
+                  {showClaimButton() && (
+                    <Button
+                      variant="invisible"
+                      sx={{ color: "rgba(9,194,246)" }}
+                    >
+                      Claim victory
+                    </Button>
+                  )}
+                  {showRemintButton() && (
+                    <Button
+                      variant="invisible"
+                      sx={{ color: "rgba(9,194,246)" }}
+                    >
+                      Remint
+                    </Button>
+                  )}
+
                   <ProgressBar
                     progress={el.voteCount / (collection?.numMints ?? 1)}
                     bg="rgba(9,194,246)"

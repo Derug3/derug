@@ -173,6 +173,8 @@ export const Collections: FC = () => {
             <StickyHeader
               collection={collectionStats}
               collectionDerug={collectionDerug}
+              wallet={wallet}
+              openDerugModal={setDerugRequestVisible}
             />
             <HeaderTabs
               selectedInfo={selectedInfo}
@@ -218,6 +220,7 @@ export const Collections: FC = () => {
       <Proposals
         openDerugModal={setDerugRequestVisible}
         wallet={wallet}
+        collectionDerug={collectionDerug}
         requests={derugRequests}
       />
     </CollectionContext.Provider>
