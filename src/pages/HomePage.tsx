@@ -107,6 +107,7 @@ const HomePage = () => {
         display: "flex",
         flexDirection: "column",
         gap: "6em",
+        marginTop: "80px",
       }}
     >
       <Box
