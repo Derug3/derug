@@ -101,7 +101,6 @@ const HomePage = () => {
         margin: "auto",
         display: "flex",
         flexDirection: "column",
-        gap: "6em",
       }}
     >
       <Box
@@ -121,7 +120,14 @@ const HomePage = () => {
           <Balancer>☀️</Balancer>
         </motion.h1>
       </Box>
-      <Box sx={{ width: "50%", margin: "auto", position: "relative" }}>
+      <Box
+        sx={{
+          width: "50%",
+          margin: "auto",
+          position: "relative",
+          marginBottom: "120px",
+        }}
+      >
         {renderSelect}
       </Box>
       {!loading && <CollectionsSlider />}
