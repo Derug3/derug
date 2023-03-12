@@ -109,9 +109,10 @@ const ListingsGraph = () => {
         collection!.symbol,
         firstBatch.data.recentTransactions.page.endCursor.txAt
       );
-      setRecentActivities(
-        splitTimestamps(collectionRecentListings.filter((v) => v.price > 0))
-      );
+      const recentAct = splitTimestamps(collectionRecentListings).map((ra) => {
+        return ra.sort((a, b) => a.price - b.price)[0];
+      });
+      setRecentActivities(recentAct);
     } catch (error) {
       console.log(error);
     }

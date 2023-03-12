@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { ICollectionRecentActivities } from "../interface/collections.interface";
 
 export const splitTimestamps = (
@@ -5,19 +6,17 @@ export const splitTimestamps = (
 ) => {
   const result: ICollectionRecentActivities[][] = [];
 
-  for (let month = 1; month <= 12; month++) {
-    const filteredTimestamps = recentCollections.filter((value) => {
-      const date = new Date(value.dateExecuted * 1000);
-      return date.getMonth() + 1 === month;
-    });
-    if (filteredTimestamps.length > 0) {
-      result.push(filteredTimestamps);
+  for (let i = 0; i < recentCollections.length; i++) {
+    let j = i + 1;
+    while (
+      dayjs.unix(recentCollections[j].dateExecuted) <
+      dayjs.unix(recentCollections[i].dateExecuted).add(1, "month")
+    ) {
+      j++;
     }
+    result.push(recentCollections.slice(i, j));
+    i = j;
   }
 
-  const mappedValues: ICollectionRecentActivities[] = result.map((arr) => {
-    return arr.sort((a, b) => a.price - b.price)[0];
-  });
-
-  return mappedValues;
+  return result;
 };
