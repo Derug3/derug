@@ -1,3 +1,5 @@
+import { ListingSource } from "../enums/collections.enums";
+
 export interface ICollectionData {
   symbol: string;
   id: string;
@@ -10,6 +12,14 @@ export interface ICollectionData {
   numMints?: number;
 }
 
+export interface IRequest {
+  title: string;
+  utility: IUtility[];
+}
+export interface IUtility {
+  name: string;
+  description: string;
+}
 export interface IListed {
   auctionHouse: string;
   price: number;
@@ -50,3 +60,21 @@ export interface ICollectionStats {
   royalty: number;
   firstListed: Date;
 }
+
+export interface INftListing {
+  price: number;
+  owner: string;
+  mint: string;
+  soruce: ListingSource;
+  imageUrl: string;
+  txAt: number;
+  name: string;
+}
+
+// export interface IListedNft {
+//   mint: string;
+//   soruce: ListingSource;
+//   name: string;
+//   imageUrl: string;
+//   price: number;
+// }

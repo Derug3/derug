@@ -1,8 +1,11 @@
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import dayjs from "dayjs";
 import { divide, multiply, round } from "mathjs";
+import { ListingSource } from "../../enums/collections.enums";
 import {
   ICollectionData,
   ICollectionStats,
+  INftListing,
   ITrait,
   ITraitInfo,
 } from "../../interface/collections.interface";
@@ -50,15 +53,48 @@ export const mapTraitsQuery = (
   return trait;
 };
 
-export const mapCollectionStats = (data: any): ICollectionStats => {
+export const mapCollectionStats = (data: any): ICollectionStats | undefined => {
   const dataInfo = data.instrumentTV2;
-  return {
-    firstListed: dayjs.unix(dataInfo.firstListDate).toDate(),
-    marketCap: dataInfo.statsOverall.marketCap,
-    numListed: dataInfo.statsOverall.numListed,
-    numMints: dataInfo.statsOverall.numMints,
-    fp: dataInfo.statsOverall.floorPrice,
-    volume24H: dataInfo.statsOverall.floor24h,
-    royalty: dataInfo.sellRoyaltyFeeBPS / 100,
-  };
+  if (dataInfo)
+    return {
+      firstListed: dayjs.unix(dataInfo.firstListDate).toDate(),
+      marketCap: dataInfo.statsOverall.marketCap,
+      numListed: dataInfo.statsOverall.numListed,
+      numMints: dataInfo.statsOverall.numMints,
+      fp: dataInfo.statsOverall.floorPrice,
+      volume24H: dataInfo.statsOverall.floor24h,
+      royalty: dataInfo.sellRoyaltyFeeBPS / 100,
+    };
+};
+
+export const mapCollectionListings = (data: any): INftListing[] => {
+  const nftListings: INftListing[] = [];
+
+  data.activeListings.txs.forEach((p: any) => {
+    nftListings.push({
+      mint: p.mint.onchainId,
+      owner: p.tx.sellerId,
+      price: divide(+p.tx.grossAmount, LAMPORTS_PER_SOL),
+      soruce: p.tx.source as ListingSource,
+      imageUrl: p.mint.imageUri,
+      txAt: p.tx.txAt,
+      name: p.mint.name,
+    });
+  });
+
+  return nftListings;
+};
+
+export const mapNextData = (data: any) => {
+  if (data.activeListings.page.endCursor)
+    return {
+      endCursor: data.activeListings.page.endCursor.txKey,
+      hasMore: data.activeListings.page.hasMore,
+    };
+  else {
+    return {
+      hasMore: false,
+      endCursor: undefined,
+    };
+  }
 };

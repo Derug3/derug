@@ -10,6 +10,7 @@ import Balancer from "react-wrap-balancer";
 import { motion } from "framer-motion";
 import { collectionsStore } from "../stores/collectionsStore";
 import { useNavigate } from "react-router";
+import { selectStyles } from "../utilities/styles";
 const HomePage = () => {
   const { setCollections, collections } = collectionsStore.getState();
   const [searchValue, setSearchValue] = useState<string>();
@@ -35,6 +36,7 @@ const HomePage = () => {
       toggleSearchLoading(true);
       setSearchValue(e);
     } else {
+      toggleSearchLoading(false);
       setFilteredCollections(collections);
     }
   };
@@ -42,6 +44,8 @@ const HomePage = () => {
   const searchByName = async () => {
     try {
       const collectionsByName = await getByNameOrSlug(name!);
+      console.log(collectionsByName, "collectionsByName");
+
       setFilteredCollections(collectionsByName);
       toggleSearchLoading(false);
     } catch (error) {
@@ -68,8 +72,11 @@ const HomePage = () => {
         placeholder="Search rugged collections"
         isLoading={searchLoading}
         onInputChange={handleSearch}
+        styles={selectStyles}
         options={filteredCollections}
         onChange={(e) => navigate(`collection?symbol=${e.symbol}`)}
+        getOptionLabel={(option) => option.name}
+        getOptionValue={(option) => option.symbol}
         formatOptionLabel={(e: any) => (
           <Box
             sx={{
@@ -82,7 +89,7 @@ const HomePage = () => {
             }}
           >
             <img
-              style={{ borderRadius: "50%", width: "2.5em" }}
+              style={{ borderRadius: "50%", width: "2.5em", height: "2.5em" }}
               src={e.image}
             />
             <Text as={"h3"}>{e.name}</Text>
@@ -100,6 +107,7 @@ const HomePage = () => {
         display: "flex",
         flexDirection: "column",
         gap: "6em",
+        marginTop: "80px",
       }}
     >
       <Box
@@ -113,14 +121,13 @@ const HomePage = () => {
           className="py-5 align-center"
           variants={FADE_DOWN_ANIMATION_VARIANTS}
         >
-          <Balancer className="w-full bg-gradient-to-br from-black to-stone-200 bg-clip-text text-center font-display  font-bold tracking-[-0.02em] text-transparent drop-shadow-sm md:text-2xl align-center font-mono">
+          <Balancer className="w-full animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 text-5xl font-black bg-clip-text text-center font-display  tracking-[-0.02em] text-transparent drop-shadow-sm md:text-2xl align-center font-mono animate-[wiggle_1s_ease-in-out_infinite]">
             Getting rugged collections back to life
           </Balancer>
-          <Balancer>☀️</Balancer>
         </motion.h1>
-      </Box>
-      <Box sx={{ width: "50%", margin: "auto", position: "relative" }}>
-        {renderSelect}
+        <Box sx={{ width: "50%", margin: "auto", position: "relative" }}>
+          {renderSelect}
+        </Box>
       </Box>
       {!loading && <CollectionsSlider />}
     </Box>

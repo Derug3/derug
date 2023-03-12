@@ -13,7 +13,7 @@ const Traits: FC<{ trait: ITrait }> = ({ trait }) => {
             background: "rgb(9, 194, 246,.15)",
           }}
         >
-          <img src={t.image} className="rounded-[4px] w-20" />
+          <img src={t.image} className="rounded-[4px] w-16" />
           <Box className="flex flex-col items-center justify-center">
             <Text className="text-sm font-semibold">{t.name}</Text>
             <Text

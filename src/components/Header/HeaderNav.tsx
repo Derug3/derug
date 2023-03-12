@@ -13,7 +13,7 @@ const HeaderNav: FC = () => {
   const navigate = useNavigate();
 
   return (
-    <Header sx={{ p: 0, background: "#f8f8f5", padding: "0.5em 1.5em" }}>
+    <Header sx={{ p: 0, padding: "0.5em 1.5em" }}>
       <Header.Item onClick={() => navigate(HOME)}>
         <img
           src={derugPfp}
@@ -21,7 +21,7 @@ const HeaderNav: FC = () => {
             width: "12em",
             paddingLeft: "1em",
             cursor: "pointer",
-            filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 15px)",
+            filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 1px)",
           }}
         />
       </Header.Item>
@@ -30,7 +30,7 @@ const HeaderNav: FC = () => {
         <motion.button className="font-mono" {...FADE_IN_ANIMATION_SETTINGS}>
           <WalletMultiButton
             style={{
-              backgroundColor: "rgba(0,183,234,15px)",
+              // backgroundColor: "rgba(0,183,234,15px)",
               fontSize: "1em",
               fontFamily: "monospace",
               filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 15px)",
