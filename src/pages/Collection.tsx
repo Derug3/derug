@@ -41,7 +41,6 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { getAllDerugRequest } from "../solana/methods/derug-request";
 
 export const Collections: FC = () => {
-  const [requests, setRequests] = useState<IRequest[]>();
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
 
   const [derugRequestVisible, setDerugRequestVisible] = useState(false);
@@ -158,7 +157,7 @@ export const Collections: FC = () => {
         collectionDerug,
         setCollectionDerug,
         derugRequests,
-        setRequests,
+        setRequests: setDerugRequests,
       }}
     >
       <Box className="overflow-y-auto">
@@ -167,8 +166,8 @@ export const Collections: FC = () => {
           <AddDerugRequst
             isOpen={derugRequestVisible}
             setIsOpen={setDerugRequestVisible}
-            derugRequests={requests}
-            setDerugRequest={setRequests}
+            derugRequests={derugRequests}
+            setDerugRequest={setDerugRequests}
           />
           <Box className="sticky top-0 grid">
             <StickyHeader
@@ -219,7 +218,7 @@ export const Collections: FC = () => {
       <Proposals
         openDerugModal={setDerugRequestVisible}
         wallet={wallet}
-        requests={requests}
+        requests={derugRequests}
       />
     </CollectionContext.Provider>
   );
