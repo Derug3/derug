@@ -6,18 +6,23 @@ import {
 import { PublicKey } from "@solana/web3.js";
 import { derugDataSeed, metadataSeed } from "../seeds";
 import { derugProgramFactory } from "../utilities";
-import { AnchorWallet } from "@solana/wallet-adapter-react";
+import { AnchorWallet, WalletContextState } from "@solana/wallet-adapter-react";
 import {
   MAINNET_RPC_CONNECTION,
   METAPLEX_PROGRAM,
+  RPC_CONNECTION,
 } from "../../utilities/utilities";
 import { TOKEN_PROGRAM_ID } from "@project-serum/anchor/dist/cjs/utils/token";
-import { IUtilityData } from "../../interface/derug.interface";
+import {
+  IDerugInstruction,
+  IUtilityData,
+} from "../../interface/derug.interface";
 import { mapUtilityAction } from "../helpers";
+import { sendTransaction } from "../sendTransaction";
 
 export const createDerugDataIx = async (
   collection: IChainCollectionData,
-  wallet: AnchorWallet,
+  wallet: WalletContextState,
   listedNfts?: INftListing
 ) => {
   const derugProgram = derugProgramFactory();
@@ -46,7 +51,7 @@ export const createDerugDataIx = async (
     .accounts({
       collectionKey,
       derugData: collection.derugDataAddress,
-      payer: wallet.publicKey,
+      payer: wallet.publicKey!,
       collectionMetadata,
       systemProgram: SystemProgram.programId,
     })
@@ -57,7 +62,7 @@ export const createDerugDataIx = async (
 
 export const createOrUpdateDerugRequest = async (
   name: string,
-  wallet: AnchorWallet,
+  wallet: WalletContextState,
   utilities: IUtilityData[],
   collection: IChainCollectionData,
   listedNft?: INftListing
@@ -74,7 +79,7 @@ export const createOrUpdateDerugRequest = async (
     [
       derugDataSeed,
       collection.derugDataAddress.toBuffer(),
-      wallet.publicKey.toBuffer(),
+      wallet.publicKey!.toBuffer(),
     ],
     derugProgram.programId
   );
@@ -88,10 +93,18 @@ export const createOrUpdateDerugRequest = async (
     .accounts({
       derugData: collection.derugDataAddress,
       derugRequest,
-      payer: wallet.publicKey,
+      payer: wallet.publicKey!,
       systemProgram: SystemProgram.programId,
     })
     .instruction();
 
   instructions.push(initalizeDerugRequest);
+
+  const derugInstruction: IDerugInstruction = {
+    instructions,
+    pendingDescription: "Creating derug request",
+    successDescription: "Successfully created derug request!",
+  };
+
+  await sendTransaction(RPC_CONNECTION, [derugInstruction], wallet);
 };

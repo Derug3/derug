@@ -1,3 +1,5 @@
+import { TransactionInstruction } from "@solana/web3.js";
+
 export interface IUtilityData {
   title: string;
   description: string;
@@ -7,4 +9,10 @@ export interface IUtilityData {
 export enum UtilityAction {
   Add,
   Remove,
+}
+
+export interface IDerugInstruction {
+  instructions: TransactionInstruction[];
+  pendingDescription: string;
+  successDescription: string;
 }
