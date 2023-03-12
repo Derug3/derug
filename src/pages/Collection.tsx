@@ -172,10 +172,8 @@ export const Collections: FC = () => {
           />
           <Box className="sticky top-0 grid">
             <StickyHeader
-              openDerugModal={setDerugRequestVisible}
               collection={collectionStats}
               collectionDerug={collectionDerug}
-              wallet={wallet}
             />
             <HeaderTabs
               selectedInfo={selectedInfo}
@@ -185,7 +183,13 @@ export const Collections: FC = () => {
             />
           </Box>
 
-          <Box sx={{ display: "grid", gridTemplateColumns: "50% 50%" }}>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "50% 50%",
+              height: "400px",
+            }}
+          >
             <div
               ref={boxRef}
               className="ASDSAD"
@@ -212,7 +216,11 @@ export const Collections: FC = () => {
           </Box>
         </Box>
       </Box>
-      <Proposals requests={requests} />
+      <Proposals
+        openDerugModal={setDerugRequestVisible}
+        wallet={wallet}
+        requests={requests}
+      />
     </CollectionContext.Provider>
   );
 };

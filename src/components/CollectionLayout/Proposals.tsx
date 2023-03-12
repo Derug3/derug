@@ -6,6 +6,7 @@ import {
   ProgressBar,
   TextInput,
 } from "@primer/react";
+import { WalletContextState } from "@solana/wallet-adapter-react";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import { FC, useContext, useRef, useState } from "react";
@@ -16,7 +17,9 @@ import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 
 export const Proposals: FC<{
   requests?: IRequest[];
-}> = ({ requests }) => {
+  wallet: WalletContextState;
+  openDerugModal: (value: boolean) => void;
+}> = ({ requests, wallet, openDerugModal }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentRequest, setCurrentRequest] = useState<IRequest>();
   const returnFocusRef = useRef(null);
@@ -122,11 +125,22 @@ export const Proposals: FC<{
               </div>
             ))
           ) : (
-            <div
-              className="text-base font-mono mt-3 text-white"
-              style={{ filter: "drop-shadow(#2dd4bf 0px 0px 10px)" }}
-            >
+            <div className="text-base font-mono mt-3 text-white">
               There is no derug request yet.
+              {wallet && (
+                <Button
+                  className="bg-transparent w-full font-mono font-bold text-lg mt-5"
+                  style={{
+                    filter: "drop-shadow(#2dd4bf 0px 0px 3px)",
+                    backgroundColor: "rgba(0,183,234,15px)",
+                    fontFamily: "monospace",
+                    borderColor: "rgba(9,194,246)",
+                  }}
+                  onClick={() => openDerugModal(true)}
+                >
+                  Add derug request
+                </Button>
+              )}
             </div>
           )}
         </div>
