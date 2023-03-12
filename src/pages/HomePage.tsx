@@ -115,10 +115,7 @@ const HomePage = () => {
           className="py-5 align-center"
           variants={FADE_DOWN_ANIMATION_VARIANTS}
         >
-          <Balancer
-            style={{}}
-            className="w-full bg-gradient-to-br from-yellow-300 to-stone-200 bg-clip-text text-center font-display  font-bold tracking-[-0.02em] text-transparent drop-shadow-sm md:text-2xl align-center font-mono"
-          >
+          <Balancer className="w-full animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 text-5xl font-black bg-clip-text text-center font-display  tracking-[-0.02em] text-transparent drop-shadow-sm md:text-2xl align-center font-mono animate-[wiggle_1s_ease-in-out_infinite]">
             Getting rugged collections back to life
           </Balancer>
           <Balancer>☀️</Balancer>
