@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { LeftPane } from "../components/CollectionLayout/LeftPane";
 import { RightPane } from "../components/CollectionLayout/RightPane";
 // import { Proposals } from "./../components/CollectionLayout/Proposals";
@@ -38,6 +38,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { getAllDerugRequest } from "../solana/methods/derug-request";
 import DerugRequest from "../components/DerugRequest/DerugRequest";
 import Remint from "../components/Remit/Remint";
+import { DerugStatus } from "../enums/collections.enums";
 export const Collections: FC = () => {
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
 
@@ -135,6 +136,26 @@ export const Collections: FC = () => {
     }
   };
 
+  const getWinningRequest = useMemo(() => {
+    return derugRequests?.sort((a, b) => a.voteCount - b.voteCount)[
+      derugRequests.length - 1
+    ];
+  }, [derugRequests]);
+
+  const shouldShowWinningModal = (status?: DerugStatus) => {
+    if (
+      derugRequests &&
+      derugRequests.some(
+        (el) => el.derugger.toString() === wallet.publicKey?.toString()
+      ) &&
+      getWinningRequest &&
+      status === DerugStatus.Voting
+    ) {
+      setIsOpen(true);
+      return true;
+    }
+  };
+
   const boxRef = useRef<HTMLDivElement | null>(null);
 
   return (
@@ -216,7 +237,7 @@ export const Collections: FC = () => {
         </Box>
       </Box>
       {/* <DerugRequest openDerugModal={setDerugRequestVisible} /> */}
-      {collectionDerug && derugRequests && isOpen && (
+      {shouldShowWinningModal(collectionDerug?.status) && isOpen && (
         <Dialog
           returnFocusRef={returnFocusRef}
           isOpen={true}
@@ -232,7 +253,7 @@ export const Collections: FC = () => {
             className="flex justify-center flex-col gap-3 "
             sx={{ background: "rgba(9,194,246,.15)" }}
           >
-            <Remint />
+            <Remint getWinningRequest={getWinningRequest} />
           </Box>
         </Dialog>
       )}
