@@ -7,27 +7,37 @@ import {
   TextInput,
   Tooltip,
 } from "@primer/react";
-import { WalletContextState } from "@solana/wallet-adapter-react";
+import { useWallet, WalletContextState } from "@solana/wallet-adapter-react";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import { FC, useContext, useRef, useState } from "react";
 import Balancer from "react-wrap-balancer";
 import { DerugStatus } from "../../enums/collections.enums";
+import { IRequest } from "../../interface/collections.interface";
 import {
-  ICollectionDerugData,
-  IRequest,
-} from "../../interface/collections.interface";
+  castDerugRequestVote,
+  getSingleDerugRequest,
+} from "../../solana/methods/derug-request";
 import { CollectionContext } from "../../stores/collectionContext";
-import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
-
+import { getAllNftsFromCollection } from "../../utilities/nft-fetching";
+import { toast } from "react-hot-toast";
+import { Oval } from "react-loader-spinner";
 export const DerugRequestItem: FC<{
   derugRequest: IRequest;
   index: number;
 }> = ({ derugRequest, index }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentRequest, setCurrentRequest] = useState<IRequest>();
-  const returnFocusRef = useRef(null);
-  const { collection, collectionDerug } = useContext(CollectionContext);
+  const [loading, toggleLoading] = useState(false);
+  const {
+    collection,
+    collectionDerug,
+    chainCollectionData,
+    setRequests,
+    derugRequests,
+  } = useContext(CollectionContext);
+
+  const wallet = useWallet();
 
   const showVoteButton = () => {
     return (
@@ -43,6 +53,39 @@ export const DerugRequestItem: FC<{
   function showRemintButton() {
     return collectionDerug?.status === DerugStatus.Reminting;
   }
+
+  const castVote = async () => {
+    if (wallet && collectionDerug && chainCollectionData) {
+      try {
+        toggleLoading(true);
+        const derugNfts = await getAllNftsFromCollection(
+          wallet,
+          collectionDerug,
+          chainCollectionData
+        );
+        await castDerugRequestVote(
+          derugRequest,
+          wallet!,
+          collectionDerug,
+          derugNfts
+        );
+
+        const updatedRequest = await getSingleDerugRequest(
+          derugRequest.address
+        );
+        const addedRequests = [...(derugRequests ?? [])];
+        const derugIndex = addedRequests.findIndex(
+          (dr) => dr.address.toString() === derugRequest.address.toString()
+        );
+        addedRequests[derugIndex] = { ...updatedRequest };
+        setRequests(addedRequests);
+      } catch (error: any) {
+        toast.error("Failed to vote:", error.message);
+      } finally {
+        toggleLoading(false);
+      }
+    }
+  };
 
   return (
     <div
@@ -96,8 +139,16 @@ export const DerugRequestItem: FC<{
       </div>
       <div className="flex items-center justify-end w-1/2">
         {showVoteButton() && (
-          <Button variant="invisible" sx={{ color: "rgba(9,194,246)" }}>
-            Vote
+          <Button
+            variant="invisible"
+            sx={{ color: "rgba(9,194,246)" }}
+            onClick={castVote}
+          >
+            {loading ? (
+              <Oval color="rgb(9, 194, 246)" height={"2em"} />
+            ) : (
+              <p>Vote</p>
+            )}
           </Button>
         )}
 
@@ -141,6 +192,9 @@ export const DerugRequestItem: FC<{
               .slice(0, 10)}
           </span>
         </Balancer>
+        <p>
+          {derugRequest.voteCount} / {collectionDerug?.totalSupply}
+        </p>
       </div>
     </div>
   );

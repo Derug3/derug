@@ -28,12 +28,17 @@ export const sendTransaction = async (
     const sigendTransactions = await wallet.signAllTransactions!(transactions);
 
     for (const [index, tx] of sigendTransactions.entries()) {
+      const txSim = await connection.simulateTransaction(tx);
+      console.log(txSim.value.logs);
+
       toast.promise(
         connection.sendRawTransaction(tx.serialize(), {
           preflightCommitment: "confirmed",
         }),
         {
           error: (data) => {
+            console.log(data);
+
             return "Failed to send transaction";
           },
           loading: instructions[index].pendingDescription,
