@@ -228,6 +228,7 @@ export const Collections: FC = () => {
             >
               <RightPane
                 selectedData={selectedData}
+                chainCollectionData={chainCollectionData}
                 parentRef={boxRef}
                 traits={traits}
                 iframeRef={iframeRef}

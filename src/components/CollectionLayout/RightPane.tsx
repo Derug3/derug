@@ -1,7 +1,11 @@
 import { Box, Text } from "@primer/react";
 import { motion } from "framer-motion";
 import { FC, useMemo } from "react";
-import { IListed, ITrait } from "../../interface/collections.interface";
+import {
+  IChainCollectionData,
+  IListed,
+  ITrait,
+} from "../../interface/collections.interface";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 import ListedNfts from "../ListedNfts/ListedNfts";
 import ListingsGraph from "../ListingsGraph/ListingsGraph";
@@ -9,10 +13,11 @@ import TraitsList from "../Traits/TraitsList";
 
 export const RightPane: FC<{
   selectedData: string;
+  chainCollectionData?: IChainCollectionData;
   traits: ITrait[] | undefined;
   iframeRef: any;
   parentRef: React.MutableRefObject<HTMLDivElement | null>;
-}> = ({ selectedData, traits, iframeRef, parentRef }) => (
+}> = ({ selectedData, traits, iframeRef, parentRef, chainCollectionData }) => (
   <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS}>
     <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS} className="sticky">
       <div className="">
@@ -32,7 +37,8 @@ export const RightPane: FC<{
               ref={iframeRef}
               height="600px"
               width="100%"
-              src={`https://solana.fm/address/HUxWyo9a5uTxzLdSSY1LVsndnHfYkJhkRoP51ghLYEs7?cluster=devnet-solana`}
+              src={`https://solana.fm/address/${chainCollectionData?.collectionMint}?cluster=devnet-solana`}
+              // todo remove cluster once we migrate
             />
           </div>
         )}
