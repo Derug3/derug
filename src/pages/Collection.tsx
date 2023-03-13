@@ -37,6 +37,7 @@ import { getDummyCollectionData } from "../solana/dummy";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { getAllDerugRequest } from "../solana/methods/derug-request";
 import DerugRequest from "../components/DerugRequest/DerugRequest";
+import Remint from "../components/Remit/Remint";
 export const Collections: FC = () => {
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
 
@@ -212,7 +213,8 @@ export const Collections: FC = () => {
           </Box>
         </Box>
       </Box>
-      <DerugRequest openDerugModal={setDerugRequestVisible} />
+      {/* <DerugRequest openDerugModal={setDerugRequestVisible} /> */}
+      {collectionDerug && derugRequests && <Remint />}
     </CollectionContext.Provider>
   );
 };

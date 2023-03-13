@@ -63,6 +63,8 @@ export const DerugRequestItem: FC<{
           collectionDerug,
           chainCollectionData
         );
+        console.log(derugNfts.length);
+
         await castDerugRequestVote(
           derugRequest,
           wallet!,
@@ -164,7 +166,9 @@ export const DerugRequestItem: FC<{
         )}
 
         <ProgressBar
-          progress={derugRequest.voteCount / (collection?.numMints ?? 1)}
+          progress={
+            (derugRequest.voteCount / (collectionDerug?.totalSupply ?? 1)) * 100
+          }
           bg="rgba(9,194,246)"
           sx={{
             width: "280px",
