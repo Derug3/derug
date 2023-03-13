@@ -13,11 +13,8 @@ const Remint = () => {
   }, [derugRequests]);
 
   return (
-    <Box
-      className="w-full py-2 flex-col gap-10"
-      sx={{ p: 0, padding: "0.5em 1.5em", margin: "3em 0" }}
-    >
-      <WinningRequest request={getWinningRequest!} />
+    <Box className="py-2 flex-col gap-10">
+      {getWinningRequest && <WinningRequest request={getWinningRequest} />}
     </Box>
   );
 };

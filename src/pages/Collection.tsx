@@ -27,7 +27,7 @@ import {
   mapNextData,
   mapTraitsQuery,
 } from "../api/graphql/mapper";
-import { Box } from "@primer/react";
+import { Box, Dialog } from "@primer/react";
 import { CollectionContext } from "../stores/collectionContext";
 import { getSingleCollection } from "../api/collections.api";
 import { HeaderTabs } from "../components/CollectionLayout/HeaderTabs";
@@ -56,7 +56,9 @@ export const Collections: FC = () => {
     useState<ICollectionDerugData>();
   const [derugRequests, setDerugRequests] = useState<IRequest[]>();
   const iframeRef = useRef(null);
+  const returnFocusRef = useRef(null);
   const slug = useSearchParams()[0].get("symbol");
+  const [isOpen, setIsOpen] = useState(true);
 
   const wallet = useWallet();
 
@@ -207,14 +209,33 @@ export const Collections: FC = () => {
                 selectedData={selectedData}
                 parentRef={boxRef}
                 traits={traits}
-                iframeRef={undefined}
+                iframeRef={iframeRef}
               />
             </Box>
           </Box>
         </Box>
       </Box>
       {/* <DerugRequest openDerugModal={setDerugRequestVisible} /> */}
-      {collectionDerug && derugRequests && <Remint />}
+      {collectionDerug && derugRequests && isOpen && (
+        <Dialog
+          returnFocusRef={returnFocusRef}
+          isOpen={true}
+          onDismiss={() => setIsOpen(false)}
+          sx={{
+            width: "max-content",
+          }}
+          aria-labelledby="header-id"
+        >
+          <Dialog.Header id="header-id">Winning request</Dialog.Header>
+          <Box
+            p={3}
+            className="flex justify-center flex-col gap-3 "
+            sx={{ background: "rgba(9,194,246,.15)" }}
+          >
+            <Remint />
+          </Box>
+        </Dialog>
+      )}
     </CollectionContext.Provider>
   );
 };

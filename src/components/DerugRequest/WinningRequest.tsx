@@ -38,59 +38,57 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
   }, []);
 
   return (
-    <Box
-      className="flex flex-row justify-between items-center w-full p-4"
-      sx={{
-        background: "rgb(9, 194, 246,.15)",
-        border: "1px solid rgb(255  225 93)",
-      }}
-    >
-      <Box className="flex flex-col gap-10 items-start">
-        <Box className="flex flex-row gap-10 items-center">
-          <Box>
-            <Box className="border-cyan-400 py-2 px-4 text-white">
-              <Text className="font-mono ">Winning request</Text>
-            </Box>
-          </Box>
-          <Text className="font-mono text-white">
+    <Box className="flex flex-row justify-between w-full items-center w-full">
+      <Box className="flex flex-col gap-5 w-full px-16 py-5">
+        <Box className="flex flex-row  ">
+          <Text className="font-mono text-neutral-400 flex justify-center">
             {request.derugger.toString()}
           </Text>
         </Box>
-        <Box className="flex flex-row gap-3">
+        <Box
+          className="flex flex-row gap-3 justify-between w-full items-center"
+          sx={{
+            color: "rgb(45, 212, 191)",
+            border: "1px solid rgba(9,194,246,.15)",
+            padding: "1em",
+          }}
+        >
           <Text className="font-mono text-white">{"Twitter handle"}</Text>
           <Box className="flex flex-row gap-3">{renderUtilities}</Box>
         </Box>
-      </Box>
-      <Box className="flex flex-col gap-5 items-center">
-        <Box className="flex flex-row items-center gap-4">
-          <ProgressBar
-            progress={
-              (request.voteCount / (collectionDerug?.totalSupply ?? 1)) * 100
-            }
-            bg="rgb(45, 212, 191)"
+        <Box className="flex flex-col gap-5 items-center w-full mt-2">
+          <Box className="flex flex-row items-center justify-between w-full gap-4">
+            <ProgressBar
+              progress={
+                (request.voteCount / (collectionDerug?.totalSupply ?? 1)) * 100
+              }
+              bg="rgba(9, 194, 246, 0.6)"
+              sx={{
+                width: "280px",
+                filter: "drop-shadow(white 0px 0px 3px)",
+                borderRadius: 0,
+                color: "rgb(45, 212, 191)",
+              }}
+            />
+            <Text
+              className="text-white font-mono text-xs	"
+              color={"rgb(9, 194, 246)"}
+            >
+              {request.voteCount} / {collectionDerug?.totalSupply}
+            </Text>
+          </Box>
+          <Button
+            className="font-bold mt-5"
             sx={{
-              width: "280px",
-              filter: "drop-shadow(white 0px 0px 3px)",
-              height: "16px",
-              borderRadius: 0,
-              color: "rgb(45, 212, 191)",
-              marginLeft: "1em",
+              width: "100%",
+              color: "white",
+              background: "rgba(9, 194, 246, 0.6)",
+              padding: "1.25em",
             }}
-          />
-          <Text className="text-white font-bold" color={"rgb(45, 212, 191)"}>
-            {request.voteCount} / {collectionDerug?.totalSupply}
-          </Text>
+          >
+            Claim victory
+          </Button>
         </Box>
-        <Button
-          className="font-bold"
-          sx={{
-            width: "70%",
-            background: "rgb(45, 212, 191)",
-            color: "black",
-          }}
-        >
-          Claim victory
-        </Button>
       </Box>
     </Box>
   );
