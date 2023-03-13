@@ -94,8 +94,6 @@ export const getAllDerugRequest = async (
     const allRequestsForCollection =
       await derugProgram.account.derugRequest.all([filters]);
 
-    console.log(allRequestsForCollection);
-
     const requests: IRequest[] = [];
 
     for (const derug of allRequestsForCollection) {

@@ -64,8 +64,6 @@ export const getCollectionDerugData = async (
       derugDataAddress
     );
 
-    console.log(derugDataAccount);
-
     return {
       collection: derugDataAccount.collection,
       createdAt: derugDataAccount.dateAdded.toNumber(),

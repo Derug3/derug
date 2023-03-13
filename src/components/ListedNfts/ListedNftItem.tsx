@@ -1,12 +1,14 @@
 import { Box, Button, Text } from "@primer/react";
-import { FC, useMemo, useState } from "react";
+import { FC, useContext, useMemo, useState } from "react";
 import magicEdenLogo from "../../assets/magicEdenLogo.png";
 import tensorLogo from "../../assets/tensorLogo.png";
 import { ListingSource } from "../../enums/collections.enums";
 import { INftListing } from "../../interface/collections.interface";
 import solanaArtLogo from "../../assets/solanart_logo.png";
+import { CollectionContext } from "../../stores/collectionContext";
 
 const ListedNftItem: FC<{ listedNft: INftListing }> = ({ listedNft }) => {
+  const { collection } = useContext(CollectionContext);
   const [hover, setHover] = useState(false);
 
   const getImgLogo = useMemo(() => {
@@ -26,6 +28,8 @@ const ListedNftItem: FC<{ listedNft: INftListing }> = ({ listedNft }) => {
         return `https://magiceden.io/item-details/${listedNft.mint}`;
       case ListingSource.SolanaArt:
         return `https://solanart.io/nft/${listedNft.mint}`;
+      case ListingSource.Tensor:
+        return `https://www.tensor.trade/trade/${collection?.symbol}`;
     }
   }, []);
 

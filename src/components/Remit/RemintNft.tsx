@@ -1,0 +1,50 @@
+import { Box, Text } from "@primer/react";
+import React, { FC, useEffect, useState } from "react";
+import { IDerugCollectionNft } from "../../interface/derug.interface";
+
+const RemintNft: FC<{ nft: IDerugCollectionNft }> = ({ nft }) => {
+  const [imageUrl, setImageUrl] = useState<string>();
+
+  useEffect(() => {
+    void fetchImageUrl();
+  }, []);
+
+  const fetchImageUrl = async () => {
+    try {
+      const nftImage = await (await fetch(nft.metadata.data.uri)).json();
+
+      setImageUrl(nftImage.image);
+    } catch (error) {}
+  };
+
+  return (
+    <Box
+      sx={{
+        border: `2.5px solid ${
+          nft.reminted
+            ? "rgb(45, 212, 191)"
+            : nft.remintingFailed
+            ? "#FD5D5D"
+            : "rgb(9, 194, 246)"
+        }`,
+        borderRadius: "4px",
+        padding: "0.5em",
+        paddingBottom: "1.25em",
+      }}
+    >
+      {imageUrl && (
+        <Box className="flex flex-col items-center gap-5">
+          <img
+            src={imageUrl}
+            className={`w-full rounded-[4px] h-full ${
+              nft.isReminting && "blur-sm"
+            }`}
+          />
+          <Text className="text-white">{nft.metadata.data.name}</Text>
+        </Box>
+      )}
+    </Box>
+  );
+};
+
+export default RemintNft;

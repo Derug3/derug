@@ -22,4 +22,7 @@ export interface IDerugCollectionNft {
   mint: PublicKey;
   metadata: Metadata;
   tokenAccount: PublicKey;
+  isReminting?: boolean;
+  reminted?: boolean;
+  remintingFailed?: boolean;
 }
