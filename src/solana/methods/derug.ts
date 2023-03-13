@@ -75,6 +75,7 @@ export const getCollectionDerugData = async (
       newCollection: derugDataAccount.newCollection,
       winningRequest: derugDataAccount.winningRequest,
       address: derugDataAddress,
+      collectionMetadata: derugDataAccount.collectionMetadata,
     };
   } catch (error) {
     console.log(error);

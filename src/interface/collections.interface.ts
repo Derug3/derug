@@ -107,4 +107,5 @@ export interface ICollectionDerugData {
   totalReminted: number;
   totalSuggestionCount: number;
   status: DerugStatus;
+  collectionMetadata: PublicKey | null;
 }
