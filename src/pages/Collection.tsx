@@ -38,6 +38,8 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { getAllDerugRequest } from "../solana/methods/derug-request";
 import DerugRequest from "../components/DerugRequest/DerugRequest";
 import Remint from "../components/Remit/Remint";
+import { DerugStatus } from "../enums/collections.enums";
+import dayjs from "dayjs";
 export const Collections: FC = () => {
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
 
@@ -213,8 +215,20 @@ export const Collections: FC = () => {
           </Box>
         </Box>
       </Box>
-      {/* <DerugRequest openDerugModal={setDerugRequestVisible} /> */}
-      {collectionDerug && derugRequests && <Remint />}
+      {collectionDerug && (
+        <>
+          {(collectionDerug.status === DerugStatus.Initialized ||
+            collectionDerug.status === DerugStatus.Voting) &&
+          dayjs
+            .unix(collectionDerug.votingStartedAt)
+            .add(3, "minutes")
+            .isAfter(dayjs()) ? (
+            <DerugRequest openDerugModal={setDerugRequestVisible} />
+          ) : (
+            <>{collectionDerug && derugRequests && <Remint />}</>
+          )}
+        </>
+      )}
     </CollectionContext.Provider>
   );
 };

@@ -129,41 +129,43 @@ const Remint = () => {
       sx={{ p: 0, padding: "0.5em 1.5em", margin: "3em 0" }}
     >
       <WinningRequest request={getWinningRequest!} />
-      <Box className="flex flex-col items-center gap-10 w-full mt-10">
-        {!loading && collectionNfts && collectionNfts?.length > 0 && (
-          <Button
-            onClick={remintNfts}
-            sx={{
-              background: "rgb(9, 194, 246)",
-              borderRadius: "4px",
-              color: "black",
-              fontWeight: "bold",
-              border: "1px solid none",
-              fontSize: "1.5em",
-              padding: "1em 2em",
-              fontFamily: "monospace",
-              "&:hover": {
-                border: "1px solid rgb(9, 194, 246)",
-                background: "transparent",
-                color: "rgb(9, 194, 246)",
-              },
-            }}
-          >
-            Remint
-          </Button>
-        )}
-        <Box className="grid grid-cols-8 gap-5 ">
-          {loading ? (
-            <>
-              {generateSkeletonArrays(5).map(() => {
-                return <Skeleton baseColor="red" />;
-              })}
-            </>
-          ) : (
-            <>{renderCollectionNfts}</>
+      {collectionDerug && collectionDerug.status === DerugStatus.Reminting && (
+        <Box className="flex flex-col items-center gap-10 w-full mt-10">
+          {!loading && collectionNfts && collectionNfts?.length > 0 && (
+            <Button
+              onClick={remintNfts}
+              sx={{
+                background: "rgb(9, 194, 246)",
+                borderRadius: "4px",
+                color: "black",
+                fontWeight: "bold",
+                border: "1px solid none",
+                fontSize: "1.5em",
+                padding: "1em 2em",
+                fontFamily: "monospace",
+                "&:hover": {
+                  border: "1px solid rgb(9, 194, 246)",
+                  background: "transparent",
+                  color: "rgb(9, 194, 246)",
+                },
+              }}
+            >
+              Remint
+            </Button>
           )}
+          <Box className="grid grid-cols-8 gap-5 ">
+            {loading ? (
+              <>
+                {generateSkeletonArrays(5).map(() => {
+                  return <Skeleton baseColor="red" />;
+                })}
+              </>
+            ) : (
+              <>{renderCollectionNfts}</>
+            )}
+          </Box>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 };

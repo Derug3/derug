@@ -1,10 +1,15 @@
 import { Box, Button, ProgressBar, Text, Tooltip } from "@primer/react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import React, { FC, useContext, useMemo } from "react";
 import { IRequest } from "../../interface/collections.interface";
+import { claimVictory } from "../../solana/methods/remint";
 import { CollectionContext } from "../../stores/collectionContext";
-
+import { toast } from "react-hot-toast";
+import { getCollectionDerugData } from "../../solana/methods/derug";
 const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
-  const { collectionDerug } = useContext(CollectionContext);
+  const { collectionDerug, setCollectionDerug } = useContext(CollectionContext);
+
+  const wallet = useWallet();
 
   const renderUtilities = useMemo(() => {
     return request.utility.map((u, i) => {
@@ -36,6 +41,20 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
       );
     });
   }, []);
+
+  const claimDerugVictory = async () => {
+    try {
+      if (wallet && collectionDerug && request) {
+        await claimVictory(wallet!, collectionDerug, request);
+        const updatedDerug = await getCollectionDerugData(
+          collectionDerug.address
+        );
+        setCollectionDerug(updatedDerug);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <Box
@@ -88,6 +107,7 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
             background: "rgb(45, 212, 191)",
             color: "black",
           }}
+          onClick={claimDerugVictory}
         >
           Claim victory
         </Button>
