@@ -1,9 +1,10 @@
 import { Box, Button, Text } from "@primer/react";
-import { FC, useCallback, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import magicEdenLogo from "../../assets/magicEdenLogo.png";
 import tensorLogo from "../../assets/tensorLogo.png";
 import { ListingSource } from "../../enums/collections.enums";
 import { INftListing } from "../../interface/collections.interface";
+import solanaArtLogo from "../../assets/solanart_logo.png";
 
 const ListedNftItem: FC<{ listedNft: INftListing }> = ({ listedNft }) => {
   const [hover, setHover] = useState(false);
@@ -14,8 +15,20 @@ const ListedNftItem: FC<{ listedNft: INftListing }> = ({ listedNft }) => {
         return magicEdenLogo;
       case ListingSource.Tensor:
         return tensorLogo;
+      case ListingSource.SolanaArt:
+        return solanaArtLogo;
     }
   }, [listedNft]);
+
+  const getUrl = useMemo(() => {
+    switch (listedNft.soruce) {
+      case ListingSource.MagicEden:
+        return `https://magiceden.io/item-details/${listedNft.mint}`;
+      case ListingSource.SolanaArt:
+        return `https://solanart.io/nft/${listedNft.mint}`;
+    }
+  }, []);
+
   return (
     <Box
       className="flex relative flex-col gap-5 px-2 py-4  items-start border-cyan-500 ease-in duration-300"
@@ -49,12 +62,7 @@ const ListedNftItem: FC<{ listedNft: INftListing }> = ({ listedNft }) => {
                 fontFamily: "monospace",
                 padding: "1em",
               }}
-              onClick={() =>
-                window.open(
-                  `https://magiceden.io/item-details/${listedNft.mint}`,
-                  "_blank"
-                )
-              }
+              onClick={() => window.open(getUrl, "_blank")}
             >
               <div className="flex align-centar justify-between cursor-pointer">
                 <img
