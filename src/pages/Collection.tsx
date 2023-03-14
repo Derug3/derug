@@ -182,8 +182,8 @@ export const Collections: FC = () => {
         setRequests: setDerugRequests,
       }}
     >
-      <Box className="overflow-y-auto">
-        <Box className="sticky top-0 grid"></Box>
+      <Box className="overflow-y-auto mt-16">
+        <Box className="sticky top-0 grid "></Box>
         <Box className="overflow-y-clip">
           <AddDerugRequst
             isOpen={derugRequestVisible}
@@ -192,12 +192,6 @@ export const Collections: FC = () => {
             setDerugRequest={setDerugRequests}
           />
           <Box className="sticky top-0 grid">
-            <StickyHeader
-              collection={collectionStats}
-              collectionDerug={collectionDerug}
-              wallet={wallet}
-              openDerugModal={setDerugRequestVisible}
-            />
             <HeaderTabs
               selectedInfo={selectedInfo}
               setSelectedInfo={setSelectedInfo}
@@ -218,6 +212,7 @@ export const Collections: FC = () => {
               className="ASDSAD"
               style={{
                 maxHeight: "27em",
+                transform: "translateY(-52px)",
                 overflow: "none",
               }}
             >
@@ -238,17 +233,17 @@ export const Collections: FC = () => {
               />
             </Box>
           </Box>
-          {/* <Marqee
-            pauseOnHover
+          <Marqee
+            pauseOnClick
             loop={0}
             speed={30}
             direction={"right"}
             gradient={false}
             style={{
               position: "absolute",
-              top: "10px",
-              left: "20%",
-              width: "60%",
+              left: "16%",
+              top: "32px",
+              width: "65%",
             }}
           >
             <StickyHeader
@@ -257,7 +252,7 @@ export const Collections: FC = () => {
               wallet={wallet}
               openDerugModal={setDerugRequestVisible}
             />
-          </Marqee> */}
+          </Marqee>
         </Box>
       </Box>
       {/* <DerugRequest openDerugModal={setDerugRequestVisible} /> */}

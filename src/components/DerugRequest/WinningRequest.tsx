@@ -57,10 +57,20 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
   };
 
   return (
-    <Box className="flex flex-row justify-between w-full items-center w-full">
-      <Box className="flex flex-col gap-5 w-full px-10">
+    <Box className="flex flex-row justify-between items-center w-full relative">
+      {/* <Box className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 h-1 w-full absolute top-0"></Box> */}
+      <Box
+        className="flex flex-col gap-5 w-full px-10"
+        sx={{
+          border:
+            "1px solid animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500",
+          boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
+        }}
+        padding="2em"
+        margin="2.5rem"
+      >
         <Box className="flex flex-row  ">
-          <Text className="font-mono text-neutral-400 flex justify-center">
+          <Text className="font-mono text-neutral-400 flex justify-center text-">
             {request.derugger.toString()}
           </Text>
         </Box>
@@ -76,18 +86,19 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
           <Box className="flex flex-row gap-3">{renderUtilities}</Box>
         </Box>
         <Box className="flex flex-col gap-5 items-center w-full">
-          <Box className="flex flex-row items-center justify-between w-full gap-4">
+          <Box className="flex font-mono flex-row items-center justify-between w-full gap-4 ">
             <Button
-              className="font-bold"
+              className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 "
               sx={{
                 color: "white",
-                background: "rgba(9, 194, 246, 0.6)",
+                // background: "rgba(9, 194, 246, 0.6)",
                 padding: "1.25em",
+                borderRadius: 0,
                 width: "30%",
               }}
               onClick={claimDerugVictory}
             >
-              Claim victory
+              <span className="text-xl lowercase">Claim victory</span>
             </Button>
             <div className="flex items-center gap-5">
               <ProgressBar
@@ -95,10 +106,10 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
                   (request.voteCount / (collectionDerug?.totalSupply ?? 1)) *
                   100
                 }
-                bg="rgba(9, 194, 246, 0.6)"
+                bg="#2DD4BF"
                 sx={{
                   width: "380px",
-                  filter: "drop-shadow(white 0px 0px 3px)",
+                  // filter: "drop-shadow(white 0px 0px 3px)",
                   height: "30px",
                   borderRadius: 0,
                   color: "rgb(45, 212, 191)",

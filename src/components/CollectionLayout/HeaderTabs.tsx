@@ -10,7 +10,7 @@ const getNavStyling = (tab: string, selected: string) => {
     fontWeight: "bold",
     fontFamily: "monospace",
     border:
-      tab !== selected ? "2px solid #BBC4CD" : "2px solid rgba(9, 194, 246)",
+      tab !== selected ? "1px solid #BBC4CD" : "1px solid rgba(9, 194, 246)",
     cursor: "pointer",
     borderBottom: "none",
     "&:hover": {
@@ -30,31 +30,14 @@ export const HeaderTabs: FC<{
   return (
     <div
       className="flex w-full self-start bg-gradient-to-r
-  font-mono text-gray-700 leading-6 justify-between px-10 py-2 border-none"
+  font-mono text-gray-700 leading-6 px-10 py-2 border-none justify-end"
     >
-      <div className="w-1/2">
+      <div className="w-1/2 flex justify-end">
         <TabNav
           aria-label="Main"
-          className="flex w-full "
+          className="flex justify-end w-fit"
           style={{
-            borderBottom: "2px solid  rgba(9, 194, 246)",
-            position: "sticky",
-          }}
-        >
-          <TabNav.Link
-            onClick={() => setSelectedInfo("description")}
-            sx={getNavStyling(selectedInfo, "description")}
-          >
-            DETAILS
-          </TabNav.Link>
-        </TabNav>
-      </div>
-      <div className="w-1/2">
-        <TabNav
-          aria-label="Main"
-          className="flex w-full "
-          style={{
-            borderBottom: "2px solid  rgba(9, 194, 246)",
+            borderBottom: "1px solid  rgba(9, 194, 246)",
             position: "sticky",
           }}
         >

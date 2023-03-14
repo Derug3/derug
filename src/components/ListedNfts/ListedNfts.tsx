@@ -40,14 +40,17 @@ const ListedNfts: FC<{
   };
 
   return (
-    <div style={{ height: "27em", overflow: "scroll" }}>
+    <div
+      className="flex w-full justify-end items-start"
+      style={{ height: "27em", overflow: "scroll" }}
+    >
       {activeListings && (
         <InfiniteScroll
           style={{
             display: "flex",
             flexWrap: "wrap",
-            columnGap: "1%",
-            rowGap: "2%",
+            justifyContent: "flex-end",
+            width: "100%",
             overflow: "none",
           }}
           threshold={500}
