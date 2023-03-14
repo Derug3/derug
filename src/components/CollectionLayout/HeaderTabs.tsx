@@ -40,7 +40,9 @@ export const HeaderTabs: FC<{
           <div className="w-full flex justify-between ml-10">
             {wallet &&
               wallet.publicKey &&
-              dayjs(collectionDerug?.periodEnd).isAfter(dayjs()) && (
+              (!collectionDerug ||
+                (collectionDerug &&
+                  dayjs(collectionDerug?.periodEnd).isAfter(dayjs()))) && (
                 <Button
                   sx={{
                     padding: "1.25em 3.25em",

@@ -45,8 +45,9 @@ export const createDerugDataIx = async (
     METAPLEX_PROGRAM
   );
 
+  //TODO:PUT REAL VALUE BEFORE MAINNET
   const ix = await derugProgram.methods
-    .initializeDerug(collectionStats.numMints)
+    .initializeDerug(18)
     .accounts({
       collectionKey,
       derugData: collection.derugDataAddress,
