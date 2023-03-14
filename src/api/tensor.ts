@@ -1,4 +1,5 @@
 import {
+  ICollectionRecentActivities,
   ICollectionStats,
   INftListing,
   ITrait,
@@ -20,6 +21,8 @@ export const getListings = async (slug: String): Promise<INftListing[]> => {
   return get(`${TENSOR}${LISTINGS}/${slug}`);
 };
 
-export const getRecentActivities = async (slug: String): Promise<ITrait[]> => {
+export const getRecentActivities = async (
+  slug: String
+): Promise<ICollectionRecentActivities[]> => {
   return get(`${TENSOR}${ACTIVITIES}/${slug}`);
 };

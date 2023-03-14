@@ -1,10 +1,6 @@
 import { useLazyQuery, useQuery } from "@apollo/client";
 import React, { useContext, useEffect, useRef } from "react";
-import { mapRecentActivities } from "../../api/graphql/mapper";
-import { RECENT_ACTIVITIES_QUERY } from "../../api/graphql/query";
-import { TENSOR_LIST_FILTER } from "../../common/constants";
 import { CollectionContext } from "../../stores/collectionContext";
-import { fetchWhileHasActivities } from "../../utilities/nft-fetching";
 import {
   Chart,
   LineController,
@@ -16,6 +12,7 @@ import {
 } from "chart.js";
 import dayjs from "dayjs";
 import { splitTimestamps } from "../../common/helpers";
+import { getRecentActivities } from "../../api/tensor";
 const ListingsGraph = () => {
   const { collection, setRecentActivities, recentActivities } =
     useContext(CollectionContext);
@@ -68,16 +65,6 @@ const ListingsGraph = () => {
     }
   }, [recentActivities]);
 
-  const [firstActivities, {}] = useLazyQuery(RECENT_ACTIVITIES_QUERY, {
-    variables: {
-      filter: {
-        txType: TENSOR_LIST_FILTER,
-      },
-      limit: 100,
-      slug: collection?.symbol,
-    },
-  });
-
   useEffect(() => {
     if (!recentActivities || recentActivities.length === 0) {
       void fetchFirstActivities();
@@ -86,31 +73,8 @@ const ListingsGraph = () => {
 
   const fetchFirstActivities = async () => {
     try {
-      const firstBatchOfListings = await firstActivities({
-        variables: {
-          limit: 100,
-          slug: collection?.symbol,
-          filter: {
-            txType: TENSOR_LIST_FILTER,
-          },
-        },
-      });
-
-      retrieveAllRecentListings(firstBatchOfListings);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const retrieveAllRecentListings = async (firstBatch: any) => {
-    try {
-      const collectionRecentListings = await fetchWhileHasActivities(
-        mapRecentActivities(firstBatch.data),
-        firstBatch.data.recentTransactions.page.endCursor.txKey,
-        collection!.symbol,
-        firstBatch.data.recentTransactions.page.endCursor.txAt
-      );
-      setRecentActivities(collectionRecentListings);
+      if (collection?.symbol)
+        setRecentActivities(await getRecentActivities(collection?.symbol));
     } catch (error) {
       console.log(error);
     }

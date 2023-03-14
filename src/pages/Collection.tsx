@@ -64,79 +64,18 @@ export const Collections: FC = () => {
 
   const wallet = useWallet();
 
-  // const { data } = useQuery(TRAITS_QUERY, {
-  //   variables: { slug },
-  // });
-
-  // const collectionFpData = useQuery(FP_QUERY, {
-  //   variables: { slug },
-  // });
-
-  // const activeListingsData = useQuery(ACTIVE_LISTINGS_QUERY, {
-  //   variables: {
-  //     slug,
-  //     filters: null,
-  //     sortBy: "PriceAsc",
-  //     limit: 100,
-  //   },
-  // });
-
   useEffect(() => {
     void getBasicCollectionData();
-    void getCollectionStats();
-    void getCollectionTraits();
-    void getCollectionListings();
   }, []);
-
-  // useEffect(() => {
-  //   if (data) {
-  //     setTraits(mapTraitsQuery(data));
-  //   }
-  // }, [data]);
-
-  // useEffect(() => {
-  //   if (collectionFpData.data) {
-  //     setCollectionStats(mapCollectionStats(collectionFpData.data));
-  //   }
-  // }, [collectionFpData]);
-
-  // useEffect(() => {
-  //   if (activeListingsData.data) {
-  //     setListings(mapCollectionListings(activeListingsData.data));
-  //   }
-  // }, [activeListingsData]);
-
-  const getCollectionStats = async () => {
-    try {
-      if (slug) setCollectionStats(await getFloorPrice(slug));
-    } catch (error: any) {
-      toast.error("Failed to get collection statistics:", error.message);
-    }
-  };
-
-  const getCollectionTraits = async () => {
-    try {
-      if (slug) {
-        setTraits(await getTraits(slug));
-      }
-    } catch (error: any) {
-      console.log(error);
-
-      toast.error("Failed to get collection traits:", error.message);
-    }
-  };
-
-  const getCollectionListings = async () => {
-    try {
-      if (slug) setListings(await getListings(slug));
-    } catch (error: any) {
-      toast.error("Failed to get collection listings:", error.message);
-    }
-  };
 
   const getBasicCollectionData = async () => {
     try {
       setBasicCollectionData(await getSingleCollection(slug ?? ""));
+      if (slug) {
+        setCollectionStats(await getFloorPrice(slug));
+        setListings(await getListings(slug));
+        setTraits(await getTraits(slug));
+      }
     } catch (error) {
       console.log(error);
     }
