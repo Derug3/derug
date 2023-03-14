@@ -19,14 +19,14 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
             "::after": {
               fontSize: "1em",
               backgroundColor: "#282C34",
+              width: "fit-content",
             },
           }}
-          direction="e"
-          aria-labderugRequest={u.description}
+          aria-label={u.description}
           noDelay={true}
         >
           <div
-            className="text-sm font-mono cursor-hderugRequestp"
+            className="text-sm font-mono"
             style={{
               borderRightWidth:
                 i !== request.utility.length - 1 ? "1px" : "0px",
@@ -57,60 +57,70 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
   };
 
   return (
-    <Box
-      className="flex flex-row justify-between items-center w-full p-4"
-      sx={{
-        background: "rgb(9, 194, 246,.15)",
-        border: "1px solid rgb(255  225 93)",
-      }}
-    >
-      <Box className="flex flex-col gap-10 items-start">
-        <Box className="flex flex-row gap-10 items-center">
-          <Box>
-            <Box className="border-cyan-400 py-2 px-4 text-white">
-              <Text className="font-mono ">Winning request</Text>
-            </Box>
-          </Box>
-          <Text className="font-mono text-white">
+    <Box className="flex flex-row justify-between items-center w-full relative">
+      {/* <Box className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 h-1 w-full absolute top-0"></Box> */}
+      <Box
+        className="flex flex-col gap-5 w-full px-10"
+        sx={{
+          border:
+            "1px solid animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500",
+          boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
+        }}
+        padding="2em"
+        margin="2.5rem"
+      >
+        <Box className="flex flex-row  ">
+          <Text className="font-mono text-neutral-400 flex justify-center text-">
             {request.derugger.toString()}
           </Text>
         </Box>
-        <Box className="flex flex-row gap-3">
+        <Box
+          className="flex flex-row gap-3 justify-between w-full items-center"
+          sx={{
+            color: "rgb(45, 212, 191)",
+            border: "1px solid rgba(9,194,246,.15)",
+            padding: "1em",
+          }}
+        >
           <Text className="font-mono text-white">{"Twitter handle"}</Text>
           <Box className="flex flex-row gap-3">{renderUtilities}</Box>
         </Box>
-      </Box>
-      <Box className="flex flex-col gap-5 items-center">
-        <Box className="flex flex-row items-center gap-4">
-          <ProgressBar
-            progress={
-              (request.voteCount / (collectionDerug?.totalSupply ?? 1)) * 100
-            }
-            bg="rgb(45, 212, 191)"
-            sx={{
-              width: "280px",
-              filter: "drop-shadow(white 0px 0px 3px)",
-              height: "16px",
-              borderRadius: 0,
-              color: "rgb(45, 212, 191)",
-              marginLeft: "1em",
-            }}
-          />
-          <Text className="text-white font-bold" color={"rgb(45, 212, 191)"}>
-            {request.voteCount} / {collectionDerug?.totalSupply}
-          </Text>
+        <Box className="flex flex-col gap-5 items-center w-full">
+          <Box className="flex font-mono flex-row items-center justify-between w-full gap-4 ">
+            <Button
+              className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 "
+              sx={{
+                color: "white",
+                // background: "rgba(9, 194, 246, 0.6)",
+                padding: "1.25em",
+                borderRadius: 0,
+                width: "30%",
+              }}
+              onClick={claimDerugVictory}
+            >
+              <span className="text-xl lowercase">Claim victory</span>
+            </Button>
+            <div className="flex items-center gap-5">
+              <ProgressBar
+                progress={
+                  (request.voteCount / (collectionDerug?.totalSupply ?? 1)) *
+                  100
+                }
+                bg="#2DD4BF"
+                sx={{
+                  width: "380px",
+                  // filter: "drop-shadow(white 0px 0px 3px)",
+                  height: "30px",
+                  borderRadius: 0,
+                  color: "rgb(45, 212, 191)",
+                }}
+              />
+              <Text className="text-white font-mono	" color={"rgb(9, 194, 246)"}>
+                {request.voteCount} / {collectionDerug?.totalSupply}
+              </Text>
+            </div>
+          </Box>
         </Box>
-        <Button
-          className="font-bold"
-          sx={{
-            width: "70%",
-            background: "rgb(45, 212, 191)",
-            color: "black",
-          }}
-          onClick={claimDerugVictory}
-        >
-          Claim victory
-        </Button>
       </Box>
     </Box>
   );

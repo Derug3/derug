@@ -42,19 +42,13 @@ const ListedNftItem: FC<{ listedNft: INftListing }> = ({ listedNft }) => {
       <img
         src={listedNft.imageUrl}
         alt="nftImg"
-        className="rounded-[4px] w-48"
+        className="rounded-[4px] w-32"
         style={{ opacity: hover ? 0.2 : 1 }}
       />
       {hover && (
         <Box className="flex absolute flex-col w-full h-full gap-2 items-center justify-center text-white font-mono">
           <Box className="flex flex-row  items-center">
             <Box className="flex flex-col">
-              <Text
-                className="text-sm font-bold"
-                sx={{ color: "rgb(45, 212, 191)" }}
-              >
-                {listedNft.name}
-              </Text>
               <Text className="text-sm font-bold ">{listedNft.price} SOL</Text>
             </Box>
           </Box>

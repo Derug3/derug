@@ -1,6 +1,7 @@
+import { IRequest } from "../../interface/collections.interface";
 import { Box, Button } from "@primer/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { FC, useContext, useEffect, useMemo, useState } from "react";
 import { IDerugCollectionNft } from "../../interface/derug.interface";
 import { CollectionContext } from "../../stores/collectionContext";
 import {
@@ -15,7 +16,9 @@ import { DerugStatus, RemintingStatus } from "../../enums/collections.enums";
 import { nftStore } from "../../stores/nftStore";
 import { remintNft } from "../../solana/methods/remint";
 import { chunk } from "lodash";
-const Remint = () => {
+export const Remint: FC<{
+  getWinningRequest: IRequest | undefined;
+}> = ({ getWinningRequest }) => {
   const { derugRequests } = useContext(CollectionContext);
   const [collectionNfts, setCollectionNfts] = useState<IDerugCollectionNft[]>();
   const [loading, toggleLoading] = useState(true);
@@ -79,12 +82,6 @@ const Remint = () => {
     });
   }, [collectionNfts]);
 
-  const getWinningRequest = useMemo(() => {
-    return derugRequests?.sort((a, b) => a.voteCount - b.voteCount)[
-      derugRequests.length - 1
-    ];
-  }, [derugRequests]);
-
   const remintNfts = async () => {
     try {
       const winningRequest = derugRequests?.sort(
@@ -139,10 +136,7 @@ const Remint = () => {
   };
 
   return (
-    <Box
-      className="w-full py-2 flex-col gap-10"
-      sx={{ p: 0, padding: "0.5em 1.5em", margin: "3em 0" }}
-    >
+    <Box className="w-full flex-col gap-10">
       <WinningRequest request={getWinningRequest!} />
       {collectionDerug && collectionDerug.status === DerugStatus.Reminting && (
         <Box className="flex flex-col items-center gap-10 w-full mt-10">

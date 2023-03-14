@@ -14,7 +14,7 @@ const HeaderNav: FC = () => {
   return (
     <Header
       className="flex items-center w-full justify-between"
-      sx={{ p: 0, padding: "0.5em 1.5em" }}
+      sx={{ p: 0, padding: "0.5em 1.5em", height: "120px" }}
     >
       <Header.Item onClick={() => navigate(HOME)}>
         <img
@@ -23,27 +23,14 @@ const HeaderNav: FC = () => {
             width: "12em",
             paddingLeft: "1em",
             cursor: "pointer",
-            filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 10px)",
+            filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 1px)",
           }}
         />
       </Header.Item>
       <div className="flex">
         {/* <Header.Item full>
           <motion.button className="font-mono" {...FADE_IN_ANIMATION_SETTINGS}>
-            <Button
-              className="bg-transparent w-full font-mono font-bold text-lg p-10"
-              style={{
-                fontSize: "1em",
-                fontFamily: "monospace",
-                height: "48px",
-                padding: "0 24px",
-                lineHeight: "48px",
-                filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 5px)",
-              }}
-              // onClick={() => openDerugModal(true)}
-            >
-              Add derug request
-            </Button>
+            
           </motion.button>
         </Header.Item> */}
         <Header.Item full>

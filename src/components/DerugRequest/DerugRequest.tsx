@@ -21,20 +21,37 @@ export const DerugRequest: FC<{
   const renderDerugRequests = useMemo(() => {
     return derugRequests?.map((dr, index) => {
       return (
-        <DerugRequestItem
-          derugRequest={dr}
-          index={index}
-          key={dr.address.toString()}
-        />
+        <>
+          <DerugRequestItem
+            derugRequest={dr}
+            index={index}
+            key={dr.address.toString()}
+          />
+          <DerugRequestItem
+            derugRequest={dr}
+            index={index + 1}
+            key={dr.address.toString()}
+          />
+          <DerugRequestItem
+            derugRequest={dr}
+            index={index + 2}
+            key={dr.address.toString()}
+          />
+          <DerugRequestItem
+            derugRequest={dr}
+            index={index + 3}
+            key={dr.address.toString()}
+          />
+        </>
       );
     });
   }, [derugRequests]);
 
   return (
     <motion.div
-      className="flex w-full flex-col"
+      className="flex w-full flex-col mt-5"
       variants={FADE_DOWN_ANIMATION_VARIANTS}
-      style={{ borderTop: "2px solid  rgba(9, 194, 246)" }}
+      style={{ boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)" }}
     >
       <Dialog
         returnFocusRef={returnFocusRef}

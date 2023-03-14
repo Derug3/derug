@@ -1,4 +1,5 @@
-import { TabNav } from "@primer/react";
+import { Button, TabNav } from "@primer/react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { FC, useContext } from "react";
 import { CollectionContext } from "../../stores/collectionContext";
 
@@ -10,7 +11,7 @@ const getNavStyling = (tab: string, selected: string) => {
     fontWeight: "bold",
     fontFamily: "monospace",
     border:
-      tab !== selected ? "2px solid #BBC4CD" : "2px solid rgba(9, 194, 246)",
+      tab !== selected ? "1px solid #BBC4CD" : "1px solid rgba(9, 194, 246)",
     cursor: "pointer",
     borderBottom: "none",
     "&:hover": {
@@ -20,71 +21,70 @@ const getNavStyling = (tab: string, selected: string) => {
 };
 
 export const HeaderTabs: FC<{
-  selectedInfo: string;
   selectedData: string;
   setSelectedInfo: (s: string) => void;
   setSelectedData: (s: string) => void;
-}> = ({ selectedInfo, selectedData, setSelectedInfo, setSelectedData }) => {
-  const { traits, activeListings } = useContext(CollectionContext);
+  openDerugModal: (value: boolean) => void;
+}> = ({ openDerugModal, selectedData, setSelectedData }) => {
+  const { traits } = useContext(CollectionContext);
+  const wallet = useWallet();
 
   return (
     <div
       className="flex w-full self-start bg-gradient-to-r
-  font-mono text-gray-700 leading-6 justify-between px-10 py-2 border-none"
+  font-mono text-gray-700 leading-6 px-10 border-none justify-end"
     >
-      <div className="w-1/2">
-        <TabNav
-          aria-label="Main"
-          className="flex w-full "
-          style={{
-            borderBottom: "2px solid  rgba(9, 194, 246)",
-            position: "sticky",
-          }}
-        >
-          <TabNav.Link
-            onClick={() => setSelectedInfo("description")}
-            sx={getNavStyling(selectedInfo, "description")}
-          >
-            DETAILS
-          </TabNav.Link>
-        </TabNav>
-      </div>
-      <div className="w-1/2">
-        <TabNav
-          aria-label="Main"
-          className="flex w-full "
-          style={{
-            borderBottom: "2px solid  rgba(9, 194, 246)",
-            position: "sticky",
-          }}
-        >
-          <TabNav.Link
-            onClick={() => setSelectedData("listed")}
-            sx={getNavStyling(selectedData, "listed")}
-          >
-            NFTS
-          </TabNav.Link>
-          {traits && traits.length > 0 && (
-            <TabNav.Link
-              onClick={() => setSelectedData("traits")}
-              sx={getNavStyling(selectedData, "traits")}
+      <div className="w-full gap-10 flex justify-end">
+        <div className="w-1/2 flex">
+          <div className="w-full flex justify-between ml-10">
+            {wallet && (
+              <Button
+                sx={{
+                  padding: "1.25em 3.25em",
+                  color: "white",
+                }}
+                onClick={() => openDerugModal(true)}
+              >
+                <span className="text-lg uppercase ">Add derug request</span>
+              </Button>
+            )}
+            <TabNav
+              aria-label="Main"
+              className="flex justify-end w-fit"
+              style={{
+                borderBottom: "1px solid  rgba(9, 194, 246)",
+                position: "sticky",
+              }}
             >
-              TRAITS
-            </TabNav.Link>
-          )}
-          <TabNav.Link
-            onClick={() => setSelectedData("statistics")}
-            sx={getNavStyling(selectedData, "statistics")}
-          >
-            STATISTICS
-          </TabNav.Link>
-          <TabNav.Link
-            onClick={() => setSelectedData("solanafm")}
-            sx={getNavStyling(selectedData, "solanafm")}
-          >
-            SOLANAFM
-          </TabNav.Link>
-        </TabNav>
+              <TabNav.Link
+                onClick={() => setSelectedData("listed")}
+                sx={getNavStyling(selectedData, "listed")}
+              >
+                NFTS
+              </TabNav.Link>
+              {traits && traits.length > 0 && (
+                <TabNav.Link
+                  onClick={() => setSelectedData("traits")}
+                  sx={getNavStyling(selectedData, "traits")}
+                >
+                  TRAITS
+                </TabNav.Link>
+              )}
+              <TabNav.Link
+                onClick={() => setSelectedData("statistics")}
+                sx={getNavStyling(selectedData, "statistics")}
+              >
+                STATISTICS
+              </TabNav.Link>
+              <TabNav.Link
+                onClick={() => setSelectedData("solanafm")}
+                sx={getNavStyling(selectedData, "solanafm")}
+              >
+                SOLANAFM
+              </TabNav.Link>
+            </TabNav>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { LeftPane } from "../components/CollectionLayout/LeftPane";
 import { RightPane } from "../components/CollectionLayout/RightPane";
 // import { Proposals } from "./../components/CollectionLayout/Proposals";
@@ -17,6 +17,7 @@ import {
   FP_QUERY,
   TRAITS_QUERY,
 } from "../api/graphql/query";
+import Marqee from "react-fast-marquee";
 
 import { StickyHeader } from "../components/CollectionLayout/StickyHeader";
 import { IRequest } from "../interface/collections.interface";
@@ -27,7 +28,7 @@ import {
   mapNextData,
   mapTraitsQuery,
 } from "../api/graphql/mapper";
-import { Box } from "@primer/react";
+import { Box, Button, Dialog } from "@primer/react";
 import { CollectionContext } from "../stores/collectionContext";
 import { getSingleCollection } from "../api/collections.api";
 import { HeaderTabs } from "../components/CollectionLayout/HeaderTabs";
@@ -37,9 +38,10 @@ import { getDummyCollectionData } from "../solana/dummy";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { getAllDerugRequest } from "../solana/methods/derug-request";
 import DerugRequest from "../components/DerugRequest/DerugRequest";
-import Remint from "../components/Remit/Remint";
 import { DerugStatus } from "../enums/collections.enums";
 import dayjs from "dayjs";
+import { Remint } from "../components/Remit/Remint";
+
 import { toast } from "react-hot-toast";
 import { getFloorPrice, getListings, getTraits } from "../api/tensor";
 export const Collections: FC = () => {
@@ -60,7 +62,9 @@ export const Collections: FC = () => {
     useState<ICollectionDerugData>();
   const [derugRequests, setDerugRequests] = useState<IRequest[]>();
   const iframeRef = useRef(null);
+  const returnFocusRef = useRef(null);
   const slug = useSearchParams()[0].get("symbol");
+  const [isOpen, setIsOpen] = useState(true);
 
   const wallet = useWallet();
 
@@ -107,6 +111,26 @@ export const Collections: FC = () => {
     }
   };
 
+  const getWinningRequest = useMemo(() => {
+    return derugRequests?.sort((a, b) => a.voteCount - b.voteCount)[
+      derugRequests.length - 1
+    ];
+  }, [derugRequests]);
+
+  const shouldShowWinningModal = (status?: DerugStatus) => {
+    if (
+      derugRequests &&
+      derugRequests.some(
+        (el) => el.derugger.toString() === wallet.publicKey?.toString()
+      ) &&
+      getWinningRequest &&
+      status === DerugStatus.Voting
+    ) {
+      setIsOpen(true);
+      return true;
+    }
+  };
+
   const boxRef = useRef<HTMLDivElement | null>(null);
 
   return (
@@ -130,8 +154,8 @@ export const Collections: FC = () => {
         setRequests: setDerugRequests,
       }}
     >
-      <Box className="overflow-y-auto">
-        <Box className="sticky top-0 grid"></Box>
+      <Box className="overflow-y-auto mt-16">
+        <Box className="sticky top-0 grid "></Box>
         <Box className="overflow-y-clip">
           <AddDerugRequst
             isOpen={derugRequestVisible}
@@ -140,17 +164,11 @@ export const Collections: FC = () => {
             setDerugRequest={setDerugRequests}
           />
           <Box className="sticky top-0 grid">
-            <StickyHeader
-              collection={collectionStats}
-              collectionDerug={collectionDerug}
-              wallet={wallet}
-              openDerugModal={setDerugRequestVisible}
-            />
             <HeaderTabs
-              selectedInfo={selectedInfo}
               setSelectedInfo={setSelectedInfo}
               selectedData={selectedData}
               setSelectedData={setSelectedData}
+              openDerugModal={setDerugRequestVisible}
             />
           </Box>
 
@@ -166,6 +184,7 @@ export const Collections: FC = () => {
               className="ASDSAD"
               style={{
                 maxHeight: "27em",
+                transform: "translateY(-42px)",
                 overflow: "none",
               }}
             >
@@ -175,18 +194,41 @@ export const Collections: FC = () => {
               sx={{
                 maxHeight: "27em",
                 overflowY: "scroll",
+                marginLeft: "2em",
               }}
             >
               <RightPane
                 selectedData={selectedData}
+                chainCollectionData={chainCollectionData}
                 parentRef={boxRef}
                 traits={traits}
-                iframeRef={undefined}
+                iframeRef={iframeRef}
               />
             </Box>
           </Box>
+          <Marqee
+            pauseOnClick
+            loop={0}
+            speed={30}
+            direction={"right"}
+            gradient={false}
+            style={{
+              position: "absolute",
+              left: "16%",
+              top: "32px",
+              width: "65%",
+            }}
+          >
+            <StickyHeader
+              collection={collectionStats}
+              collectionDerug={collectionDerug}
+              wallet={wallet}
+              openDerugModal={setDerugRequestVisible}
+            />
+          </Marqee>
         </Box>
       </Box>
+      {/* <DerugRequest openDerugModal={setDerugRequestVisible} /> */}
       {collectionDerug && (
         <>
           {(collectionDerug.status === DerugStatus.Initialized ||
@@ -197,7 +239,11 @@ export const Collections: FC = () => {
             .isAfter(dayjs()) ? (
             <DerugRequest openDerugModal={setDerugRequestVisible} />
           ) : (
-            <>{collectionDerug && derugRequests && <Remint />}</>
+            <>
+              {collectionDerug && derugRequests && (
+                <Remint getWinningRequest={getWinningRequest} />
+              )}
+            </>
           )}
         </>
       )}

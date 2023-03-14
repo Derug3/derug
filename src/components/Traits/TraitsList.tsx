@@ -9,7 +9,7 @@ const TraitsList: FC<{ traits: ITrait[] }> = ({ traits }) => {
       return <Traits trait={t} key={t.name} />;
     });
   }, []);
-  return <Box className="flex flex-col gap-10 pl-0">{renderTraits}</Box>;
+  return <Box className="flex flex-col gap-5 pl-0">{renderTraits}</Box>;
 };
 
 export default TraitsList;

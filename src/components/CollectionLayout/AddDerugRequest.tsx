@@ -113,7 +113,6 @@ export const AddDerugRequst: FC<{
         onDismiss={() => setIsOpen(false)}
         sx={{
           width: "600px",
-          filter: "drop-shadow(rgb(246, 242, 9) 0px 0px 10px)",
         }}
         aria-labelledby="header-id"
       >
