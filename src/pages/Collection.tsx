@@ -42,6 +42,8 @@ import { DerugStatus } from "../enums/collections.enums";
 import dayjs from "dayjs";
 import { Remint } from "../components/Remit/Remint";
 
+import { toast } from "react-hot-toast";
+import { getFloorPrice, getListings, getTraits } from "../api/tensor";
 export const Collections: FC = () => {
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
 
@@ -66,48 +68,18 @@ export const Collections: FC = () => {
 
   const wallet = useWallet();
 
-  const { data } = useQuery(TRAITS_QUERY, {
-    variables: { slug },
-  });
-
-  const collectionFpData = useQuery(FP_QUERY, {
-    variables: { slug },
-  });
-
-  const activeListingsData = useQuery(ACTIVE_LISTINGS_QUERY, {
-    variables: {
-      slug,
-      filters: null,
-      sortBy: "PriceAsc",
-      limit: 100,
-    },
-  });
-
   useEffect(() => {
     void getBasicCollectionData();
   }, []);
 
-  useEffect(() => {
-    if (data) {
-      setTraits(mapTraitsQuery(data));
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (collectionFpData.data) {
-      setCollectionStats(mapCollectionStats(collectionFpData.data));
-    }
-  }, [collectionFpData]);
-
-  useEffect(() => {
-    if (activeListingsData.data) {
-      setListings(mapCollectionListings(activeListingsData.data));
-    }
-  }, [activeListingsData]);
-
   const getBasicCollectionData = async () => {
     try {
       setBasicCollectionData(await getSingleCollection(slug ?? ""));
+      if (slug) {
+        setCollectionStats(await getFloorPrice(slug));
+        setListings(await getListings(slug));
+        setTraits(await getTraits(slug));
+      }
     } catch (error) {
       console.log(error);
     }

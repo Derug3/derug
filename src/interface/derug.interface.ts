@@ -1,7 +1,7 @@
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import { Keypair, TransactionInstruction } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
-import { RemintingStatus } from "../enums/collections.enums";
+import { ListingSource, RemintingStatus } from "../enums/collections.enums";
 export interface IUtilityData {
   title: string;
   description: string;
@@ -26,4 +26,17 @@ export interface IDerugCollectionNft {
   metadata: Metadata;
   tokenAccount: PublicKey;
   remintingStatus?: RemintingStatus;
+}
+
+export interface IListingValue {
+  image: string;
+  price: number;
+  soruce: ListingSource;
+}
+
+export interface IGraphData {
+  smallestPrice: number;
+  largestPrice: number;
+  months: string[];
+  prices: number[];
 }

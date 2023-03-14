@@ -64,7 +64,7 @@ export interface ICollectionStats {
   numListed: number;
   numMints: number;
   royalty: number;
-  firstListed: Date;
+  firstListed: number;
 }
 
 export interface INftListing {
