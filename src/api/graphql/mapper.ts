@@ -58,7 +58,7 @@ export const mapCollectionStats = (data: any): ICollectionStats | undefined => {
   const dataInfo = data.instrumentTV2;
   if (dataInfo)
     return {
-      firstListed: dayjs.unix(dataInfo.firstListDate).toDate(),
+      firstListed: dataInfo.firstListDate,
       marketCap: dataInfo.statsOverall.marketCap,
       numListed: dataInfo.statsOverall.numListed,
       numMints: dataInfo.statsOverall.numMints,
