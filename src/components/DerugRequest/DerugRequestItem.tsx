@@ -93,9 +93,7 @@ export const DerugRequestItem: FC<{
     <div
       className="flex w-full items-center py-2"
       style={{
-        borderRadius: "4px",
         padding: "10px",
-        background: "rgb(9, 194, 246,.15)",
       }}
     >
       <div className="flex gap-3 items-center justify-start w-1/2	ml-7">
@@ -107,6 +105,18 @@ export const DerugRequestItem: FC<{
           }}
         >
           <span style={{ fontSize: "1em", opacity: 0.7 }}>#{index + 1}</span>{" "}
+          {""}{" "}
+        </Balancer>
+        <Balancer
+          className="text-md cursor-pointer text-white font-mono truncate w-1/3"
+          onClick={() => {
+            setIsOpen(true);
+            setCurrentRequest(derugRequest);
+          }}
+        >
+          <span style={{ fontSize: "1em", opacity: 0.7 }}>
+            {wallet.publicKey?.toString()}
+          </span>{" "}
           {""}{" "}
         </Balancer>
         {derugRequest.utility &&
@@ -130,7 +140,6 @@ export const DerugRequestItem: FC<{
                   paddingRight:
                     i !== derugRequest.utility.length - 1 ? "1em" : "0px",
                   color: "rgb(9, 194, 246)",
-                  filter: "drop-shadow(white 0px 0px 3px)",
                 }}
               >
                 {" "}
@@ -169,14 +178,12 @@ export const DerugRequestItem: FC<{
           progress={
             (derugRequest.voteCount / (collectionDerug?.totalSupply ?? 1)) * 100
           }
-          bg="rgba(9,194,246)"
+          bg="#2DD4BF"
           sx={{
-            width: "280px",
-            filter: "drop-shadow(white 0px 0px 3px)",
-            height: "16px",
+            width: "380px",
+            height: "30px",
             borderRadius: 0,
-            color: "rgb(179, 255, 174)",
-            marginLeft: "1em",
+            color: "rgb(45, 212, 191)",
           }}
         />
         <Balancer
@@ -186,7 +193,7 @@ export const DerugRequestItem: FC<{
           <span
             style={{
               padding: "10px",
-              filter: "drop-shadow(#2dd4bf 0px 0px 10px)",
+              fontSize: "0.75em",
             }}
           >
             {dayjs
@@ -196,7 +203,11 @@ export const DerugRequestItem: FC<{
               .slice(0, 10)}
           </span>
         </Balancer>
-        <p>
+        <p
+          style={{
+            fontSize: "1.5em",
+          }}
+        >
           {derugRequest.voteCount} / {collectionDerug?.totalSupply}
         </p>
       </div>

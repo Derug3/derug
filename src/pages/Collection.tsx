@@ -256,26 +256,6 @@ export const Collections: FC = () => {
         </Box>
       </Box>
       {/* <DerugRequest openDerugModal={setDerugRequestVisible} /> */}
-      {shouldShowWinningModal(collectionDerug?.status) && isOpen && (
-        <Dialog
-          returnFocusRef={returnFocusRef}
-          isOpen={true}
-          onDismiss={() => setIsOpen(false)}
-          sx={{
-            width: "max-content",
-          }}
-          aria-labelledby="header-id"
-        >
-          <Dialog.Header id="header-id">Winning request</Dialog.Header>
-          <Box
-            p={3}
-            className="flex justify-center flex-col gap-3 "
-            sx={{ background: "rgba(9,194,246,.15)" }}
-          >
-            <Remint getWinningRequest={getWinningRequest} />
-          </Box>
-        </Dialog>
-      )}
       {collectionDerug && (
         <>
           {(collectionDerug.status === DerugStatus.Initialized ||
