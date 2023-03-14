@@ -3,6 +3,7 @@ import {
   AccountMeta,
   ComputeBudgetProgram,
   Keypair,
+  LAMPORTS_PER_SOL,
   PublicKey,
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
@@ -21,7 +22,13 @@ import {
 } from "../seeds";
 import { sendTransaction } from "../sendTransaction";
 import { derugProgramFactory } from "../utilities";
-import { AccountLayout, MintLayout, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import {
+  AccountLayout,
+  getMinimumBalanceForRentExemptAccount,
+  getMinimumBalanceForRentExemptMint,
+  MintLayout,
+  TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
 import {
   IDerugCollectionNft,
   IDerugInstruction,
@@ -47,15 +54,9 @@ export const claimVictory = async (
   const tokenAccount = Keypair.generate();
   const collection = Keypair.generate();
 
-  instructions.push({
-    instructions: [claimVictoryIx],
-    pendingDescription: "Claiming victory...",
-    successDescription: "Successfully claimed victory",
-  });
-
   const createTokenAcc = SystemProgram.createAccount({
     fromPubkey: wallet.publicKey!,
-    lamports: AccountLayout.span,
+    lamports: await getMinimumBalanceForRentExemptAccount(RPC_CONNECTION),
     newAccountPubkey: tokenAccount.publicKey,
     programId: TOKEN_PROGRAM_ID,
     space: AccountLayout.span,
@@ -63,7 +64,7 @@ export const claimVictory = async (
 
   const createMint = SystemProgram.createAccount({
     fromPubkey: wallet.publicKey!,
-    lamports: MintLayout.span,
+    lamports: await getMinimumBalanceForRentExemptMint(RPC_CONNECTION),
     newAccountPubkey: collection.publicKey,
     programId: TOKEN_PROGRAM_ID,
     space: MintLayout.span,
@@ -80,6 +81,7 @@ export const claimVictory = async (
       METAPLEX_PROGRAM.toBuffer(),
       collection.publicKey.toBuffer(),
       collectionAuthoritySeed,
+      pdaAuthority.toBuffer(),
     ],
     METAPLEX_PROGRAM
   );
@@ -123,8 +125,8 @@ export const claimVictory = async (
     .instruction();
 
   instructions.push({
-    instructions: [createTokenAcc, createMint, initRemintingIx],
-    pendingDescription: "Initializing reminting",
+    instructions: [claimVictoryIx, createTokenAcc, createMint, initRemintingIx],
+    pendingDescription: "Initializing reminting and claiming victory",
     successDescription: "Successfully initialized reminting",
     partialSigner: [tokenAccount, collection],
   });
@@ -181,7 +183,7 @@ export const remintNft = async (
 
     const createTokenAcc = SystemProgram.createAccount({
       fromPubkey: wallet.publicKey!,
-      lamports: AccountLayout.span,
+      lamports: await getMinimumBalanceForRentExemptAccount(RPC_CONNECTION),
       newAccountPubkey: tokenAccount.publicKey,
       programId: TOKEN_PROGRAM_ID,
       space: AccountLayout.span,
@@ -189,7 +191,7 @@ export const remintNft = async (
 
     const createMint = SystemProgram.createAccount({
       fromPubkey: wallet.publicKey!,
-      lamports: MintLayout.span,
+      lamports: await getMinimumBalanceForRentExemptMint(RPC_CONNECTION),
       newAccountPubkey: mint.publicKey,
       programId: TOKEN_PROGRAM_ID,
       space: MintLayout.span,
@@ -243,4 +245,5 @@ export const remintNft = async (
       remintingNft: nft,
     });
   }
+  await sendTransaction(RPC_CONNECTION, instructions, wallet);
 };

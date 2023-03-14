@@ -14,6 +14,7 @@ import Skeleton from "react-loading-skeleton";
 import { DerugStatus, RemintingStatus } from "../../enums/collections.enums";
 import { nftStore } from "../../stores/nftStore";
 import { remintNft } from "../../solana/methods/remint";
+import { chunk } from "lodash";
 const Remint = () => {
   const { derugRequests } = useContext(CollectionContext);
   const [collectionNfts, setCollectionNfts] = useState<IDerugCollectionNft[]>();
@@ -103,14 +104,28 @@ const Remint = () => {
           })
         );
 
-        await remintNft(
-          wallet!,
-          collectionDerug,
-          winningRequest,
-          collectionNfts?.filter((nft) => !nft.remintingStatus)
-        );
+        if (collectionNfts.length > 10) {
+          const chunkedNfts = chunk(collectionNfts, 10);
+          for (const collectionChunk of chunkedNfts) {
+            await remintNft(
+              wallet!,
+              collectionDerug,
+              winningRequest,
+              collectionChunk?.filter((nft) => !nft.remintingStatus)
+            );
+          }
+        } else {
+          await remintNft(
+            wallet!,
+            collectionDerug,
+            winningRequest,
+            collectionNfts?.filter((nft) => !nft.remintingStatus)
+          );
+        }
       }
     } catch (error) {
+      console.log(error);
+
       setCollectionNfts(
         collectionNfts?.map((cnft) => {
           if (cnft.remintingStatus) {
