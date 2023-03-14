@@ -1,4 +1,4 @@
-import { Box, Text } from "@primer/react";
+import { Box, Button, Text } from "@primer/react";
 import { motion } from "framer-motion";
 import { FC } from "react";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
@@ -18,13 +18,15 @@ export const LeftPane: FC<{
     >
       <div className="">
         {(selectedInfo === "description" || selectedInfo === "") && (
-          <Text
-            id="description"
-            as="p"
-            sx={{ p: 2, maxHeight: "32em", overflow: "none" }}
-          >
-            <CollectionData />
-          </Text>
+          <>
+            <Text
+              id="description"
+              as="p"
+              sx={{ p: 2, maxHeight: "32em", overflow: "none" }}
+            >
+              <CollectionData />
+            </Text>
+          </>
         )}
       </div>
     </motion.div>

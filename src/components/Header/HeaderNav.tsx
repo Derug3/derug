@@ -30,20 +30,7 @@ const HeaderNav: FC = () => {
       <div className="flex">
         {/* <Header.Item full>
           <motion.button className="font-mono" {...FADE_IN_ANIMATION_SETTINGS}>
-            <Button
-              className="bg-transparent w-full font-mono font-bold text-lg p-10"
-              style={{
-                fontSize: "1em",
-                fontFamily: "monospace",
-                height: "48px",
-                padding: "0 24px",
-                lineHeight: "48px",
-                filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 5px)",
-              }}
-              // onClick={() => openDerugModal(true)}
-            >
-              Add derug request
-            </Button>
+            
           </motion.button>
         </Header.Item> */}
         <Header.Item full>

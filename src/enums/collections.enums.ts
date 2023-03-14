@@ -20,3 +20,9 @@ export enum DerugRequestStatus {
   Reminting = "reminting",
   Completed = "completed",
 }
+
+export enum RemintingStatus {
+  InProgress,
+  Succeded,
+  Failed,
+}

@@ -17,6 +17,7 @@ import {
   FP_QUERY,
   TRAITS_QUERY,
 } from "../api/graphql/query";
+import Marqee from "react-fast-marquee";
 
 import { StickyHeader } from "../components/CollectionLayout/StickyHeader";
 import { IRequest } from "../interface/collections.interface";
@@ -27,7 +28,7 @@ import {
   mapNextData,
   mapTraitsQuery,
 } from "../api/graphql/mapper";
-import { Box, Dialog } from "@primer/react";
+import { Box, Button, Dialog } from "@primer/react";
 import { CollectionContext } from "../stores/collectionContext";
 import { getSingleCollection } from "../api/collections.api";
 import { HeaderTabs } from "../components/CollectionLayout/HeaderTabs";
@@ -37,8 +38,10 @@ import { getDummyCollectionData } from "../solana/dummy";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { getAllDerugRequest } from "../solana/methods/derug-request";
 import DerugRequest from "../components/DerugRequest/DerugRequest";
-import Remint from "../components/Remit/Remint";
 import { DerugStatus } from "../enums/collections.enums";
+import dayjs from "dayjs";
+import { Remint } from "../components/Remit/Remint";
+
 export const Collections: FC = () => {
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
 
@@ -189,12 +192,6 @@ export const Collections: FC = () => {
             setDerugRequest={setDerugRequests}
           />
           <Box className="sticky top-0 grid">
-            <StickyHeader
-              collection={collectionStats}
-              collectionDerug={collectionDerug}
-              wallet={wallet}
-              openDerugModal={setDerugRequestVisible}
-            />
             <HeaderTabs
               selectedInfo={selectedInfo}
               setSelectedInfo={setSelectedInfo}
@@ -207,7 +204,7 @@ export const Collections: FC = () => {
             sx={{
               display: "grid",
               gridTemplateColumns: "50% 50%",
-              height: "400px",
+              height: "500px",
             }}
           >
             <div
@@ -235,6 +232,26 @@ export const Collections: FC = () => {
               />
             </Box>
           </Box>
+          <Marqee
+            pauseOnHover
+            loop={0}
+            speed={90}
+            direction={"right"}
+            gradient={false}
+            style={{
+              position: "absolute",
+              top: "0",
+              left: "300px",
+              width: "50%",
+            }}
+          >
+            <StickyHeader
+              collection={collectionStats}
+              collectionDerug={collectionDerug}
+              wallet={wallet}
+              openDerugModal={setDerugRequestVisible}
+            />
+          </Marqee>
         </Box>
       </Box>
       {/* <DerugRequest openDerugModal={setDerugRequestVisible} /> */}
@@ -257,6 +274,24 @@ export const Collections: FC = () => {
             <Remint getWinningRequest={getWinningRequest} />
           </Box>
         </Dialog>
+      )}
+      {collectionDerug && (
+        <>
+          {(collectionDerug.status === DerugStatus.Initialized ||
+            collectionDerug.status === DerugStatus.Voting) &&
+          dayjs
+            .unix(collectionDerug.votingStartedAt)
+            .add(3, "minutes")
+            .isAfter(dayjs()) ? (
+            <DerugRequest openDerugModal={setDerugRequestVisible} />
+          ) : (
+            <>
+              {collectionDerug && derugRequests && (
+                <Remint getWinningRequest={getWinningRequest} />
+              )}
+            </>
+          )}
+        </>
       )}
     </CollectionContext.Provider>
   );

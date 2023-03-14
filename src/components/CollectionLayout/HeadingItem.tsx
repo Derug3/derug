@@ -35,7 +35,7 @@ const HeadingItem: FC<{
  text-orange-800 drop-shadow-3xl"
           date={dayjs
             .unix(amount as number)
-            .add(3, "days")
+            .add(3, "minutes")
             .toDate()}
         />
       )}

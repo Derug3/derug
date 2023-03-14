@@ -1,10 +1,15 @@
 import { Box, Button, ProgressBar, Text, Tooltip } from "@primer/react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import React, { FC, useContext, useMemo } from "react";
 import { IRequest } from "../../interface/collections.interface";
+import { claimVictory } from "../../solana/methods/remint";
 import { CollectionContext } from "../../stores/collectionContext";
-
+import { toast } from "react-hot-toast";
+import { getCollectionDerugData } from "../../solana/methods/derug";
 const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
-  const { collectionDerug } = useContext(CollectionContext);
+  const { collectionDerug, setCollectionDerug } = useContext(CollectionContext);
+
+  const wallet = useWallet();
 
   const renderUtilities = useMemo(() => {
     return request.utility.map((u, i) => {
@@ -37,9 +42,23 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
     });
   }, []);
 
+  const claimDerugVictory = async () => {
+    try {
+      if (wallet && collectionDerug && request) {
+        await claimVictory(wallet!, collectionDerug, request);
+        const updatedDerug = await getCollectionDerugData(
+          collectionDerug.address
+        );
+        setCollectionDerug(updatedDerug);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <Box className="flex flex-row justify-between w-full items-center w-full">
-      <Box className="flex flex-col gap-5 w-full px-16 py-5">
+      <Box className="flex flex-col gap-5 w-full px-16 ">
         <Box className="flex flex-row  ">
           <Text className="font-mono text-neutral-400 flex justify-center">
             {request.derugger.toString()}
@@ -85,10 +104,22 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
               background: "rgba(9, 194, 246, 0.6)",
               padding: "1.25em",
             }}
+            onClick={claimDerugVictory}
           >
             Claim victory
           </Button>
         </Box>
+        {/* <Button
+          className="font-bold"
+          sx={{
+            width: "70%",
+            background: "rgb(45, 212, 191)",
+            color: "black",
+          }}
+          onClick={claimDerugVictory}
+        >
+          Claim victory
+        </Button> */}
       </Box>
     </Box>
   );

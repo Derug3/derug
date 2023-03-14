@@ -93,7 +93,7 @@ font-mono text-gray-700 leading-6 justify-between px-10 py-2 border-none mb-10"
           </Box>
         )}
       </Box>
-      <Box className="flex flex-col items-center">
+      {/* <Box className="flex flex-col items-center">
         <div className="flex gap-3">
           <AiOutlineStar
             style={{ color: isFavorite ? "#F0CF65" : "white" }}
@@ -135,7 +135,7 @@ font-mono text-gray-700 leading-6 justify-between px-10 py-2 border-none mb-10"
             </Button>
           )}
         </div>
-      </Box>
+      </Box> */}
     </div>
   );
 };
