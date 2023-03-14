@@ -115,7 +115,7 @@ export const DerugRequestItem: FC<{
           }}
         >
           <span style={{ fontSize: "1em", opacity: 0.7 }}>
-            {wallet.publicKey?.toString()}
+            {derugRequest.derugger.toString()}
           </span>{" "}
           {""}{" "}
         </Balancer>

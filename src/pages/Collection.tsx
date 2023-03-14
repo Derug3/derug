@@ -11,23 +11,14 @@ import {
   INftListing,
   ITrait,
 } from "../interface/collections.interface";
-import { useQuery } from "@apollo/client";
-import {
-  ACTIVE_LISTINGS_QUERY,
-  FP_QUERY,
-  TRAITS_QUERY,
-} from "../api/graphql/query";
+
 import Marqee from "react-fast-marquee";
 
 import { StickyHeader } from "../components/CollectionLayout/StickyHeader";
 import { IRequest } from "../interface/collections.interface";
 import { useSearchParams } from "react-router-dom";
-import {
-  mapCollectionListings,
-  mapCollectionStats,
-  mapNextData,
-  mapTraitsQuery,
-} from "../api/graphql/mapper";
+import utc from "dayjs/plugin/utc";
+
 import { Box, Button, Dialog } from "@primer/react";
 import { CollectionContext } from "../stores/collectionContext";
 import { getSingleCollection } from "../api/collections.api";
@@ -45,6 +36,7 @@ import { Remint } from "../components/Remit/Remint";
 import { toast } from "react-hot-toast";
 import { getFloorPrice, getListings, getTraits } from "../api/tensor";
 export const Collections: FC = () => {
+  dayjs.extend(utc);
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
 
   const [derugRequestVisible, setDerugRequestVisible] = useState(false);
@@ -130,6 +122,14 @@ export const Collections: FC = () => {
       return true;
     }
   };
+
+  const showDerugRequests = useMemo(() => {
+    if (collectionDerug) {
+      return !!!collectionDerug.winningRequest;
+    } else {
+      return false;
+    }
+  }, [collectionDerug]);
 
   const boxRef = useRef<HTMLDivElement | null>(null);
 
@@ -232,16 +232,14 @@ export const Collections: FC = () => {
         <>
           {(collectionDerug.status === DerugStatus.Initialized ||
             collectionDerug.status === DerugStatus.Voting) &&
-          dayjs
-            .unix(collectionDerug.votingStartedAt)
-            .add(3, "minutes")
-            .isAfter(dayjs()) ? (
+          showDerugRequests ? (
             <DerugRequest openDerugModal={setDerugRequestVisible} />
           ) : (
             <>
-              {collectionDerug && derugRequests && (
-                <Remint getWinningRequest={getWinningRequest} />
-              )}
+              {collectionDerug &&
+                collectionDerug.addedRequests.find((ar) => ar.winning) && (
+                  <Remint getWinningRequest={getWinningRequest} />
+                )}
             </>
           )}
         </>

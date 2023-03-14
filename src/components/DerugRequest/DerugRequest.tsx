@@ -15,7 +15,7 @@ export const DerugRequest: FC<{
   const [currentRequest, setCurrentRequest] = useState<IRequest>();
   const returnFocusRef = useRef(null);
 
-  const { derugRequests } = useContext(CollectionContext);
+  const { derugRequests, collectionDerug } = useContext(CollectionContext);
 
   const wallet = useWallet();
   const renderDerugRequests = useMemo(() => {
@@ -31,6 +31,37 @@ export const DerugRequest: FC<{
       );
     });
   }, [derugRequests]);
+
+  const getPercentage = () => {
+    if (collectionDerug?.addedRequests.length == 1) {
+      return 2;
+    }
+    if (collectionDerug && collectionDerug?.addedRequests.length < 5) {
+      return collectionDerug.addedRequests.length;
+    }
+    return 5;
+  };
+
+  const getWinningRequest = useMemo(() => {
+    if (
+      wallet &&
+      wallet.publicKey &&
+      dayjs(collectionDerug?.periodEnd).isBefore(dayjs())
+    ) {
+      const percentage = getPercentage();
+      const majorWinner = collectionDerug?.addedRequests.find(
+        (ac) => ac.voteCount > collectionDerug.totalSupply / percentage
+      );
+      if (majorWinner) {
+        const request = derugRequests?.find(
+          (dr) => dr.address.toString() === majorWinner.request.toString()
+        );
+        if (request?.derugger.toString() === wallet.publicKey.toString()) {
+          return request;
+        }
+      }
+    }
+  }, [wallet]);
 
   return (
     <motion.div
@@ -54,7 +85,7 @@ export const DerugRequest: FC<{
       <div className="w-full">
         <div className="flex w-full flex-col gap-1 items-center justify-around p-3">
           {derugRequests ? (
-            <>{renderDerugRequests}</>
+            <>{getWinningRequest ?? renderDerugRequests}</>
           ) : (
             <div className="text-base font-mono mt-3 text-white">
               There is no derug request yet.

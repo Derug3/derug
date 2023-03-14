@@ -13,6 +13,10 @@ import { METAPLEX_PROGRAM, RPC_CONNECTION } from "../../utilities/utilities";
 import { TOKEN_PROGRAM_ID } from "@project-serum/anchor/dist/cjs/utils/token";
 
 import { DerugStatus } from "../../enums/collections.enums";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 export const createDerugDataIx = async (
   collection: IChainCollectionData,
@@ -71,11 +75,14 @@ export const getCollectionDerugData = async (
       totalReminted: derugDataAccount.totalReminted,
       totalSuggestionCount: derugDataAccount.totalSuggestionCount,
       totalSupply: derugDataAccount.totalSupply,
-      votingStartedAt: derugDataAccount.votingStartedAt.toNumber(),
+      periodEnd: dayjs(derugDataAccount.periodEnd.toNumber() / 1000)
+        .utc()
+        .toDate(),
       newCollection: derugDataAccount.newCollection,
       winningRequest: derugDataAccount.winningRequest,
       address: derugDataAddress,
       collectionMetadata: derugDataAccount.collectionMetadata,
+      addedRequests: derugDataAccount.activeRequests,
     };
   } catch (error) {
     console.log(error);
