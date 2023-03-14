@@ -193,10 +193,10 @@ export const Collections: FC = () => {
           />
           <Box className="sticky top-0 grid">
             <HeaderTabs
-              selectedInfo={selectedInfo}
               setSelectedInfo={setSelectedInfo}
               selectedData={selectedData}
               setSelectedData={setSelectedData}
+              openDerugModal={setDerugRequestVisible}
             />
           </Box>
 

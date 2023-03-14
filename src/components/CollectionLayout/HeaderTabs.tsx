@@ -1,4 +1,5 @@
 import { Button, TabNav } from "@primer/react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { FC, useContext } from "react";
 import { CollectionContext } from "../../stores/collectionContext";
 
@@ -20,12 +21,13 @@ const getNavStyling = (tab: string, selected: string) => {
 };
 
 export const HeaderTabs: FC<{
-  selectedInfo: string;
   selectedData: string;
   setSelectedInfo: (s: string) => void;
   setSelectedData: (s: string) => void;
-}> = ({ selectedInfo, selectedData, setSelectedInfo, setSelectedData }) => {
-  const { traits, activeListings } = useContext(CollectionContext);
+  openDerugModal: (value: boolean) => void;
+}> = ({ openDerugModal, selectedData, setSelectedData }) => {
+  const { traits } = useContext(CollectionContext);
+  const wallet = useWallet();
 
   return (
     <div
@@ -35,15 +37,17 @@ export const HeaderTabs: FC<{
       <div className="w-full gap-10 flex justify-end">
         <div className="w-1/2 flex">
           <div className="w-full flex justify-between ml-10">
-            <Button
-              sx={{
-                padding: "1.25em 3.25em",
-                color: "white",
-              }}
-              onClick={() => {}}
-            >
-              <span className="text-lg uppercase ">Add derug request</span>
-            </Button>
+            {wallet && (
+              <Button
+                sx={{
+                  padding: "1.25em 3.25em",
+                  color: "white",
+                }}
+                onClick={() => openDerugModal(true)}
+              >
+                <span className="text-lg uppercase ">Add derug request</span>
+              </Button>
+            )}
             <TabNav
               aria-label="Main"
               className="flex justify-end w-fit"
