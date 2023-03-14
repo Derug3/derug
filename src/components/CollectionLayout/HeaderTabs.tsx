@@ -1,4 +1,4 @@
-import { TabNav } from "@primer/react";
+import { Button, TabNav } from "@primer/react";
 import { FC, useContext } from "react";
 import { CollectionContext } from "../../stores/collectionContext";
 
@@ -30,44 +30,57 @@ export const HeaderTabs: FC<{
   return (
     <div
       className="flex w-full self-start bg-gradient-to-r
-  font-mono text-gray-700 leading-6 px-10 py-2 border-none justify-end"
+  font-mono text-gray-700 leading-6 px-10 border-none justify-end"
     >
-      <div className="w-1/2 flex justify-end">
-        <TabNav
-          aria-label="Main"
-          className="flex justify-end w-fit"
-          style={{
-            borderBottom: "1px solid  rgba(9, 194, 246)",
-            position: "sticky",
-          }}
-        >
-          <TabNav.Link
-            onClick={() => setSelectedData("listed")}
-            sx={getNavStyling(selectedData, "listed")}
-          >
-            NFTS
-          </TabNav.Link>
-          {traits && traits.length > 0 && (
-            <TabNav.Link
-              onClick={() => setSelectedData("traits")}
-              sx={getNavStyling(selectedData, "traits")}
+      <div className="w-full gap-10 flex justify-end">
+        <div className="w-1/2 flex">
+          <div className="w-full flex justify-between ml-10">
+            <Button
+              sx={{
+                padding: "1.25em 3.25em",
+                color: "white",
+              }}
+              onClick={() => {}}
             >
-              TRAITS
-            </TabNav.Link>
-          )}
-          <TabNav.Link
-            onClick={() => setSelectedData("statistics")}
-            sx={getNavStyling(selectedData, "statistics")}
-          >
-            STATISTICS
-          </TabNav.Link>
-          <TabNav.Link
-            onClick={() => setSelectedData("solanafm")}
-            sx={getNavStyling(selectedData, "solanafm")}
-          >
-            SOLANAFM
-          </TabNav.Link>
-        </TabNav>
+              <span className="text-lg uppercase ">Add derug request</span>
+            </Button>
+            <TabNav
+              aria-label="Main"
+              className="flex justify-end w-fit"
+              style={{
+                borderBottom: "1px solid  rgba(9, 194, 246)",
+                position: "sticky",
+              }}
+            >
+              <TabNav.Link
+                onClick={() => setSelectedData("listed")}
+                sx={getNavStyling(selectedData, "listed")}
+              >
+                NFTS
+              </TabNav.Link>
+              {traits && traits.length > 0 && (
+                <TabNav.Link
+                  onClick={() => setSelectedData("traits")}
+                  sx={getNavStyling(selectedData, "traits")}
+                >
+                  TRAITS
+                </TabNav.Link>
+              )}
+              <TabNav.Link
+                onClick={() => setSelectedData("statistics")}
+                sx={getNavStyling(selectedData, "statistics")}
+              >
+                STATISTICS
+              </TabNav.Link>
+              <TabNav.Link
+                onClick={() => setSelectedData("solanafm")}
+                sx={getNavStyling(selectedData, "solanafm")}
+              >
+                SOLANAFM
+              </TabNav.Link>
+            </TabNav>
+          </div>
+        </div>
       </div>
     </div>
   );

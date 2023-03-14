@@ -41,15 +41,19 @@ const ListedNfts: FC<{
 
   return (
     <div
-      className="flex w-full justify-end items-start"
-      style={{ height: "27em", overflow: "scroll" }}
+      className="flex w-full justify-between items-center flex-wrap"
+      style={{
+        height: "27em",
+        overflow: "scroll",
+        width: "100%",
+      }}
     >
       {activeListings && (
         <InfiniteScroll
           style={{
             display: "flex",
             flexWrap: "wrap",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             width: "100%",
             overflow: "none",
           }}

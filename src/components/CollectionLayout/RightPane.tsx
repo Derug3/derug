@@ -23,14 +23,7 @@ export const RightPane: FC<{
       <div className="">
         {selectedData === "traits" && traits && <TraitsList traits={traits} />}
         {selectedData === "statistics" && traits && <ListingsGraph />}
-        {selectedData === "listed" && (
-          // <Box
-          //   className="flex flex-row flex-wrap mt-5 gap-1"
-          //   style={{ overflow: "auto" }}
-          // >
-          // </Box>
-          <ListedNfts parentRef={parentRef} />
-        )}
+        {selectedData === "listed" && <ListedNfts parentRef={parentRef} />}
         {selectedData === "solanafm" && (
           <div id="solanafm" className="flex w-full">
             <iframe

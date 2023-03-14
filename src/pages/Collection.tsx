@@ -212,7 +212,7 @@ export const Collections: FC = () => {
               className="ASDSAD"
               style={{
                 maxHeight: "27em",
-                transform: "translateY(-52px)",
+                transform: "translateY(-42px)",
                 overflow: "none",
               }}
             >
@@ -222,6 +222,7 @@ export const Collections: FC = () => {
               sx={{
                 maxHeight: "27em",
                 overflowY: "scroll",
+                marginLeft: "2em",
               }}
             >
               <RightPane
