@@ -37,7 +37,7 @@ export const HeaderTabs: FC<{
       <div className="w-full gap-10 flex justify-end">
         <div className="w-1/2 flex">
           <div className="w-full flex justify-between ml-10">
-            {wallet && (
+            {wallet && wallet.publicKey && (
               <Button
                 sx={{
                   padding: "1.25em 3.25em",

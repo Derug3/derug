@@ -228,7 +228,6 @@ export const Collections: FC = () => {
           </Marqee>
         </Box>
       </Box>
-      {/* <DerugRequest openDerugModal={setDerugRequestVisible} /> */}
       {collectionDerug && (
         <>
           {(collectionDerug.status === DerugStatus.Initialized ||

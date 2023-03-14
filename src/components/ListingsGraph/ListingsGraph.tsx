@@ -40,7 +40,6 @@ const ListingsGraph = () => {
       );
 
       const chartContext = chartRef.current!.getContext("2d");
-      const sorted = recentActivities.sort((a, b) => a.price - b.price);
       myChart = new Chart(chartContext!, {
         type: "line",
         data: {
@@ -81,8 +80,6 @@ const ListingsGraph = () => {
         toggleLoading(true);
         const recentAct = await getRecentActivities(collection?.symbol);
         const mappedValues = mapByDates(recentAct);
-        console.log(mappedValues);
-
         setGraphData(mappedValues);
         setRecentActivities(recentAct);
       }

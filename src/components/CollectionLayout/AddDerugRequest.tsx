@@ -90,7 +90,7 @@ export const AddDerugRequst: FC<{
         const addedRequests = [...(derugRequests ?? [])];
         addedRequests.push(await getSingleDerugRequest(requestAddress));
       }
-      if (chainCollectionData && !chainCollectionData?.hasActiveDerugData) {
+      if (chainCollectionData) {
         const derugData = await getCollectionDerugData(
           chainCollectionData?.derugDataAddress
         );
