@@ -64,7 +64,7 @@ export interface ICollectionStats {
   numListed: number;
   numMints: number;
   royalty: number;
-  firstListed: Date;
+  firstListed: number;
 }
 
 export interface INftListing {
@@ -107,4 +107,5 @@ export interface ICollectionDerugData {
   totalReminted: number;
   totalSuggestionCount: number;
   status: DerugStatus;
+  collectionMetadata: PublicKey | null;
 }

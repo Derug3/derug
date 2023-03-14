@@ -246,11 +246,6 @@ export type DerugProgram = {
           isSigner: false;
         },
         {
-          name: "oldCollectionMetadata";
-          isMut: true;
-          isSigner: false;
-        },
-        {
           name: "oldMint";
           isMut: true;
           isSigner: false;
@@ -406,7 +401,9 @@ export type DerugProgram = {
           },
           {
             name: "collectionMetadata";
-            type: "publicKey";
+            type: {
+              option: "publicKey";
+            };
           },
           {
             name: "totalSupply";
@@ -962,11 +959,6 @@ export const IDL: DerugProgram = {
           isSigner: false,
         },
         {
-          name: "oldCollectionMetadata",
-          isMut: true,
-          isSigner: false,
-        },
-        {
           name: "oldMint",
           isMut: true,
           isSigner: false,
@@ -1122,7 +1114,9 @@ export const IDL: DerugProgram = {
           },
           {
             name: "collectionMetadata",
-            type: "publicKey",
+            type: {
+              option: "publicKey",
+            },
           },
           {
             name: "totalSupply",

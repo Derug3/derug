@@ -1,16 +1,7 @@
-import { useQuery } from "@apollo/client";
-import { Box } from "@primer/react";
-import React, {
-  FC,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { FC, useContext, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import { useSearchParams } from "react-router-dom";
-import { ACTIVE_LISTINGS_QUERY, makeNextQuery } from "../../api/graphql/query";
+import { makeNextQuery } from "../../api/graphql/query";
 import { CollectionContext } from "../../stores/collectionContext";
 import ListedNftItem from "./ListedNftItem";
 

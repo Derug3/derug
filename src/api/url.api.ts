@@ -5,3 +5,7 @@ export const NAME = "/name";
 export const SYMBOL = "/symbol";
 export const MAGIC_EDEN_COLLECTION = "/collections";
 export const LISTINGS = "/listings";
+export const TENSOR = "/tensor";
+export const FLOOR_PRICE = "/fp";
+export const TRAITS = "/traits";
+export const ACTIVITIES = "/activities";

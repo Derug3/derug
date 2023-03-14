@@ -11,6 +11,7 @@ import { FC, useState } from "react";
 import { DerugStatus } from "../../enums/collections.enums";
 import { useSearchParams } from "react-router-dom";
 import { WalletContextState } from "@solana/wallet-adapter-react";
+import dayjs from "dayjs";
 
 export const StickyHeader: FC<{
   collection?: ICollectionStats;
@@ -55,7 +56,11 @@ font-mono text-gray-700 leading-6 justify-between px-10 py-2 border-none mb-10"
         <HeadingItem
           descColor="#2dd4bf"
           title="FIRST LISTING"
-          amount={collection?.firstListed.toDateString().slice(0, 10)}
+          amount={dayjs
+            .unix(collection?.firstListed ?? 0)
+            .toDate()
+            .toDateString()
+            .slice(0, 10)}
           desc=""
         />
         {collectionDerug && (

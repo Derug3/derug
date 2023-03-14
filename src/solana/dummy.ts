@@ -10,7 +10,7 @@ export const getDummyCollectionData =
       [
         derugDataSeed,
         new PublicKey(
-          "HUxWyo9a5uTxzLdSSY1LVsndnHfYkJhkRoP51ghLYEs7"
+          "5igf61dzqeaNCq3DjygoNr84QUd4KGNQMQ6A5vdHGYTM"
         ).toBuffer(),
       ],
       derugProgram.programId
@@ -28,10 +28,10 @@ export const getDummyCollectionData =
     }
 
     return {
-      collectionMint: "HUxWyo9a5uTxzLdSSY1LVsndnHfYkJhkRoP51ghLYEs7",
+      collectionMint: "5igf61dzqeaNCq3DjygoNr84QUd4KGNQMQ6A5vdHGYTM",
       hasActiveDerugData,
-      slug: "solana_monkey_business",
-      totalSupply: 5000,
+      slug: "boogle_gen_1",
+      totalSupply: 99,
       rugUpdateAuthority: "KQ1jcFYvnH9DNUzBfVbquRohP9uZ6C7DVJJDyqiGB4P",
       derugDataAddress: derugData,
     };
