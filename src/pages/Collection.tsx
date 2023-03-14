@@ -229,7 +229,7 @@ export const Collections: FC = () => {
         </Box>
       </Box>
       <DerugRequest openDerugModal={setDerugRequestVisible} />
-      {/* {collectionDerug && (
+      {collectionDerug && (
         <>
           {(collectionDerug.status === DerugStatus.Initialized ||
             collectionDerug.status === DerugStatus.Voting) &&
@@ -246,7 +246,7 @@ export const Collections: FC = () => {
             </>
           )}
         </>
-      )} */}
+      )}
     </CollectionContext.Provider>
   );
 };
