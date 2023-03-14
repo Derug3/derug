@@ -1,5 +1,4 @@
-import { useLazyQuery, useQuery } from "@apollo/client";
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { CollectionContext } from "../../stores/collectionContext";
 import {
   Chart,
@@ -11,11 +10,18 @@ import {
   CategoryScale,
 } from "chart.js";
 import dayjs from "dayjs";
-import { splitTimestamps } from "../../common/helpers";
 import { getRecentActivities } from "../../api/tensor";
+import toast from "react-hot-toast";
+import { Oval } from "react-loader-spinner";
+import { Box } from "@primer/react";
+import { mapByDates } from "../../api/graphql/mapper";
+import { IGraphData } from "../../interface/derug.interface";
 const ListingsGraph = () => {
   const { collection, setRecentActivities, recentActivities } =
     useContext(CollectionContext);
+
+  const [loading, toggleLoading] = useState(false);
+  const [graphData, setGraphData] = useState<IGraphData>();
 
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   let myChart: any = null;
@@ -38,12 +44,10 @@ const ListingsGraph = () => {
       myChart = new Chart(chartContext!, {
         type: "line",
         data: {
-          labels: recentActivities.map((ra) =>
-            dayjs.unix(ra.dateExecuted).toDate().getMonth()
-          ),
+          labels: graphData?.months,
           datasets: [
             {
-              data: recentActivities?.map((ra) => ra.price),
+              data: graphData?.prices,
               fill: false,
               borderColor: "rgb(9, 194, 246)",
               tension: 0.1,
@@ -53,8 +57,8 @@ const ListingsGraph = () => {
         options: {
           scales: {
             y: {
-              min: sorted[0].price,
-              max: sorted[sorted.length - 1].price * 2,
+              min: 0,
+              max: graphData?.largestPrice! + graphData?.smallestPrice! * 2,
             },
           },
         },
@@ -66,26 +70,45 @@ const ListingsGraph = () => {
   }, [recentActivities]);
 
   useEffect(() => {
-    if (!recentActivities || recentActivities.length === 0) {
+    if (!recentActivities && !loading) {
       void fetchFirstActivities();
     }
   }, []);
 
   const fetchFirstActivities = async () => {
     try {
-      if (collection?.symbol)
-        setRecentActivities(await getRecentActivities(collection?.symbol));
-    } catch (error) {
-      console.log(error);
+      if (collection?.symbol) {
+        toggleLoading(true);
+        const recentAct = await getRecentActivities(collection?.symbol);
+        const mappedValues = mapByDates(recentAct);
+        console.log(mappedValues);
+
+        setGraphData(mappedValues);
+        setRecentActivities(recentAct);
+      }
+    } catch (error: any) {
+      toast.error("Failed to get listing details ", error.message);
+    } finally {
+      toggleLoading(false);
     }
   };
 
   return (
     <>
-      {recentActivities && recentActivities.length > 0 ? (
+      {recentActivities && recentActivities.length > 0 && graphData ? (
         <canvas ref={chartRef} />
       ) : (
-        <p>No listings data for collection</p>
+        <Box className="flex flex-col items-center mt-50">
+          {loading ? (
+            <Oval
+              width={"5em"}
+              color="rgb(9, 194, 246)"
+              secondaryColor="rgba(9,194,246,.15)"
+            />
+          ) : (
+            <p>No listings data for collection</p>
+          )}
+        </Box>
       )}
     </>
   );

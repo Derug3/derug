@@ -1,16 +1,18 @@
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import dayjs, { unix } from "dayjs";
-import { divide, multiply, round } from "mathjs";
+import { divide, i, multiply, round } from "mathjs";
 import { ListingSource } from "../../enums/collections.enums";
+import utc from "dayjs/plugin/utc";
 import {
-  ICollectionData,
   ICollectionRecentActivities,
   ICollectionStats,
   INftListing,
   ITrait,
   ITraitInfo,
 } from "../../interface/collections.interface";
+import { IGraphData, IListingValue } from "../../interface/derug.interface";
 
+dayjs.extend(utc);
 export const mapTraitsQuery = (
   data: any
   //   collection: ICollectionData
@@ -115,4 +117,69 @@ export const mapRecentActivities = (data: any) => {
   });
 
   return recentTransacions;
+};
+
+export const mapByDates = (recentActivities: ICollectionRecentActivities[]) => {
+  const monthsMap = new Map<string, IListingValue>();
+  const mappedValues = recentActivities
+    .map((ra) => {
+      return { ...ra, dateExecuted: dayjs.unix(ra.dateExecuted / 1000).utc() };
+    })
+    .filter((ra) => ra.price > 0);
+
+  for (const mv of mappedValues) {
+    const mvKey =
+      mv.dateExecuted.month().toString() + mv.dateExecuted.year().toString();
+    const existingValue = monthsMap.get(mvKey);
+
+    if (!existingValue || existingValue.price > mv.price) {
+      monthsMap.set(mvKey, {
+        image: mv.image,
+        price: mv.price,
+        soruce: mv.source,
+      });
+    }
+  }
+  return remapListings(monthsMap);
+};
+
+export const MONTHS_MAP = new Map<number, string>([
+  [0, "Jan"],
+  [1, "Feb"],
+  [2, "Mar"],
+  [3, "Apr"],
+  [4, "May"],
+  [5, "Jun"],
+  [6, "Jul"],
+  [7, "Aug"],
+  [8, "Sep"],
+  [9, "Oct"],
+  [10, "Dec"],
+  [11, "Jan"],
+]);
+
+export const remapListings = (
+  listings: Map<string, IListingValue>
+): IGraphData => {
+  const months: string[] = [];
+  let smallestPrice = LAMPORTS_PER_SOL;
+  let largestPrice = -1;
+  const prices: number[] = [];
+  for (const [key, value] of listings) {
+    months.push(MONTHS_MAP.get(+key.slice(0, 1))! + "/" + key.slice(-2));
+    if (value.price < smallestPrice) {
+      smallestPrice = value.price;
+    }
+    if (value.price > largestPrice) {
+      largestPrice = value.price;
+    }
+    prices.push(value.price);
+  }
+
+  return {
+    prices: prices.reverse(),
+    months: months.reverse(),
+    smallestPrice,
+    largestPrice,
+  };
 };
