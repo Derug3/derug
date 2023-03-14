@@ -192,6 +192,12 @@ export const Collections: FC = () => {
             setDerugRequest={setDerugRequests}
           />
           <Box className="sticky top-0 grid">
+            <StickyHeader
+              collection={collectionStats}
+              collectionDerug={collectionDerug}
+              wallet={wallet}
+              openDerugModal={setDerugRequestVisible}
+            />
             <HeaderTabs
               selectedInfo={selectedInfo}
               setSelectedInfo={setSelectedInfo}
@@ -204,7 +210,7 @@ export const Collections: FC = () => {
             sx={{
               display: "grid",
               gridTemplateColumns: "50% 50%",
-              height: "500px",
+              height: "400px",
             }}
           >
             <div
@@ -232,17 +238,17 @@ export const Collections: FC = () => {
               />
             </Box>
           </Box>
-          <Marqee
+          {/* <Marqee
             pauseOnHover
             loop={0}
-            speed={90}
+            speed={30}
             direction={"right"}
             gradient={false}
             style={{
               position: "absolute",
-              top: "0",
-              left: "300px",
-              width: "50%",
+              top: "10px",
+              left: "20%",
+              width: "60%",
             }}
           >
             <StickyHeader
@@ -251,7 +257,7 @@ export const Collections: FC = () => {
               wallet={wallet}
               openDerugModal={setDerugRequestVisible}
             />
-          </Marqee>
+          </Marqee> */}
         </Box>
       </Box>
       {/* <DerugRequest openDerugModal={setDerugRequestVisible} /> */}

@@ -136,10 +136,7 @@ export const Remint: FC<{
   };
 
   return (
-    <Box
-      className="w-full flex-col gap-10"
-      sx={{ p: 0, padding: "0.5em 1.5em" }}
-    >
+    <Box className="w-full flex-col gap-10">
       <WinningRequest request={getWinningRequest!} />
       {collectionDerug && collectionDerug.status === DerugStatus.Reminting && (
         <Box className="flex flex-col items-center gap-10 w-full mt-10">

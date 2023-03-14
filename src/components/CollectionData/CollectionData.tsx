@@ -14,7 +14,7 @@ const CollectionData = () => {
           alt="collectionImg"
           className="rounded-[50%] w-32"
         />
-        <Box className="flex flex-col gap-2 items-start">
+        <Box className="flex flex-col gap-4 items-start">
           <Text className="font-bold font-monospace text-white-500 text-4xl">
             {collection?.name}
           </Text>
@@ -32,19 +32,6 @@ const CollectionData = () => {
                   {chainCollectionData.rugUpdateAuthority}
                 </span>
               </Text>
-              <Button
-                className="bg-transparent w-full font-mono font-bold text-lg p-10"
-                style={{
-                  fontSize: "1em",
-                  fontFamily: "monospace",
-                  height: "48px",
-                  padding: "1em 2em",
-                  lineHeight: "48px",
-                  filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 5px)",
-                }}
-              >
-                Add derug request
-              </Button>
             </>
           )}
           <Box className="flex flex-row gap-5">

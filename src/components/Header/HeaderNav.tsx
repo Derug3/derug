@@ -23,7 +23,7 @@ const HeaderNav: FC = () => {
             width: "12em",
             paddingLeft: "1em",
             cursor: "pointer",
-            filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 10px)",
+            filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 1px)",
           }}
         />
       </Header.Item>
