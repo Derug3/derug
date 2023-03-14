@@ -27,21 +27,6 @@ export const DerugRequest: FC<{
             index={index}
             key={dr.address.toString()}
           />
-          <DerugRequestItem
-            derugRequest={dr}
-            index={index + 1}
-            key={dr.address.toString()}
-          />
-          <DerugRequestItem
-            derugRequest={dr}
-            index={index + 2}
-            key={dr.address.toString()}
-          />
-          <DerugRequestItem
-            derugRequest={dr}
-            index={index + 3}
-            key={dr.address.toString()}
-          />
         </>
       );
     });
