@@ -17,11 +17,15 @@ import { Box } from "@primer/react";
 import { mapByDates } from "../../api/graphql/mapper";
 import { IGraphData } from "../../interface/derug.interface";
 const ListingsGraph = () => {
-  const { collection, setRecentActivities, recentActivities } =
-    useContext(CollectionContext);
+  const {
+    collection,
+    setRecentActivities,
+    recentActivities,
+    graphData,
+    setGraphData,
+  } = useContext(CollectionContext);
 
   const [loading, toggleLoading] = useState(false);
-  const [graphData, setGraphData] = useState<IGraphData>();
 
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   let myChart: any = null;
@@ -39,7 +43,7 @@ const ListingsGraph = () => {
         Title
       );
 
-      const chartContext = chartRef.current!.getContext("2d");
+      const chartContext = chartRef.current?.getContext("2d");
       myChart = new Chart(chartContext!, {
         type: "line",
         data: {
@@ -97,11 +101,13 @@ const ListingsGraph = () => {
       ) : (
         <Box className="flex flex-col items-center mt-50">
           {loading ? (
-            <Oval
-              width={"5em"}
-              color="rgb(9, 194, 246)"
-              secondaryColor="rgba(9,194,246,.15)"
-            />
+            <Box className="mt-40">
+              <Oval
+                width={"5em"}
+                color="rgb(9, 194, 246)"
+                secondaryColor="rgba(9,194,246,.15)"
+              />
+            </Box>
           ) : (
             <p>No listings data for collection</p>
           )}

@@ -99,12 +99,6 @@ export const DerugRequest: FC<{
               {wallet && (
                 <Button
                   className="bg-transparent w-full font-mono font-bold text-lg mt-5"
-                  style={{
-                    filter: "drop-shadow(#2dd4bf 0px 0px 3px)",
-                    backgroundColor: "rgba(0,183,234,15px)",
-                    fontFamily: "monospace",
-                    borderColor: "rgba(9,194,246)",
-                  }}
                   onClick={() => openDerugModal(true)}
                 >
                   Add derug request

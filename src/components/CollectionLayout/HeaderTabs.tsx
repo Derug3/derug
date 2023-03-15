@@ -50,7 +50,7 @@ export const HeaderTabs: FC<{
                   }}
                   onClick={() => openDerugModal(true)}
                 >
-                  <span className="text-lg uppercase ">Add derug request</span>
+                  <span className="text-sm uppercase ">Add derug request</span>
                 </Button>
               )}
             <TabNav

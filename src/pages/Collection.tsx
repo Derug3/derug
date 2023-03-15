@@ -35,6 +35,7 @@ import { Remint } from "../components/Remit/Remint";
 
 import { toast } from "react-hot-toast";
 import { getFloorPrice, getListings, getTraits } from "../api/tensor";
+import { IGraphData } from "../interface/derug.interface";
 export const Collections: FC = () => {
   dayjs.extend(utc);
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
@@ -52,9 +53,10 @@ export const Collections: FC = () => {
     useState<ICollectionRecentActivities[]>();
   const [collectionDerug, setCollectionDerug] =
     useState<ICollectionDerugData>();
+  const [graphData, setGraphData] = useState<IGraphData>();
+
   const [derugRequests, setDerugRequests] = useState<IRequest[]>();
   const iframeRef = useRef(null);
-  const returnFocusRef = useRef(null);
   const slug = useSearchParams()[0].get("symbol");
   const [isOpen, setIsOpen] = useState(true);
 
@@ -66,12 +68,12 @@ export const Collections: FC = () => {
 
   const getBasicCollectionData = async () => {
     try {
-      setBasicCollectionData(await getSingleCollection(slug ?? ""));
       if (slug) {
         setCollectionStats(await getFloorPrice(slug));
         setListings(await getListings(slug));
         setTraits(await getTraits(slug));
       }
+      setBasicCollectionData(await getSingleCollection(slug ?? ""));
     } catch (error) {
       console.log(error);
     }
@@ -152,6 +154,8 @@ export const Collections: FC = () => {
         setCollectionDerug,
         derugRequests,
         setRequests: setDerugRequests,
+        graphData,
+        setGraphData,
       }}
     >
       <Box className="overflow-y-auto mt-16">
