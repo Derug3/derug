@@ -48,7 +48,8 @@ export const DerugRequest: FC<{
     if (
       wallet &&
       wallet.publicKey &&
-      dayjs(collectionDerug?.periodEnd).isBefore(dayjs())
+      collectionDerug &&
+      collectionDerug?.periodEnd < new Date()
     ) {
       const percentage = getPercentage();
       const majorWinner = collectionDerug?.addedRequests.find(
