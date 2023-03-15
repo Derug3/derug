@@ -13,9 +13,9 @@ import { toast } from "react-hot-toast";
 import RemintNft from "./RemintNft";
 import Skeleton from "react-loading-skeleton";
 import { DerugStatus, RemintingStatus } from "../../enums/collections.enums";
-import { nftStore } from "../../stores/nftStore";
 import { remintNft } from "../../solana/methods/remint";
 import { chunk } from "lodash";
+import nftStore from "../../stores/nftStore";
 export const Remint: FC<{
   getWinningRequest: IRequest | undefined;
 }> = ({ getWinningRequest }) => {
@@ -26,7 +26,7 @@ export const Remint: FC<{
   const { collectionDerug, chainCollectionData } =
     useContext(CollectionContext);
 
-  const { nfts, setNfts } = nftStore.getState();
+  const { nfts, setNfts } = nftStore();
 
   const wallet = useWallet();
 
@@ -132,6 +132,8 @@ export const Remint: FC<{
           }
         })
       );
+    } finally {
+      toggleLoading(false);
     }
   };
 
