@@ -7,6 +7,7 @@ import { IRequest } from "../../interface/collections.interface";
 import { CollectionContext } from "../../stores/collectionContext";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 import DerugRequestItem from "./DerugRequestItem";
+import WinningRequest from "./WinningRequest";
 
 export const DerugRequest: FC<{
   openDerugModal: (value: boolean) => void;
@@ -61,7 +62,7 @@ export const DerugRequest: FC<{
         }
       }
     }
-  }, [wallet]);
+  }, [wallet, collectionDerug, derugRequests]);
 
   return (
     <motion.div
@@ -85,7 +86,13 @@ export const DerugRequest: FC<{
       <div className="w-full">
         <div className="flex w-full flex-col gap-1 items-center justify-around p-3">
           {derugRequests ? (
-            <>{getWinningRequest ?? renderDerugRequests}</>
+            <>
+              {getWinningRequest ? (
+                <WinningRequest request={getWinningRequest} />
+              ) : (
+                <>{renderDerugRequests}</>
+              )}
+            </>
           ) : (
             <div className="text-base font-mono mt-3 text-white">
               There is no derug request yet.

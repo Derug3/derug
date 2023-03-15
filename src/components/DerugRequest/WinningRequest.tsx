@@ -6,6 +6,7 @@ import { claimVictory } from "../../solana/methods/remint";
 import { CollectionContext } from "../../stores/collectionContext";
 import { toast } from "react-hot-toast";
 import { getCollectionDerugData } from "../../solana/methods/derug";
+import { DerugStatus } from "../../enums/collections.enums";
 const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
   const { collectionDerug, setCollectionDerug } = useContext(CollectionContext);
 
@@ -87,19 +88,22 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
         </Box>
         <Box className="flex flex-col gap-5 items-center w-full">
           <Box className="flex font-mono flex-row items-center justify-between w-full gap-4 ">
-            <Button
-              className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 "
-              sx={{
-                color: "white",
-                // background: "rgba(9, 194, 246, 0.6)",
-                padding: "1.25em",
-                borderRadius: 0,
-                width: "30%",
-              }}
-              onClick={claimDerugVictory}
-            >
-              <span className="text-xl lowercase">Claim victory</span>
-            </Button>
+            {collectionDerug &&
+              collectionDerug.status !== DerugStatus.Reminting && (
+                <Button
+                  className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 "
+                  sx={{
+                    color: "white",
+                    // background: "rgba(9, 194, 246, 0.6)",
+                    padding: "1.25em",
+                    borderRadius: 0,
+                    width: "30%",
+                  }}
+                  onClick={claimDerugVictory}
+                >
+                  <span className="text-xl lowercase">Claim victory</span>
+                </Button>
+              )}
             <div className="flex items-center gap-5">
               <ProgressBar
                 progress={

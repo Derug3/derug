@@ -237,7 +237,8 @@ export const Collections: FC = () => {
           ) : (
             <>
               {collectionDerug &&
-                collectionDerug.addedRequests.find((ar) => ar.winning) && (
+                collectionDerug.addedRequests.find((ar) => ar.winning) &&
+                derugRequests && (
                   <Remint getWinningRequest={getWinningRequest} />
                 )}
             </>
