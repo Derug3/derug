@@ -35,7 +35,7 @@ export const HeaderTabs: FC<{
       className="flex w-full self-start bg-gradient-to-r
   font-mono text-gray-700 leading-6 px-10 border-none justify-end"
     >
-      <div className="w-full gap-10 flex justify-end">
+      <div className="w-full gap-5 flex justify-end">
         <div className="w-1/2 flex">
           <div className="w-full flex justify-between ml-10">
             {wallet &&

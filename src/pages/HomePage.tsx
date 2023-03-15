@@ -106,6 +106,7 @@ const HomePage = () => {
         margin: "auto",
         display: "flex",
         flexDirection: "column",
+        zoom: "85%",
       }}
     >
       <Box
