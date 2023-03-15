@@ -3,6 +3,7 @@ import { useWallet, WalletContextState } from "@solana/wallet-adapter-react";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import { FC, useContext, useMemo, useRef, useState } from "react";
+import { DerugStatus } from "../../enums/collections.enums";
 import { IRequest } from "../../interface/collections.interface";
 import { CollectionContext } from "../../stores/collectionContext";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
@@ -64,6 +65,18 @@ export const DerugRequest: FC<{
     }
   }, [wallet, collectionDerug, derugRequests]);
 
+  const showAddDerugButton = useMemo(() => {
+    if (!derugRequests || derugRequests.length == 0) {
+      return true;
+    } else if (
+      (collectionDerug &&
+        collectionDerug.addedRequests.find((ar) => ar.winning)) ||
+      collectionDerug?.status === DerugStatus.Reminting
+    ) {
+      return false;
+    }
+  }, []);
+
   return (
     <motion.div
       className="flex w-full flex-col mt-5"
@@ -96,7 +109,7 @@ export const DerugRequest: FC<{
           ) : (
             <div className="text-base font-mono mt-3 text-white">
               There is no derug request yet.
-              {wallet && (
+              {wallet && showAddDerugButton && (
                 <Button
                   className="bg-transparent w-full font-mono font-bold text-lg mt-5"
                   onClick={() => openDerugModal(true)}

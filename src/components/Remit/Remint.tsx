@@ -16,12 +16,15 @@ import { DerugStatus, RemintingStatus } from "../../enums/collections.enums";
 import { remintNft } from "../../solana/methods/remint";
 import { chunk } from "lodash";
 import nftStore from "../../stores/nftStore";
+import { Oval } from "react-loader-spinner";
 export const Remint: FC<{
   getWinningRequest: IRequest | undefined;
 }> = ({ getWinningRequest }) => {
   const { derugRequests } = useContext(CollectionContext);
   const [collectionNfts, setCollectionNfts] = useState<IDerugCollectionNft[]>();
   const [loading, toggleLoading] = useState(true);
+
+  const [isReminting, toggleIsReminting] = useState(false);
 
   const { collectionDerug, chainCollectionData } =
     useContext(CollectionContext);
@@ -84,6 +87,7 @@ export const Remint: FC<{
 
   const remintNfts = async () => {
     try {
+      toggleIsReminting(true);
       const winningRequest = derugRequests?.sort(
         (a, b) => a.voteCount - b.voteCount
       )[derugRequests.length - 1];
@@ -134,6 +138,7 @@ export const Remint: FC<{
       );
     } finally {
       toggleLoading(false);
+      toggleIsReminting(false);
     }
   };
 
@@ -161,10 +166,14 @@ export const Remint: FC<{
                 },
               }}
             >
-              Remint
+              {!isReminting ? (
+                <p>Remint</p>
+              ) : (
+                <Oval color="black" width={"1.5em"} secondaryColor="blue" />
+              )}
             </Button>
           )}
-          <Box className="grid grid-cols-8 gap-5 ">
+          <Box className="grid grid-cols-8 gap-5 px-10 ">
             {loading ? (
               <>
                 {generateSkeletonArrays(5).map(() => {

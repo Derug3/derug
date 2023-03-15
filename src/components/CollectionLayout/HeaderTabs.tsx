@@ -1,7 +1,8 @@
 import { Button, TabNav } from "@primer/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import dayjs from "dayjs";
-import { FC, useContext } from "react";
+import { FC, useContext, useMemo } from "react";
+import { DerugStatus } from "../../enums/collections.enums";
 import { CollectionContext } from "../../stores/collectionContext";
 
 const getNavStyling = (tab: string, selected: string) => {
@@ -27,8 +28,21 @@ export const HeaderTabs: FC<{
   setSelectedData: (s: string) => void;
   openDerugModal: (value: boolean) => void;
 }> = ({ openDerugModal, selectedData, setSelectedData }) => {
-  const { traits, collectionDerug } = useContext(CollectionContext);
+  const { traits, collectionDerug, derugRequests } =
+    useContext(CollectionContext);
   const wallet = useWallet();
+
+  const showAddDerugButton = useMemo(() => {
+    if (!derugRequests || derugRequests.length == 0) {
+      return true;
+    } else if (
+      (collectionDerug &&
+        collectionDerug.addedRequests.find((ar) => ar.winning)) ||
+      collectionDerug?.status === DerugStatus.Reminting
+    ) {
+      return false;
+    }
+  }, []);
 
   return (
     <div
@@ -42,7 +56,8 @@ export const HeaderTabs: FC<{
               wallet.publicKey &&
               (!collectionDerug ||
                 (collectionDerug &&
-                  dayjs(collectionDerug?.periodEnd).isBefore(dayjs()))) && (
+                  dayjs(collectionDerug?.periodEnd).isBefore(dayjs()))) &&
+              showAddDerugButton && (
                 <Button
                   sx={{
                     padding: "1.25em 3.25em",

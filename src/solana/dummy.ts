@@ -10,7 +10,7 @@ export const getDummyCollectionData =
       [
         derugDataSeed,
         new PublicKey(
-          "F7ehLXDAQqgWTQmxND3yEW6CxYMXh66PrM5g1DnMWjJ9"
+          "GXsZxT97QtkhPyiuPxHvTrKJjnk1ruTCJ8eDfjnjxDEg"
         ).toBuffer(),
       ],
       derugProgram.programId
@@ -28,7 +28,7 @@ export const getDummyCollectionData =
     }
 
     return {
-      collectionMint: "F7ehLXDAQqgWTQmxND3yEW6CxYMXh66PrM5g1DnMWjJ9",
+      collectionMint: "GXsZxT97QtkhPyiuPxHvTrKJjnk1ruTCJ8eDfjnjxDEg",
       hasActiveDerugData,
       slug: "boogle_gen_1",
       totalSupply: 99,

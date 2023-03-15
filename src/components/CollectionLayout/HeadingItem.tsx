@@ -8,7 +8,8 @@ const HeadingItem: FC<{
   desc?: string;
   descColor: string;
   isCounter?: boolean;
-}> = ({ title, amount, desc, descColor, isCounter }) => {
+  date?: Date;
+}> = ({ title, amount, desc, descColor, isCounter, date }) => {
   return (
     <Heading className="flex flex-col items-center gap-2">
       <Text
@@ -33,10 +34,7 @@ const HeadingItem: FC<{
         <Countdown
           className="font-mono text-sm
  text-orange-800 drop-shadow-3xl"
-          date={dayjs
-            .unix(amount as number)
-            .add(3, "minutes")
-            .toDate()}
+          date={date}
         />
       )}
     </Heading>

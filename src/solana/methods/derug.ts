@@ -45,6 +45,23 @@ export const createDerugDataIx = async (
     METAPLEX_PROGRAM
   );
 
+  const metadataAccInfo = await RPC_CONNECTION.getAccountInfo(
+    collectionMetadata
+  );
+  if (
+    !metadataAccInfo ||
+    metadataAccInfo.owner.toString() !== METAPLEX_PROGRAM.toString()
+  ) {
+    [collectionMetadata] = PublicKey.findProgramAddressSync(
+      [
+        metadataSeed,
+        METAPLEX_PROGRAM.toBuffer(),
+        new PublicKey(listedNfts?.mint!).toBuffer(),
+      ],
+      METAPLEX_PROGRAM
+    );
+  }
+
   //TODO:PUT REAL VALUE BEFORE MAINNET
   const ix = await derugProgram.methods
     .initializeDerug(18)
