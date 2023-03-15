@@ -19,7 +19,7 @@ import { IRequest } from "../interface/collections.interface";
 import { useSearchParams } from "react-router-dom";
 import utc from "dayjs/plugin/utc";
 
-import { Box, Button, Dialog } from "@primer/react";
+import { Box } from "@primer/react";
 import { CollectionContext } from "../stores/collectionContext";
 import { getSingleCollection } from "../api/collections.api";
 import { HeaderTabs } from "../components/CollectionLayout/HeaderTabs";
