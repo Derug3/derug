@@ -34,7 +34,7 @@ export const HeaderTabs: FC<{
       className="flex w-full self-start bg-gradient-to-r
   font-mono text-gray-700 leading-6 px-10 border-none justify-end"
     >
-      <div className="w-full gap-10 flex justify-end">
+      <div className="w-full gap-5 flex justify-end">
         <div className="w-1/2 flex">
           <div className="w-full flex justify-between ml-10">
             {wallet && (
@@ -42,6 +42,8 @@ export const HeaderTabs: FC<{
                 sx={{
                   padding: "1.25em 3.25em",
                   color: "white",
+                  border: "1px solid rgba(9,194,246)",
+                  borderRadius: 0,
                 }}
                 onClick={() => openDerugModal(true)}
               >

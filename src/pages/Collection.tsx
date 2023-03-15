@@ -154,7 +154,7 @@ export const Collections: FC = () => {
         setRequests: setDerugRequests,
       }}
     >
-      <Box className="overflow-y-auto mt-16">
+      <Box className="overflow-y-auto mt-16" style={{ zoom: "85%" }}>
         <Box className="sticky top-0 grid "></Box>
         <Box className="overflow-y-clip">
           <AddDerugRequst
@@ -228,7 +228,7 @@ export const Collections: FC = () => {
           </Marqee>
         </Box>
       </Box>
-      {/* <DerugRequest openDerugModal={setDerugRequestVisible} /> */}
+      <DerugRequest openDerugModal={setDerugRequestVisible} />
       {collectionDerug && (
         <>
           {(collectionDerug.status === DerugStatus.Initialized ||
