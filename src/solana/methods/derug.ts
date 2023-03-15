@@ -69,6 +69,8 @@ export const getCollectionDerugData = async (
       derugDataAddress
     );
 
+    console.log(dayjs.unix(derugDataAccount.periodEnd.toNumber()).utc());
+
     return {
       collection: derugDataAccount.collection,
       createdAt: derugDataAccount.dateAdded.toNumber(),

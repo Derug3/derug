@@ -159,7 +159,7 @@ export const Collections: FC = () => {
         <Box className="overflow-y-clip">
           <AddDerugRequst
             isOpen={derugRequestVisible}
-            setIsOpen={setDerugRequestVisible}
+            setIsOpen={(val) => setDerugRequestVisible(val)}
             derugRequests={derugRequests}
             setDerugRequest={setDerugRequests}
           />
