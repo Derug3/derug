@@ -9,6 +9,7 @@ import {
   IRequest,
   ITrait,
 } from "../interface/collections.interface";
+import { IGraphData } from "../interface/derug.interface";
 
 export interface CollectionContext {
   collection: ICollectionData | undefined;
@@ -19,6 +20,8 @@ export interface CollectionContext {
   recentActivities: ICollectionRecentActivities[] | undefined;
   collectionDerug: ICollectionDerugData | undefined;
   derugRequests: IRequest[] | undefined;
+  graphData: IGraphData | undefined;
+  setGraphData: (data: IGraphData) => void;
   setRequests: (requests: IRequest[]) => void;
   setCollectionDerug: (derug: ICollectionDerugData) => void;
   setRecentActivities: (activities: ICollectionRecentActivities[]) => void;

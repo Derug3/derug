@@ -1,16 +1,7 @@
-import { useQuery } from "@apollo/client";
-import { Box } from "@primer/react";
-import React, {
-  FC,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { FC, useContext, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import { useSearchParams } from "react-router-dom";
-import { ACTIVE_LISTINGS_QUERY, makeNextQuery } from "../../api/graphql/query";
+import { makeNextQuery } from "../../api/graphql/query";
 import { CollectionContext } from "../../stores/collectionContext";
 import ListedNftItem from "./ListedNftItem";
 
@@ -49,14 +40,21 @@ const ListedNfts: FC<{
   };
 
   return (
-    <div style={{ height: "27em", overflow: "scroll" }}>
+    <div
+      className="flex w-full justify-between items-center flex-wrap"
+      style={{
+        height: "27em",
+        overflow: "scroll",
+        width: "100%",
+      }}
+    >
       {activeListings && (
         <InfiniteScroll
           style={{
             display: "flex",
             flexWrap: "wrap",
-            columnGap: "1%",
-            rowGap: "2%",
+            justifyContent: "space-between",
+            width: "100%",
             overflow: "none",
           }}
           threshold={500}

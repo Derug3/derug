@@ -90,7 +90,7 @@ export const AddDerugRequst: FC<{
         const addedRequests = [...(derugRequests ?? [])];
         addedRequests.push(await getSingleDerugRequest(requestAddress));
       }
-      if (chainCollectionData && !chainCollectionData?.hasActiveDerugData) {
+      if (chainCollectionData) {
         const derugData = await getCollectionDerugData(
           chainCollectionData?.derugDataAddress
         );
@@ -113,7 +113,6 @@ export const AddDerugRequst: FC<{
         onDismiss={() => setIsOpen(false)}
         sx={{
           width: "600px",
-          filter: "drop-shadow(rgb(246, 242, 9) 0px 0px 10px)",
         }}
         aria-labelledby="header-id"
       >

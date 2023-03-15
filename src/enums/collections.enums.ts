@@ -2,6 +2,7 @@ export enum ListingSource {
   MagicEden = "MAGICEDEN_V2",
   Tensor = "TENSORSWAP",
   Hades = "HADESWAP",
+  SolanaArt = "SOLANART",
 }
 
 export enum DerugStatus {
@@ -18,4 +19,10 @@ export enum DerugRequestStatus {
   Succeded = "succeded",
   Reminting = "reminting",
   Completed = "completed",
+}
+
+export enum RemintingStatus {
+  InProgress,
+  Succeded,
+  Failed,
 }

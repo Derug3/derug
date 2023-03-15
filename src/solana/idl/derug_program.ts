@@ -246,11 +246,6 @@ export type DerugProgram = {
           isSigner: false;
         },
         {
-          name: "oldCollectionMetadata";
-          isMut: true;
-          isSigner: false;
-        },
-        {
           name: "oldMint";
           isMut: true;
           isSigner: false;
@@ -406,7 +401,9 @@ export type DerugProgram = {
           },
           {
             name: "collectionMetadata";
-            type: "publicKey";
+            type: {
+              option: "publicKey";
+            };
           },
           {
             name: "totalSupply";
@@ -429,7 +426,7 @@ export type DerugProgram = {
             };
           },
           {
-            name: "votingStartedAt";
+            name: "periodEnd";
             type: "i64";
           },
           {
@@ -533,6 +530,10 @@ export type DerugProgram = {
           {
             name: "voteCount";
             type: "i32";
+          },
+          {
+            name: "winning";
+            type: "bool";
           }
         ];
       };
@@ -962,11 +963,6 @@ export const IDL: DerugProgram = {
           isSigner: false,
         },
         {
-          name: "oldCollectionMetadata",
-          isMut: true,
-          isSigner: false,
-        },
-        {
           name: "oldMint",
           isMut: true,
           isSigner: false,
@@ -1122,7 +1118,9 @@ export const IDL: DerugProgram = {
           },
           {
             name: "collectionMetadata",
-            type: "publicKey",
+            type: {
+              option: "publicKey",
+            },
           },
           {
             name: "totalSupply",
@@ -1145,7 +1143,7 @@ export const IDL: DerugProgram = {
             },
           },
           {
-            name: "votingStartedAt",
+            name: "periodEnd",
             type: "i64",
           },
           {
@@ -1249,6 +1247,10 @@ export const IDL: DerugProgram = {
           {
             name: "voteCount",
             type: "i32",
+          },
+          {
+            name: "winning",
+            type: "bool",
           },
         ],
       },

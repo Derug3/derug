@@ -5,7 +5,7 @@ import { ApolloProvider } from "@apollo/client";
 import WalletWrapper from "./WalletWrapper/WalletWrapper";
 import { gqlClient } from "./utilities/utilities";
 import { Toaster, toast } from "react-hot-toast";
-import { useEffect } from "react";
+import "react-loading-skeleton/dist/skeleton.css";
 function App() {
   return (
     <div className="App">

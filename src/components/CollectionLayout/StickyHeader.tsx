@@ -11,6 +11,7 @@ import { FC, useState } from "react";
 import { DerugStatus } from "../../enums/collections.enums";
 import { useSearchParams } from "react-router-dom";
 import { WalletContextState } from "@solana/wallet-adapter-react";
+import dayjs from "dayjs";
 
 export const StickyHeader: FC<{
   collection?: ICollectionStats;
@@ -23,7 +24,7 @@ export const StickyHeader: FC<{
 
   return (
     <div
-      className="flex w-full self-start bg-gradient-to-r 
+      className="flex w-full self-start bg-gradient-to-r
 font-mono text-gray-700 leading-6 justify-between px-10 py-2 border-none mb-10"
     >
       <Box className="flex flex-row gap-10">
@@ -55,7 +56,11 @@ font-mono text-gray-700 leading-6 justify-between px-10 py-2 border-none mb-10"
         <HeadingItem
           descColor="#2dd4bf"
           title="FIRST LISTING"
-          amount={collection?.firstListed.toDateString().slice(0, 10)}
+          amount={dayjs
+            .unix(collection?.firstListed ?? 0)
+            .toDate()
+            .toDateString()
+            .slice(0, 10)}
           desc=""
         />
         {collectionDerug && (
@@ -92,49 +97,6 @@ font-mono text-gray-700 leading-6 justify-between px-10 py-2 border-none mb-10"
             )}
           </Box>
         )}
-      </Box>
-      <Box className="flex flex-col items-center">
-        <div className="flex mb-5">
-          {wallet && (
-            <Button
-              className="bg-transparent w-full font-mono font-bold text-lg p-10"
-              style={{
-                fontSize: "1em",
-                fontFamily: "monospace",
-                height: "48px",
-                padding: "0 24px",
-                lineHeight: "48px",
-                filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 5px)",
-              }}
-              onClick={() => openDerugModal(true)}
-            >
-              Add derug request
-            </Button>
-          )}
-        </div>
-        <div className="flex gap-3">
-          <AiOutlineStar
-            style={{ color: isFavorite ? "#F0CF65" : "white" }}
-            className="text-4xl text-red cursor-pointer"
-            onClick={() => setIsFavorite(!isFavorite)}
-          />
-          <img
-            src={tensorLogo}
-            alt="tensorLogo"
-            className="w-8 h-8 rounded-full cursor-pointer"
-            onClick={() =>
-              window.open(`https://www.tensor.trade/trade/${slug}`, "_blank")
-            }
-          />
-          <img
-            src={magicEdenLogo}
-            alt="magicEden"
-            className="w-8 h-8 rounded-full cursor-pointer"
-            onClick={() =>
-              window.open(`https://magiceden.io/marketplace/${slug}`, "_blank")
-            }
-          />
-        </div>
       </Box>
     </div>
   );
