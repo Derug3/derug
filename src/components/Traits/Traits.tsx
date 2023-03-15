@@ -37,9 +37,7 @@ const Traits: FC<{ trait: ITrait }> = ({ trait }) => {
         {trait.name} [{trait.values.length}]
       </Text>
       <Box className="h-0.5 bg-gray-200 w-full mb-3" />
-      <Box className="grid md:grid-cols-4 grid-cols-1 gap-1">
-        {renderTraits}
-      </Box>
+      <Box className="grid md:grid-cols-6 gap-1">{renderTraits}</Box>
     </Box>
   );
 };
