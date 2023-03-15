@@ -11,24 +11,15 @@ import {
   INftListing,
   ITrait,
 } from "../interface/collections.interface";
-import { useQuery } from "@apollo/client";
-import {
-  ACTIVE_LISTINGS_QUERY,
-  FP_QUERY,
-  TRAITS_QUERY,
-} from "../api/graphql/query";
+
 import Marqee from "react-fast-marquee";
 
 import { StickyHeader } from "../components/CollectionLayout/StickyHeader";
 import { IRequest } from "../interface/collections.interface";
 import { useSearchParams } from "react-router-dom";
-import {
-  mapCollectionListings,
-  mapCollectionStats,
-  mapNextData,
-  mapTraitsQuery,
-} from "../api/graphql/mapper";
-import { Box, Button, Dialog } from "@primer/react";
+import utc from "dayjs/plugin/utc";
+
+import { Box } from "@primer/react";
 import { CollectionContext } from "../stores/collectionContext";
 import { getSingleCollection } from "../api/collections.api";
 import { HeaderTabs } from "../components/CollectionLayout/HeaderTabs";
@@ -44,7 +35,9 @@ import { Remint } from "../components/Remit/Remint";
 
 import { toast } from "react-hot-toast";
 import { getFloorPrice, getListings, getTraits } from "../api/tensor";
+import { IGraphData } from "../interface/derug.interface";
 export const Collections: FC = () => {
+  dayjs.extend(utc);
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
 
   const [derugRequestVisible, setDerugRequestVisible] = useState(false);
@@ -60,9 +53,10 @@ export const Collections: FC = () => {
     useState<ICollectionRecentActivities[]>();
   const [collectionDerug, setCollectionDerug] =
     useState<ICollectionDerugData>();
+  const [graphData, setGraphData] = useState<IGraphData>();
+
   const [derugRequests, setDerugRequests] = useState<IRequest[]>();
   const iframeRef = useRef(null);
-  const returnFocusRef = useRef(null);
   const slug = useSearchParams()[0].get("symbol");
   const [isOpen, setIsOpen] = useState(true);
 
@@ -74,12 +68,12 @@ export const Collections: FC = () => {
 
   const getBasicCollectionData = async () => {
     try {
-      setBasicCollectionData(await getSingleCollection(slug ?? ""));
       if (slug) {
         setCollectionStats(await getFloorPrice(slug));
         setListings(await getListings(slug));
         setTraits(await getTraits(slug));
       }
+      setBasicCollectionData(await getSingleCollection(slug ?? ""));
     } catch (error) {
       console.log(error);
     }
@@ -131,6 +125,14 @@ export const Collections: FC = () => {
     }
   };
 
+  const showDerugRequests = useMemo(() => {
+    if (collectionDerug) {
+      return !!!collectionDerug.winningRequest;
+    } else {
+      return false;
+    }
+  }, [collectionDerug]);
+
   const boxRef = useRef<HTMLDivElement | null>(null);
 
   return (
@@ -152,6 +154,8 @@ export const Collections: FC = () => {
         setCollectionDerug,
         derugRequests,
         setRequests: setDerugRequests,
+        graphData,
+        setGraphData,
       }}
     >
       <Box className="overflow-y-auto mt-16" style={{ zoom: "85%" }}>
@@ -159,7 +163,7 @@ export const Collections: FC = () => {
         <Box className="overflow-y-clip">
           <AddDerugRequst
             isOpen={derugRequestVisible}
-            setIsOpen={setDerugRequestVisible}
+            setIsOpen={(val) => setDerugRequestVisible(val)}
             derugRequests={derugRequests}
             setDerugRequest={setDerugRequests}
           />
@@ -228,21 +232,19 @@ export const Collections: FC = () => {
           </Marqee>
         </Box>
       </Box>
-      <DerugRequest openDerugModal={setDerugRequestVisible} />
       {collectionDerug && (
         <>
           {(collectionDerug.status === DerugStatus.Initialized ||
             collectionDerug.status === DerugStatus.Voting) &&
-          dayjs
-            .unix(collectionDerug.votingStartedAt)
-            .add(3, "minutes")
-            .isAfter(dayjs()) ? (
+          showDerugRequests ? (
             <DerugRequest openDerugModal={setDerugRequestVisible} />
           ) : (
             <>
-              {collectionDerug && derugRequests && (
-                <Remint getWinningRequest={getWinningRequest} />
-              )}
+              {collectionDerug &&
+                collectionDerug.addedRequests.find((ar) => ar.winning) &&
+                derugRequests && (
+                  <Remint getWinningRequest={getWinningRequest} />
+                )}
             </>
           )}
         </>

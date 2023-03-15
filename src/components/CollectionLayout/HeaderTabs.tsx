@@ -1,5 +1,6 @@
 import { Button, TabNav } from "@primer/react";
 import { useWallet } from "@solana/wallet-adapter-react";
+import dayjs from "dayjs";
 import { FC, useContext } from "react";
 import { CollectionContext } from "../../stores/collectionContext";
 
@@ -26,7 +27,7 @@ export const HeaderTabs: FC<{
   setSelectedData: (s: string) => void;
   openDerugModal: (value: boolean) => void;
 }> = ({ openDerugModal, selectedData, setSelectedData }) => {
-  const { traits } = useContext(CollectionContext);
+  const { traits, collectionDerug } = useContext(CollectionContext);
   const wallet = useWallet();
 
   return (
@@ -37,19 +38,21 @@ export const HeaderTabs: FC<{
       <div className="w-full gap-5 flex justify-end">
         <div className="w-1/2 flex">
           <div className="w-full flex justify-between ml-10">
-            {wallet && (
-              <Button
-                sx={{
-                  padding: "1.25em 3.25em",
-                  color: "white",
-                  border: "1px solid rgba(9,194,246)",
-                  borderRadius: 0,
-                }}
-                onClick={() => openDerugModal(true)}
-              >
-                <span className="text-lg uppercase ">Add derug request</span>
-              </Button>
-            )}
+            {wallet &&
+              wallet.publicKey &&
+              (!collectionDerug ||
+                (collectionDerug &&
+                  dayjs(collectionDerug?.periodEnd).isBefore(dayjs()))) && (
+                <Button
+                  sx={{
+                    padding: "1.25em 3.25em",
+                    color: "white",
+                  }}
+                  onClick={() => openDerugModal(true)}
+                >
+                  <span className="text-sm uppercase ">Add derug request</span>
+                </Button>
+              )}
             <TabNav
               aria-label="Main"
               className="flex justify-end w-fit"

@@ -166,7 +166,7 @@ export const remapListings = (
   let largestPrice = -1;
   const prices: number[] = [];
   for (const [key, value] of listings) {
-    months.push(MONTHS_MAP.get(+key.slice(0, 1))! + "/" + key.slice(-2));
+    months.push(MONTHS_MAP.get(+key.slice(0, 1))! + " / " + key.slice(-2));
     if (value.price < smallestPrice) {
       smallestPrice = value.price;
     }

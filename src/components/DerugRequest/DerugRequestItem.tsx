@@ -63,7 +63,10 @@ export const DerugRequestItem: FC<{
           collectionDerug,
           chainCollectionData
         );
-        console.log(derugNfts.length);
+        if (derugNfts.length === 0) {
+          toast.error("No NFTs from collection!");
+          return;
+        }
 
         await castDerugRequestVote(
           derugRequest,
@@ -82,7 +85,7 @@ export const DerugRequestItem: FC<{
         addedRequests[derugIndex] = { ...updatedRequest };
         setRequests(addedRequests);
       } catch (error: any) {
-        toast.error("Failed to vote:", error.message);
+        toast.error("Failed to vote:", error);
       } finally {
         toggleLoading(false);
       }
@@ -115,7 +118,7 @@ export const DerugRequestItem: FC<{
           }}
         >
           <span style={{ fontSize: "1em", opacity: 0.7 }}>
-            {wallet.publicKey?.toString()}
+            {derugRequest.derugger.toString()}
           </span>{" "}
           {""}{" "}
         </Balancer>

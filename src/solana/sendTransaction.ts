@@ -7,7 +7,7 @@ import {
 } from "@solana/web3.js";
 import { IDerugInstruction } from "../interface/derug.interface";
 import { toast } from "react-hot-toast";
-import { nftStore } from "../stores/nftStore";
+import nftStore from "../stores/nftStore";
 import { RemintingStatus } from "../enums/collections.enums";
 export const sendTransaction = async (
   connection: Connection,
@@ -54,26 +54,25 @@ export const sendTransaction = async (
                 mint: instructions[index].remintingNft?.mint!,
                 status: RemintingStatus.Failed,
               });
+              setNfts(savedNfts);
             }
 
             return "Failed to send transaction";
           },
           loading: instructions[index].pendingDescription,
           success: (data) => {
-            console.log(data);
-
             if (instructions[index].remintingNft) {
               savedNfts.push({
                 mint: instructions[index].remintingNft?.mint!,
                 status: RemintingStatus.Succeded,
               });
+              setNfts(savedNfts);
             }
 
             return instructions[index].successDescription;
           },
         }
       );
-      setNfts(savedNfts);
     }
   } catch (error: any) {
     toast.error("Failed to send transaction:", error.message);

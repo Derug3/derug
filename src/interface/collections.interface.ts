@@ -103,9 +103,16 @@ export interface ICollectionDerugData {
   createdAt: number;
   newCollection: PublicKey | null;
   winningRequest: PublicKey | null;
-  votingStartedAt: number;
+  addedRequests: IActiveRequest[];
+  periodEnd: Date;
   totalReminted: number;
   totalSuggestionCount: number;
   status: DerugStatus;
   collectionMetadata: PublicKey | null;
+}
+
+export interface IActiveRequest {
+  request: PublicKey;
+  voteCount: number;
+  winning: boolean;
 }

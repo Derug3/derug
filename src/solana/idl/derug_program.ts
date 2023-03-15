@@ -426,7 +426,7 @@ export type DerugProgram = {
             };
           },
           {
-            name: "votingStartedAt";
+            name: "periodEnd";
             type: "i64";
           },
           {
@@ -530,6 +530,10 @@ export type DerugProgram = {
           {
             name: "voteCount";
             type: "i32";
+          },
+          {
+            name: "winning";
+            type: "bool";
           }
         ];
       };
@@ -1139,7 +1143,7 @@ export const IDL: DerugProgram = {
             },
           },
           {
-            name: "votingStartedAt",
+            name: "periodEnd",
             type: "i64",
           },
           {
@@ -1243,6 +1247,10 @@ export const IDL: DerugProgram = {
           {
             name: "voteCount",
             type: "i32",
+          },
+          {
+            name: "winning",
+            type: "bool",
           },
         ],
       },
