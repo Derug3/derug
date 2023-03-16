@@ -35,13 +35,14 @@ export const HeaderTabs: FC<{
     >
       <div className="w-full gap-5 flex justify-end">
         <div className="w-1/2 flex">
-          <div className="w-full flex justify-between ml-10">
+          <div className="w-full flex justify-between">
             {wallet &&
               wallet.publicKey &&
               (!collectionDerug ||
                 (collectionDerug &&
                   dayjs(collectionDerug?.periodEnd).isBefore(dayjs()))) && (
                 <Button
+                  className="ml-8"
                   sx={{
                     padding: "1.25em 3.25em",
                     color: "rgba(9, 194, 246)",
@@ -50,7 +51,7 @@ export const HeaderTabs: FC<{
                   }}
                   onClick={() => openDerugModal(true)}
                 >
-                  <span className="text-sm uppercase ">Add derug request</span>
+                  <span className="text-sm uppercase">Add derug request</span>
                 </Button>
               )}
             <TabNav
