@@ -11,8 +11,6 @@ const getNavStyling = (tab: string, selected: string) => {
     fontSize: "1rem",
     fontWeight: "bold",
     fontFamily: "monospace",
-    border:
-      tab !== selected ? "1px solid #BBC4CD" : "1px solid rgba(9, 194, 246)",
     cursor: "pointer",
     borderBottom: "none",
     "&:hover": {
@@ -46,7 +44,9 @@ export const HeaderTabs: FC<{
                 <Button
                   sx={{
                     padding: "1.25em 3.25em",
-                    color: "white",
+                    color: "rgba(9, 194, 246)",
+                    borderRadius: 0,
+                    // backgroundColor: "rgba(9, 194, 246,.35)",
                   }}
                   onClick={() => openDerugModal(true)}
                 >
