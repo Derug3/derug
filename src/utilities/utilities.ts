@@ -23,5 +23,5 @@ export const DERUG_PROGRAM_ID = process.env.REACT_APP_DERUG_PROGRAM as string;
 
 export const RPC_CONNECTION = new Connection(
   "https://api.devnet.solana.com",
-  "processed"
+  "confirmed"
 );

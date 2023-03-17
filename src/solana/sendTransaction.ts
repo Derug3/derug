@@ -41,38 +41,40 @@ export const sendTransaction = async (
 
       const savedNfts = [...nfts];
 
-      toast.promise(
-        connection.sendRawTransaction(tx.serialize(), {
-          preflightCommitment: "confirmed",
-        }),
-        {
-          error: (data) => {
-            console.log(data);
+      try {
+        await toast.promise(
+          connection.sendRawTransaction(tx.serialize(), {
+            preflightCommitment: "confirmed",
+          }),
+          {
+            error: (data) => {
+              console.log(data);
 
-            if (instructions[index].remintingNft) {
-              savedNfts.push({
-                mint: instructions[index].remintingNft?.mint!,
-                status: RemintingStatus.Failed,
-              });
-              setNfts(savedNfts);
-            }
+              if (instructions[index].remintingNft) {
+                savedNfts.push({
+                  mint: instructions[index].remintingNft?.mint!,
+                  status: RemintingStatus.Failed,
+                });
+                setNfts(savedNfts);
+              }
 
-            return "Failed to send transaction";
-          },
-          loading: instructions[index].pendingDescription,
-          success: (data) => {
-            if (instructions[index].remintingNft) {
-              savedNfts.push({
-                mint: instructions[index].remintingNft?.mint!,
-                status: RemintingStatus.Succeded,
-              });
-              setNfts(savedNfts);
-            }
+              return "Failed to send transaction";
+            },
+            loading: instructions[index].pendingDescription,
+            success: (data) => {
+              if (instructions[index].remintingNft) {
+                savedNfts.push({
+                  mint: instructions[index].remintingNft?.mint!,
+                  status: RemintingStatus.Succeded,
+                });
+                setNfts(savedNfts);
+              }
 
-            return instructions[index].successDescription;
-          },
-        }
-      );
+              return instructions[index].successDescription;
+            },
+          }
+        );
+      } catch (error) {}
     }
   } catch (error: any) {
     toast.error("Failed to send transaction:", error.message);

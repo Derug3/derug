@@ -237,8 +237,61 @@ export const remintNft = async (
       .remainingAccounts(remainingAccounts)
       .instruction();
 
+    const [collectionMetadata] = PublicKey.findProgramAddressSync(
+      [
+        metadataSeed,
+        METAPLEX_PROGRAM.toBuffer(),
+        derugData.newCollection!.toBuffer(),
+      ],
+      METAPLEX_PROGRAM
+    );
+
+    const [collectionMasterEdition] = PublicKey.findProgramAddressSync(
+      [
+        metadataSeed,
+        METAPLEX_PROGRAM.toBuffer(),
+        derugData.newCollection!.toBuffer(),
+        editionSeed,
+      ],
+      METAPLEX_PROGRAM
+    );
+
+    const [collectionAuthority] = PublicKey.findProgramAddressSync(
+      [
+        metadataSeed,
+        METAPLEX_PROGRAM.toBuffer(),
+        derugData.newCollection!.toBuffer(),
+        collectionAuthoritySeed,
+        pdaAuthority.toBuffer(),
+      ],
+      METAPLEX_PROGRAM
+    );
+
+    const updateVerifyCollection = await derugProgram.methods
+      .updateVerifyCollection()
+      .accounts({
+        collectionAuthority,
+        derugData: derugData.address,
+        derugger: request.derugger,
+        collectionMint: derugData.newCollection!,
+        nftMint: mint.publicKey,
+        nftMetadata: newMetadata,
+        pdaAuthority,
+        payer: wallet.publicKey!,
+        derugRequest: request.address,
+        collectionMetadata: collectionMetadata,
+        collectionMasterEdition,
+        metadataProgram: METAPLEX_PROGRAM,
+      })
+      .instruction();
+
     instructions.push({
-      instructions: [createTokenAcc, createMint, remintNftIx],
+      instructions: [
+        createTokenAcc,
+        createMint,
+        remintNftIx,
+        updateVerifyCollection,
+      ],
       pendingDescription: `Reminting ${nft.metadata.data.name}`,
       successDescription: `Successfully reminted ${nft.metadata.data.name}`,
       partialSigner: [tokenAccount, mint],

@@ -67,16 +67,16 @@ export const DerugRequest: FC<{
   }, [wallet, collectionDerug, derugRequests]);
 
   const showAddDerugButton = useMemo(() => {
-    if (!derugRequests || derugRequests.length == 0) {
-      return true;
-    } else if (
-      (collectionDerug &&
-        collectionDerug.addedRequests.find((ar) => ar.winning)) ||
-      collectionDerug?.status === DerugStatus.Reminting
-    ) {
-      return false;
-    }
-  }, []);
+    // if (!derugRequests || derugRequests.length == 0) {
+    //   return true;
+    // } else if (
+    //   collectionDerug &&
+    //   collectionDerug?.status === DerugStatus.Reminting
+    // ) {
+    //   return false;
+    // }
+    return true;
+  }, [derugRequests, collectionDerug]);
 
   return (
     <motion.div
@@ -110,7 +110,7 @@ export const DerugRequest: FC<{
           ) : (
             <div className="text-base font-mono mt-3 text-white">
               There is no derug request yet.
-              {wallet && showAddDerugButton && (
+              {showAddDerugButton && (
                 <Button
                   className="bg-transparent w-full font-mono font-bold text-lg mt-5"
                   onClick={() => openDerugModal(true)}

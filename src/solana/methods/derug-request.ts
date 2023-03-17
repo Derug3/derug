@@ -36,9 +36,15 @@ export const createOrUpdateDerugRequest = async (
 
   const derugProgram = derugProgramFactory();
 
+  //TODO:Change mint before mainnet
   if (!collection.hasActiveDerugData) {
     instructions.push(
-      await createDerugDataIx(collection, wallet, collectionStats, listedNft)
+      await createDerugDataIx(
+        collection,
+        wallet,
+        collectionStats,
+        new PublicKey("7PoQHoZ7jdFmFqf2Z539ezt45N95HPJmw4tk5mQMqThs")
+      )
     );
   }
 

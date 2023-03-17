@@ -42,7 +42,7 @@ export const HeaderTabs: FC<{
     ) {
       return false;
     }
-  }, []);
+  }, [derugRequests, collectionDerug]);
 
   return (
     <div
@@ -56,8 +56,7 @@ export const HeaderTabs: FC<{
               wallet.publicKey &&
               (!collectionDerug ||
                 (collectionDerug &&
-                  dayjs(collectionDerug?.periodEnd).isBefore(dayjs()))) &&
-              showAddDerugButton && (
+                  dayjs(collectionDerug?.periodEnd).isAfter(dayjs()))) && (
                 <Button
                   sx={{
                     padding: "1.25em 3.25em",
