@@ -71,12 +71,18 @@ export const Collections: FC = () => {
       setBasicCollectionData(await getSingleCollection(slug ?? ""));
       if (slug) {
         const collectionStats = await getFloorPrice(slug);
-        if (collectionStats.slug !== slug) {
-          slug = collectionStats.slug;
-        }
+
         setCollectionStats(collectionStats);
-        setListings(await getListings(slug));
-        setTraits(await getTraits(slug));
+        let listingsData = await getListings(slug);
+        if (listingsData.length === 0) {
+          listingsData = await getListings(collectionStats.slug);
+        }
+        setListings(listingsData);
+        let traitsData = await getTraits(slug);
+        if (traitsData.length === 0) {
+          traitsData = await getTraits(collectionStats.slug);
+        }
+        setTraits(traitsData);
       }
     } catch (error) {
       console.log(error);
