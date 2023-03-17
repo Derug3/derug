@@ -57,7 +57,7 @@ export const Collections: FC = () => {
 
   const [derugRequests, setDerugRequests] = useState<IRequest[]>();
   const iframeRef = useRef(null);
-  const slug = useSearchParams()[0].get("symbol");
+  let slug = useSearchParams()[0].get("symbol");
   const [isOpen, setIsOpen] = useState(true);
 
   const wallet = useWallet();
@@ -68,12 +68,16 @@ export const Collections: FC = () => {
 
   const getBasicCollectionData = async () => {
     try {
+      setBasicCollectionData(await getSingleCollection(slug ?? ""));
       if (slug) {
-        setCollectionStats(await getFloorPrice(slug));
+        const collectionStats = await getFloorPrice(slug);
+        if (collectionStats.slug !== slug) {
+          slug = collectionStats.slug;
+        }
+        setCollectionStats(collectionStats);
         setListings(await getListings(slug));
         setTraits(await getTraits(slug));
       }
-      setBasicCollectionData(await getSingleCollection(slug ?? ""));
     } catch (error) {
       console.log(error);
     }
