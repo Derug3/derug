@@ -41,6 +41,7 @@ export const Collections: FC = () => {
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
 
   const [derugRequestVisible, setDerugRequestVisible] = useState(false);
+  const [loading, toggleLoading] = useState(true);
   const [traits, setTraits] = useState<ITrait[]>();
   const [selectedInfo, setSelectedInfo] = useState("description");
   const [selectedData, setSelectedData] = useState("listed");
@@ -68,14 +69,26 @@ export const Collections: FC = () => {
 
   const getBasicCollectionData = async () => {
     try {
-      if (slug) {
-        setCollectionStats(await getFloorPrice(slug));
-        setListings(await getListings(slug));
-        setTraits(await getTraits(slug));
-      }
       setBasicCollectionData(await getSingleCollection(slug ?? ""));
+      if (slug) {
+        const collectionStats = await getFloorPrice(slug);
+
+        setCollectionStats(collectionStats);
+        let listingsData = await getListings(slug);
+        if (listingsData.length === 0) {
+          listingsData = await getListings(collectionStats.slug);
+        }
+        setListings(listingsData);
+        let traitsData = await getTraits(slug);
+        if (traitsData.length === 0) {
+          traitsData = await getTraits(collectionStats.slug);
+        }
+        setTraits(traitsData);
+      }
     } catch (error) {
       console.log(error);
+    } finally {
+      toggleLoading(false);
     }
   };
 
@@ -138,6 +151,8 @@ export const Collections: FC = () => {
   return (
     <CollectionContext.Provider
       value={{
+        loading,
+        toggleLoading,
         chainCollectionData,
         setChainCollectionData,
         activeListings: listings,

@@ -97,13 +97,17 @@ const ListingsGraph = () => {
   return (
     <>
       {recentActivities && recentActivities.length > 0 && graphData ? (
-        <canvas ref={chartRef} />
+        <div className="h-96 mt-4">
+          {" "}
+          <canvas ref={chartRef} />
+        </div>
       ) : (
         <Box className="flex flex-col items-center mt-50">
           {loading ? (
             <Box className="mt-40">
               <Oval
                 width={"5em"}
+                height={"3em"}
                 color="rgb(9, 194, 246)"
                 secondaryColor="rgba(9,194,246,.15)"
               />

@@ -49,7 +49,12 @@ const ListedNftItem: FC<{ listedNft: INftListing }> = ({ listedNft }) => {
         <Box className="flex absolute flex-col w-full h-full gap-2 items-center justify-center text-white font-mono">
           <Box className="flex flex-row  items-center">
             <Box className="flex flex-col">
-              <Text className="text-sm font-bold ">{listedNft.price} SOL</Text>
+              <Text
+                className="text-sm font-bold"
+                sx={{ color: "rgba(9, 194, 246)" }}
+              >
+                {listedNft.price} SOL
+              </Text>
             </Box>
           </Box>
           <Box className="flex flex-row gap-5 items-center">
@@ -59,15 +64,15 @@ const ListedNftItem: FC<{ listedNft: INftListing }> = ({ listedNft }) => {
                 bg: "transparent",
                 fontFamily: "monospace",
                 padding: "1em",
+                borderRadius: 0,
               }}
               onClick={() => window.open(getUrl, "_blank")}
             >
-              <div className="flex align-centar justify-between cursor-pointer">
-                <img
-                  src={getImgLogo}
-                  alt="meLogo"
-                  className="rounded-[50px] w-5 h-5 mr-2"
-                />{" "}
+              <div
+                className="flex align-centar justify-between cursor-pointer"
+                style={{ color: "rgba(9, 194, 246)" }}
+              >
+                <img src={getImgLogo} alt="meLogo" className="w-5 h-5 mr-2" />{" "}
                 Details
               </div>
             </Button>
