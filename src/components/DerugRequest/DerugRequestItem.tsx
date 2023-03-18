@@ -41,8 +41,9 @@ export const DerugRequestItem: FC<{
 
   const showVoteButton = () => {
     return (
-      collectionDerug?.status === DerugStatus.Initialized ||
-      collectionDerug?.status === DerugStatus.Voting
+      (collectionDerug?.status === DerugStatus.Initialized ||
+        collectionDerug?.status === DerugStatus.Voting) &&
+      !collectionDerug.addedRequests.find((ar) => ar.winning)
     );
   };
 

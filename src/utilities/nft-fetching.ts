@@ -86,8 +86,10 @@ export const getAllNftsFromCollection = async (
     multipleAccInfo.forEach((mai, index) => {
       const [metadata] = Metadata.fromAccountInfo(mai!);
       if (
-        metadata.collection &&
-        metadata.collection.key.toString() ===
+        (metadata.collection &&
+          metadata.collection.key.toString() ===
+            chainCollectionData.collectionMint) ||
+        metadata.data.creators?.at(0)?.address.toString() ===
           chainCollectionData.collectionMint
       ) {
         derugNfts.push({

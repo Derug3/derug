@@ -22,7 +22,7 @@ export const createDerugDataIx = async (
   collection: IChainCollectionData,
   wallet: WalletContextState,
   collectionStats: ICollectionStats,
-  listedNfts?: INftListing
+  listedNftMint?: PublicKey
 ) => {
   const derugProgram = derugProgramFactory();
   const collectionKey = new PublicKey(collection.collectionMint);
@@ -37,13 +37,26 @@ export const createDerugDataIx = async (
   if (collectionAccountInf?.owner.toString() === TOKEN_PROGRAM_ID.toString()) {
     mintKey = collectionKey;
   } else {
-    mintKey = new PublicKey(listedNfts?.mint!);
+    mintKey = listedNftMint!;
   }
 
   [collectionMetadata] = PublicKey.findProgramAddressSync(
     [metadataSeed, METAPLEX_PROGRAM.toBuffer(), mintKey.toBuffer()],
     METAPLEX_PROGRAM
   );
+
+  const metadataAccInfo = await RPC_CONNECTION.getAccountInfo(
+    collectionMetadata
+  );
+  if (
+    !metadataAccInfo ||
+    metadataAccInfo.owner.toString() !== METAPLEX_PROGRAM.toString()
+  ) {
+    [collectionMetadata] = PublicKey.findProgramAddressSync(
+      [metadataSeed, METAPLEX_PROGRAM.toBuffer(), listedNftMint!.toBuffer()],
+      METAPLEX_PROGRAM
+    );
+  }
 
   //TODO:PUT REAL VALUE BEFORE MAINNET
   const ix = await derugProgram.methods
@@ -69,6 +82,13 @@ export const getCollectionDerugData = async (
       derugDataAddress
     );
 
+    console.log(derugDataAccount.periodEnd.toNumber());
+
+    console.log(
+      dayjs.unix(derugDataAccount.periodEnd.toNumber()).utc(),
+      "PERIOD END"
+    );
+
     return {
       collection: derugDataAccount.collection,
       createdAt: derugDataAccount.dateAdded.toNumber(),
@@ -76,9 +96,7 @@ export const getCollectionDerugData = async (
       totalReminted: derugDataAccount.totalReminted,
       totalSuggestionCount: derugDataAccount.totalSuggestionCount,
       totalSupply: derugDataAccount.totalSupply,
-      periodEnd: dayjs(derugDataAccount.periodEnd.toNumber() / 1000)
-        .utc()
-        .toDate(),
+      periodEnd: dayjs(derugDataAccount.periodEnd.toNumber() * 1000).toDate(),
       newCollection: derugDataAccount.newCollection,
       winningRequest: derugDataAccount.winningRequest,
       address: derugDataAddress,
