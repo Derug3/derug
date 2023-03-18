@@ -83,7 +83,7 @@ font-mono text-gray-700 leading-6 justify-between px-10 py-2 border-none mb-10"
             <HeadingItem
               descColor="#2dd4bf"
               title="REMAINING TIME"
-              amount={collectionDerug.createdAt}
+              date={collectionDerug.periodEnd}
               isCounter
               desc=""
             />

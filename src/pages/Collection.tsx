@@ -58,7 +58,7 @@ export const Collections: FC = () => {
 
   const [derugRequests, setDerugRequests] = useState<IRequest[]>();
   const iframeRef = useRef(null);
-  const slug = useSearchParams()[0].get("symbol");
+  let slug = useSearchParams()[0].get("symbol");
   const [isOpen, setIsOpen] = useState(true);
 
   const wallet = useWallet();

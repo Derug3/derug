@@ -22,6 +22,7 @@ const ListingsGraph = () => {
     setRecentActivities,
     recentActivities,
     graphData,
+    collectionStats,
     setGraphData,
   } = useContext(CollectionContext);
 
@@ -80,9 +81,12 @@ const ListingsGraph = () => {
 
   const fetchFirstActivities = async () => {
     try {
-      if (collection?.symbol) {
+      if (collectionStats?.slug || collection?.symbol) {
         toggleLoading(true);
-        const recentAct = await getRecentActivities(collection?.symbol);
+        let recentAct = await getRecentActivities(collection?.symbol ?? "");
+        if (recentAct.length === 0 && collectionStats?.slug) {
+          recentAct = await getRecentActivities(collectionStats.slug);
+        }
         const mappedValues = mapByDates(recentAct);
         setGraphData(mappedValues);
         setRecentActivities(recentAct);
@@ -113,7 +117,9 @@ const ListingsGraph = () => {
               />
             </Box>
           ) : (
-            <p>No listings data for collection</p>
+            <Box sx={{ marginTop: "10%" }}>
+              <p>No listings data for collection</p>
+            </Box>
           )}
         </Box>
       )}

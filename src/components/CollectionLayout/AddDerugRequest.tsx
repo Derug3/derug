@@ -96,9 +96,10 @@ export const AddDerugRequst: FC<{
         );
         setCollectionDerug(derugData);
       }
-      setIsOpen(false);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsOpen(false);
     }
   };
 
