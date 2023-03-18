@@ -20,15 +20,7 @@ const ListedNfts: FC = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "space-between",
-        width: "100%",
-        overflow: "none",
-      }}
-    >
+    <div className="grid grid-cols-5">
       {!loading
         ? renderListedNfts()
         : generateSkeletonArrays(25).map((_, i) => (
