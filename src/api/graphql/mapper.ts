@@ -60,6 +60,7 @@ export const mapCollectionStats = (data: any): ICollectionStats | undefined => {
   const dataInfo = data.instrumentTV2;
   if (dataInfo)
     return {
+      slug: dataInfo.slug,
       firstListed: dataInfo.firstListDate,
       marketCap: dataInfo.statsOverall.marketCap,
       numListed: dataInfo.statsOverall.numListed,

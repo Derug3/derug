@@ -59,6 +59,7 @@ export interface ITraitInfo {
 
 export interface ICollectionStats {
   fp: number;
+  slug: string;
   volume24H: number;
   marketCap: number;
   numListed: number;

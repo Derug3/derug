@@ -41,6 +41,7 @@ export const Collections: FC = () => {
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
 
   const [derugRequestVisible, setDerugRequestVisible] = useState(false);
+  const [loading, toggleLoading] = useState(true);
   const [traits, setTraits] = useState<ITrait[]>();
   const [selectedInfo, setSelectedInfo] = useState("description");
   const [selectedData, setSelectedData] = useState("listed");
@@ -86,6 +87,8 @@ export const Collections: FC = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      toggleLoading(false);
     }
   };
 
@@ -148,6 +151,8 @@ export const Collections: FC = () => {
   return (
     <CollectionContext.Provider
       value={{
+        loading,
+        toggleLoading,
         chainCollectionData,
         setChainCollectionData,
         activeListings: listings,

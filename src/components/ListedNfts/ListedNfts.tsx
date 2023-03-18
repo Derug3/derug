@@ -1,17 +1,19 @@
 import React, { FC, useContext, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
+import Skeleton from "react-loading-skeleton";
 import { useSearchParams } from "react-router-dom";
 import { makeNextQuery } from "../../api/graphql/query";
 import { CollectionContext } from "../../stores/collectionContext";
+import { generateSkeletonArrays } from "../../utilities/nft-fetching";
 import ListedNftItem from "./ListedNftItem";
 
 const ListedNfts: FC<{
   parentRef: React.MutableRefObject<HTMLDivElement | null>;
 }> = ({ parentRef }) => {
-  const { activeListings, setActiveListings } = useContext(CollectionContext);
+  const { activeListings, loading, toggleLoading, setActiveListings } =
+    useContext(CollectionContext);
   const [params] = useSearchParams();
 
-  const [loading, toggleLoading] = useState(false);
   const [hasMore, toggleHasMore] = useState(false);
   const [nextCursor, setNextCursor] = useState<string>();
 
@@ -64,7 +66,16 @@ const ListedNfts: FC<{
           loadMore={mapNewBatchOfNfts}
           getScrollParent={() => parentRef.current!}
         >
-          {renderListedNfts()}
+          {!loading
+            ? renderListedNfts()
+            : generateSkeletonArrays(25).map((_, i) => (
+                <Skeleton
+                  height={128}
+                  width={128}
+                  baseColor="rgb(22,27,34)"
+                  highlightColor="rgb(29,35,44)"
+                />
+              ))}
         </InfiniteScroll>
       )}
     </div>

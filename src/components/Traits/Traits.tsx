@@ -1,7 +1,11 @@
 import { Box, Text } from "@primer/react";
-import React, { FC, useMemo } from "react";
+import React, { FC, useContext, useMemo } from "react";
+import Skeleton from "react-loading-skeleton";
 import { ITrait } from "../../interface/collections.interface";
+import { CollectionContext } from "../../stores/collectionContext";
+import { generateSkeletonArrays } from "../../utilities/nft-fetching";
 const Traits: FC<{ trait: ITrait }> = ({ trait }) => {
+  const { loading } = useContext(CollectionContext);
   const renderTraits = useMemo(() => {
     return trait.values.map((t) => {
       return (
@@ -35,7 +39,16 @@ const Traits: FC<{ trait: ITrait }> = ({ trait }) => {
       </Text>
       <Box className="h-0.5 bg-gray-200 w-full mb-3" />
       <Box className="grid grid-rows-4 grid-flow-col w-full gap-1">
-        {renderTraits}
+        {loading
+          ? generateSkeletonArrays(32).map((_, i) => (
+              <Skeleton
+                height={128}
+                width={128}
+                baseColor="rgb(22,27,34)"
+                highlightColor="rgb(29,35,44)"
+              />
+            ))
+          : renderTraits}
       </Box>
     </Box>
   );

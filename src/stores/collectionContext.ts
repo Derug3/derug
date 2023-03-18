@@ -12,6 +12,7 @@ import {
 import { IGraphData } from "../interface/derug.interface";
 
 export interface CollectionContext {
+  loading: boolean;
   collection: ICollectionData | undefined;
   traits: ITrait[] | undefined;
   activeListings: INftListing[] | undefined;
@@ -21,6 +22,7 @@ export interface CollectionContext {
   collectionDerug: ICollectionDerugData | undefined;
   derugRequests: IRequest[] | undefined;
   graphData: IGraphData | undefined;
+  toggleLoading(loading: boolean): void;
   setGraphData: (data: IGraphData) => void;
   setRequests: (requests: IRequest[]) => void;
   setCollectionDerug: (derug: ICollectionDerugData) => void;
