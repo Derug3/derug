@@ -56,7 +56,10 @@ export const HeaderTabs: FC<{
               wallet.publicKey &&
               (!collectionDerug ||
                 (collectionDerug &&
-                  dayjs(collectionDerug?.periodEnd).isAfter(dayjs()))) && (
+                  dayjs(collectionDerug?.periodEnd).isAfter(dayjs()))) &&
+              !derugRequests?.find(
+                (dr) => dr.derugger.toString() === wallet.publicKey?.toString()
+              ) && (
                 <Button
                   sx={{
                     padding: "1.25em 3.25em",

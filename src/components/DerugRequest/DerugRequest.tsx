@@ -49,12 +49,12 @@ export const DerugRequest: FC<{
       wallet &&
       wallet.publicKey &&
       collectionDerug &&
-      collectionDerug?.periodEnd < new Date()
+      dayjs(collectionDerug.periodEnd).isBefore(dayjs())
     ) {
       const percentage = getPercentage();
-      const majorWinner = collectionDerug?.addedRequests.find(
-        (ac) => ac.voteCount > collectionDerug.totalSupply / percentage
-      );
+      const majorWinner = collectionDerug?.addedRequests
+        .sort((a, b) => (a.voteCount > b.voteCount ? -1 : 1))
+        .find((ac) => ac.voteCount > collectionDerug.totalSupply / percentage);
       if (majorWinner) {
         const request = derugRequests?.find(
           (dr) => dr.address.toString() === majorWinner.request.toString()
