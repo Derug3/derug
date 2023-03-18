@@ -42,7 +42,7 @@ const ListedNftItem: FC<{ listedNft: INftListing }> = ({ listedNft }) => {
       <img
         src={listedNft.imageUrl}
         alt="nftImg"
-        className="rounded-[4px] w-32"
+        className="rounded-[4px]"
         style={{ opacity: hover ? 0.2 : 1 }}
       />
       {hover && (
