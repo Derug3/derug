@@ -41,6 +41,7 @@ export const Collections: FC = () => {
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
 
   const [derugRequestVisible, setDerugRequestVisible] = useState(false);
+  const [loading, toggleLoading] = useState(true);
   const [traits, setTraits] = useState<ITrait[]>();
   const [selectedInfo, setSelectedInfo] = useState("description");
   const [selectedData, setSelectedData] = useState("listed");
@@ -86,6 +87,8 @@ export const Collections: FC = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      toggleLoading(false);
     }
   };
 
@@ -143,11 +146,11 @@ export const Collections: FC = () => {
     }
   }, [collectionDerug]);
 
-  const boxRef = useRef<HTMLDivElement | null>(null);
-
   return (
     <CollectionContext.Provider
       value={{
+        loading,
+        toggleLoading,
         chainCollectionData,
         setChainCollectionData,
         activeListings: listings,
@@ -194,7 +197,6 @@ export const Collections: FC = () => {
             }}
           >
             <div
-              ref={boxRef}
               className="ASDSAD"
               style={{
                 maxHeight: "27em",
@@ -208,13 +210,11 @@ export const Collections: FC = () => {
               sx={{
                 maxHeight: "27em",
                 overflowY: "scroll",
-                marginLeft: "2em",
               }}
             >
               <RightPane
                 selectedData={selectedData}
                 chainCollectionData={chainCollectionData}
-                parentRef={boxRef}
                 traits={traits}
                 iframeRef={iframeRef}
               />
