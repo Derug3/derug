@@ -16,14 +16,13 @@ export const RightPane: FC<{
   chainCollectionData?: IChainCollectionData;
   traits: ITrait[] | undefined;
   iframeRef: any;
-  parentRef: React.MutableRefObject<HTMLDivElement | null>;
-}> = ({ selectedData, traits, iframeRef, parentRef, chainCollectionData }) => (
+}> = ({ selectedData, traits, iframeRef, chainCollectionData }) => (
   <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS}>
     <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS} className="sticky">
-      <div className="">
+      <div className="ml-8">
         {selectedData === "traits" && traits && <TraitsList traits={traits} />}
         {selectedData === "statistics" && traits && <ListingsGraph />}
-        {selectedData === "listed" && <ListedNfts parentRef={parentRef} />}
+        {selectedData === "listed" && <ListedNfts />}
         {selectedData === "solanafm" && (
           <div id="solanafm" className="flex w-full">
             <iframe
