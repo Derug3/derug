@@ -1,7 +1,8 @@
 import { Button, TabNav } from "@primer/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import dayjs from "dayjs";
-import { FC, useContext } from "react";
+import { FC, useContext, useMemo } from "react";
+import { DerugStatus } from "../../enums/collections.enums";
 import { CollectionContext } from "../../stores/collectionContext";
 
 const getNavStyling = (tab: string, selected: string) => {
@@ -11,8 +12,6 @@ const getNavStyling = (tab: string, selected: string) => {
     fontSize: "1rem",
     fontWeight: "bold",
     fontFamily: "monospace",
-    border:
-      tab !== selected ? "1px solid #BBC4CD" : "1px solid rgba(9, 194, 246)",
     cursor: "pointer",
     borderBottom: "none",
     "&:hover": {
@@ -27,30 +26,49 @@ export const HeaderTabs: FC<{
   setSelectedData: (s: string) => void;
   openDerugModal: (value: boolean) => void;
 }> = ({ openDerugModal, selectedData, setSelectedData }) => {
-  const { traits, collectionDerug } = useContext(CollectionContext);
+  const { traits, collectionDerug, derugRequests } =
+    useContext(CollectionContext);
   const wallet = useWallet();
+
+  const showAddDerugButton = useMemo(() => {
+    if (!derugRequests || derugRequests.length == 0) {
+      return true;
+    } else if (
+      (collectionDerug &&
+        collectionDerug.addedRequests.find((ar) => ar.winning)) ||
+      collectionDerug?.status === DerugStatus.Reminting
+    ) {
+      return false;
+    }
+  }, [derugRequests, collectionDerug]);
 
   return (
     <div
       className="flex w-full self-start bg-gradient-to-r
   font-mono text-gray-700 leading-6 px-10 border-none justify-end"
     >
-      <div className="w-full gap-10 flex justify-end">
+      <div className="w-full gap-5 flex justify-end">
         <div className="w-1/2 flex">
-          <div className="w-full flex justify-between ml-10">
+          <div className="w-full flex justify-between">
             {wallet &&
               wallet.publicKey &&
               (!collectionDerug ||
                 (collectionDerug &&
-                  dayjs(collectionDerug?.periodEnd).isBefore(dayjs()))) && (
+                  dayjs(collectionDerug?.periodEnd).isAfter(dayjs()))) &&
+              !derugRequests?.find(
+                (dr) => dr.derugger.toString() === wallet.publicKey?.toString()
+              ) && (
                 <Button
+                  className="ml-8"
                   sx={{
                     padding: "1.25em 3.25em",
-                    color: "white",
+                    color: "rgba(9, 194, 246)",
+                    borderRadius: 0,
+                    // backgroundColor: "rgba(9, 194, 246,.35)",
                   }}
                   onClick={() => openDerugModal(true)}
                 >
-                  <span className="text-sm uppercase ">Add derug request</span>
+                  <span className="text-sm uppercase">Add derug request</span>
                 </Button>
               )}
             <TabNav

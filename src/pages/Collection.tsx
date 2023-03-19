@@ -57,7 +57,7 @@ export const Collections: FC = () => {
 
   const [derugRequests, setDerugRequests] = useState<IRequest[]>();
   const iframeRef = useRef(null);
-  const slug = useSearchParams()[0].get("symbol");
+  let slug = useSearchParams()[0].get("symbol");
   const [isOpen, setIsOpen] = useState(true);
 
   const wallet = useWallet();
@@ -68,12 +68,22 @@ export const Collections: FC = () => {
 
   const getBasicCollectionData = async () => {
     try {
-      if (slug) {
-        setCollectionStats(await getFloorPrice(slug));
-        setListings(await getListings(slug));
-        setTraits(await getTraits(slug));
-      }
       setBasicCollectionData(await getSingleCollection(slug ?? ""));
+      if (slug) {
+        const collectionStats = await getFloorPrice(slug);
+
+        setCollectionStats(collectionStats);
+        let listingsData = await getListings(slug);
+        if (listingsData.length === 0) {
+          listingsData = await getListings(collectionStats.slug);
+        }
+        setListings(listingsData);
+        let traitsData = await getTraits(slug);
+        if (traitsData.length === 0) {
+          traitsData = await getTraits(collectionStats.slug);
+        }
+        setTraits(traitsData);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -158,7 +168,7 @@ export const Collections: FC = () => {
         setGraphData,
       }}
     >
-      <Box className="overflow-y-auto mt-16">
+      <Box className="overflow-y-auto mt-16" style={{ zoom: "85%" }}>
         <Box className="sticky top-0 grid "></Box>
         <Box className="overflow-y-clip">
           <AddDerugRequst

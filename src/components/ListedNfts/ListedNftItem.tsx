@@ -35,7 +35,7 @@ const ListedNftItem: FC<{ listedNft: INftListing }> = ({ listedNft }) => {
 
   return (
     <Box
-      className="flex relative flex-col gap-5 px-2 py-4  items-start border-cyan-500 ease-in duration-300"
+      className="flex relative flex-col gap-5 py-4  items-start border-cyan-500 ease-in duration-300"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >

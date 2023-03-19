@@ -8,7 +8,7 @@ export const derugProgramFactory = () => {
     IDL,
     new PublicKey(DERUG_PROGRAM_ID),
     new AnchorProvider(RPC_CONNECTION, new NodeWallet(Keypair.generate()), {
-      commitment: "processed",
+      commitment: "confirmed",
     })
   );
 };

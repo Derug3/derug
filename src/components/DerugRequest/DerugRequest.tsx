@@ -3,6 +3,7 @@ import { useWallet, WalletContextState } from "@solana/wallet-adapter-react";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import { FC, useContext, useMemo, useRef, useState } from "react";
+import { DerugStatus } from "../../enums/collections.enums";
 import { IRequest } from "../../interface/collections.interface";
 import { CollectionContext } from "../../stores/collectionContext";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
@@ -47,12 +48,13 @@ export const DerugRequest: FC<{
     if (
       wallet &&
       wallet.publicKey &&
-      dayjs(collectionDerug?.periodEnd).isBefore(dayjs())
+      collectionDerug &&
+      dayjs(collectionDerug.periodEnd).isBefore(dayjs())
     ) {
       const percentage = getPercentage();
-      const majorWinner = collectionDerug?.addedRequests.find(
-        (ac) => ac.voteCount > collectionDerug.totalSupply / percentage
-      );
+      const majorWinner = collectionDerug?.addedRequests
+        .sort((a, b) => (a.voteCount > b.voteCount ? -1 : 1))
+        .find((ac) => ac.voteCount > collectionDerug.totalSupply / percentage);
       if (majorWinner) {
         const request = derugRequests?.find(
           (dr) => dr.address.toString() === majorWinner.request.toString()
@@ -63,6 +65,18 @@ export const DerugRequest: FC<{
       }
     }
   }, [wallet, collectionDerug, derugRequests]);
+
+  const showAddDerugButton = useMemo(() => {
+    // if (!derugRequests || derugRequests.length == 0) {
+    //   return true;
+    // } else if (
+    //   collectionDerug &&
+    //   collectionDerug?.status === DerugStatus.Reminting
+    // ) {
+    //   return false;
+    // }
+    return true;
+  }, [derugRequests, collectionDerug]);
 
   return (
     <motion.div
@@ -96,7 +110,7 @@ export const DerugRequest: FC<{
           ) : (
             <div className="text-base font-mono mt-3 text-white">
               There is no derug request yet.
-              {wallet && (
+              {showAddDerugButton && (
                 <Button
                   className="bg-transparent w-full font-mono font-bold text-lg mt-5"
                   onClick={() => openDerugModal(true)}
