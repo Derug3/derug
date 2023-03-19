@@ -1,19 +1,13 @@
 import React, { FC, useContext, useState } from "react";
-import InfiniteScroll from "react-infinite-scroller";
 import Skeleton from "react-loading-skeleton";
-import { useSearchParams } from "react-router-dom";
-import { makeNextQuery } from "../../api/graphql/query";
 import { CollectionContext } from "../../stores/collectionContext";
 import { generateSkeletonArrays } from "../../utilities/nft-fetching";
 import ListedNftItem from "./ListedNftItem";
 
 const ListedNfts: FC = () => {
-  const { activeListings, loading, toggleLoading, setActiveListings } =
-    useContext(CollectionContext);
+  const { activeListings, loading } = useContext(CollectionContext);
 
   const renderListedNfts = () => {
-    console.log(activeListings?.length, "activeListings");
-
     return activeListings?.map((ln) => {
       return <ListedNftItem listedNft={ln} key={ln.mint} />;
     });

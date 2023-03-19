@@ -11,21 +11,26 @@ const HeadingItem: FC<{
   date?: Date;
 }> = ({ title, amount, desc, descColor, isCounter, date }) => {
   return (
-    <Heading className="flex flex-col items-center gap-2">
+    <Heading className="flex flex-row items-center justify-between w-full">
       <Text
-        className="text-sm
-"
-        style={{ fontFamily: "monospace", color: "white" }}
+        className="text-sm border-1 p-2 w-1/2"
+        style={{
+          fontFamily: "monospace",
+          color: "white",
+          fontWeight: 200,
+          border: "1px solid rgba(9,194,246,.15)",
+        }}
       >
         {title}
       </Text>
       {!isCounter ? (
         <Text
-          className="text-sm
-"
+          className="text-sm p-2 w-1/2"
           style={{
-            color: `white`,
-            filter: `${`drop-shadow(white 0px 0px 10px)`}`,
+            fontFamily: "monospace",
+            color: `#2DD4BF`,
+            border: "1px solid rgb(9,194,246)",
+            // filter: `${`drop-shadow(white 0px 0px 10px)`}`,
           }}
         >
           {amount} <span>{desc}</span>
@@ -33,7 +38,7 @@ const HeadingItem: FC<{
       ) : (
         <Countdown
           className="font-mono text-sm
- text-orange-800 drop-shadow-3xl"
+ text-orange-800 p-2 w-1/2"
           date={date}
         />
       )}
