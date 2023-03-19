@@ -99,7 +99,6 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
                   className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 "
                   sx={{
                     color: "white",
-                    // background: "rgba(9, 194, 246, 0.6)",
                     padding: "1.25em",
                     borderRadius: 0,
                     width: "30%",
