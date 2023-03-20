@@ -59,12 +59,10 @@ export const HeaderTabs: FC<{
                 (dr) => dr.derugger.toString() === wallet.publicKey?.toString()
               ) && (
                 <Button
-                  className="ml-8"
                   sx={{
                     padding: "1.25em 3.25em",
                     color: "rgba(9, 194, 246)",
                     borderRadius: 0,
-                    // backgroundColor: "rgba(9, 194, 246,.35)",
                   }}
                   onClick={() => openDerugModal(true)}
                 >

@@ -60,7 +60,7 @@ export const createDerugDataIx = async (
 
   //TODO:PUT REAL VALUE BEFORE MAINNET
   const ix = await derugProgram.methods
-    .initializeDerug(18)
+    .initializeDerug(18, collection.slug)
     .accounts({
       collectionKey,
       derugData: collection.derugDataAddress,
@@ -102,6 +102,7 @@ export const getCollectionDerugData = async (
       address: derugDataAddress,
       collectionMetadata: derugDataAccount.collectionMetadata,
       addedRequests: derugDataAccount.activeRequests,
+      thresholdDenominator: derugDataAccount.thresholdDenominator,
     };
   } catch (error) {
     console.log(error);

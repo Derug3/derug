@@ -178,18 +178,29 @@ export const DerugRequestItem: FC<{
           </Button>
         )}
 
-        <ProgressBar
-          progress={
-            (derugRequest.voteCount / (collectionDerug?.totalSupply ?? 1)) * 100
-          }
-          bg="#2DD4BF"
-          sx={{
-            width: "380px",
-            height: "30px",
-            borderRadius: 0,
-            color: "rgb(45, 212, 191)",
-          }}
-        />
+        <div className="relative">
+          <ProgressBar
+            progress={
+              (derugRequest.voteCount / (collectionDerug?.totalSupply ?? 1)) *
+              100
+            }
+            bg="#2DD4BF"
+            sx={{
+              width: "380px",
+              height: "30px",
+              borderRadius: 0,
+              color: "rgb(45, 212, 191)",
+            }}
+          />
+          {collectionDerug && (
+            <div
+              className={`absolute left-[${
+                collectionDerug?.totalSupply /
+                collectionDerug?.thresholdDenominator
+              }%] w-[1px] h-[100%] bg-red-500`}
+            />
+          )}
+        </div>
         <Balancer
           className="text-lg cursor-pointer text-white font-mono px-5"
           style={{ fontSize: "1em", opacity: 0.2 }}
