@@ -35,6 +35,10 @@ export type DerugProgram = {
         {
           name: "totalSupply";
           type: "u32";
+        },
+        {
+          name: "slug";
+          type: "string";
         }
       ];
     },
@@ -391,6 +395,10 @@ export type DerugProgram = {
       type: {
         kind: "struct";
         fields: [
+          {
+            name: "slug";
+            type: "string";
+          },
           {
             name: "collection";
             type: "publicKey";
@@ -753,6 +761,10 @@ export const IDL: DerugProgram = {
           name: "totalSupply",
           type: "u32",
         },
+        {
+          name: "slug",
+          type: "string",
+        },
       ],
     },
     {
@@ -1108,6 +1120,10 @@ export const IDL: DerugProgram = {
       type: {
         kind: "struct",
         fields: [
+          {
+            name: "slug",
+            type: "string",
+          },
           {
             name: "collection",
             type: "publicKey",
