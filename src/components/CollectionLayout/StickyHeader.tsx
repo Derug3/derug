@@ -18,42 +18,44 @@ export const StickyHeader: FC<{
 }> = ({ collection, collectionDerug }) => {
   return (
     <Box className="flex flex-row items-start justify-between w-full pl-10 mt-5">
-      {collectionDerug && (
-        <Box className="flex flex-col gap-5 border-1 w-1/2">
-          <HeadingItem
-            amount={collection?.fp}
-            descColor="#2dd4bf"
-            title="FLOOR PRICE"
-            desc="SOL"
-          />
-          <HeadingItem
-            title="LISTED"
-            descColor="#2dd4bf"
-            desc="NFTs"
-            amount={collection?.numListed}
-          />
-          <HeadingItem
-            descColor="#2dd4bf"
-            title="MARKET CAP"
-            amount={collection?.marketCap}
-            desc="SOL"
-          />
+      <Box className="flex flex-col gap-5 border-1 w-1/2">
+        <HeadingItem
+          amount={collection?.fp}
+          descColor="#2dd4bf"
+          title="FLOOR PRICE"
+          desc="SOL"
+        />
+        <HeadingItem
+          title="LISTED"
+          descColor="#2dd4bf"
+          desc="NFTs"
+          amount={collection?.numListed}
+        />
+        <HeadingItem
+          descColor="#2dd4bf"
+          title="MARKET CAP"
+          amount={collection?.marketCap}
+          desc="SOL"
+        />
+      </Box>
+
+      <Box className="flex flex-col gap-5 w-1/2">
+        <HeadingItem
+          descColor="#2dd4bf"
+          title="TOTAL SUPPLY"
+          desc="NFTs"
+          amount={collection?.numMints}
+        />
+        {collectionDerug && (
           <HeadingItem
             descColor="#2dd4bf"
             title="TOTAL REQUESTS"
             amount={collectionDerug.totalSuggestionCount}
             desc=""
           />
-        </Box>
-      )}
-      {collectionDerug && (
-        <Box className="flex flex-col gap-5 w-1/2">
-          <HeadingItem
-            descColor="#2dd4bf"
-            title="TOTAL SUPPLY"
-            desc="NFTs"
-            amount={collection?.numMints}
-          />
+        )}
+
+        {collectionDerug && (
           <HeadingItem
             descColor="#2dd4bf"
             title="STATUS"
@@ -63,7 +65,9 @@ export const StickyHeader: FC<{
             }
             desc=""
           />
-          {collectionDerug.status === DerugStatus.Reminting && (
+        )}
+        {collectionDerug &&
+          collectionDerug.status === DerugStatus.Reminting && (
             <HeadingItem
               descColor="#2dd4bf"
               title="TOTAL REMINTED"
@@ -71,6 +75,7 @@ export const StickyHeader: FC<{
               desc=""
             />
           )}
+        {collectionDerug && (
           <HeadingItem
             descColor="#2dd4bf"
             title="REMAINING TIME"
@@ -78,8 +83,8 @@ export const StickyHeader: FC<{
             isCounter
             desc=""
           />
-        </Box>
-      )}
+        )}
+      </Box>
     </Box>
   );
 };
