@@ -199,7 +199,6 @@ export const Collections: FC = () => {
               className="flex flex-col justify-between items-start"
               style={{
                 transform: "translateY(-42px)",
-                height: "calc(100% + 42px)",
               }}
             >
               <div className="flex flex-col w-full justify-between h-full">
@@ -214,7 +213,7 @@ export const Collections: FC = () => {
             </div>
             <Box
               sx={{
-                maxHeight: "27em",
+                maxHeight: "30em",
                 overflowY: "scroll",
               }}
             >
