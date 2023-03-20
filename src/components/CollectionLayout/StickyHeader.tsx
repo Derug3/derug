@@ -15,22 +15,28 @@ export const StickyHeader: FC<{
   wallet: WalletContextState;
   openDerugModal: (value: boolean) => void;
   collectionDerug?: ICollectionDerugData;
-}> = ({ wallet, collection, collectionDerug, openDerugModal }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const slug = useSearchParams()[0].get("symbol");
-
+}> = ({ collection, collectionDerug }) => {
   return (
     <Box className="flex flex-row items-start justify-between w-full pl-10 mt-5">
       {collectionDerug && (
         <Box className="flex flex-col gap-5 border-1 w-1/2">
           <HeadingItem
+            amount={collection?.fp}
             descColor="#2dd4bf"
-            title="STATUS"
-            amount={
-              collectionDerug.status[0].toUpperCase() +
-              collectionDerug.status.slice(1)
-            }
-            desc=""
+            title="FLOOR PRICE"
+            desc="SOL"
+          />
+          <HeadingItem
+            title="LISTED"
+            descColor="#2dd4bf"
+            desc="NFTs"
+            amount={collection?.numListed}
+          />
+          <HeadingItem
+            descColor="#2dd4bf"
+            title="MARKET CAP"
+            amount={collection?.marketCap}
+            desc="SOL"
           />
           <HeadingItem
             descColor="#2dd4bf"
@@ -38,14 +44,6 @@ export const StickyHeader: FC<{
             amount={collectionDerug.totalSuggestionCount}
             desc=""
           />
-          {collectionDerug.status === DerugStatus.Reminting && (
-            <HeadingItem
-              descColor="#2dd4bf"
-              title="TOTAL REMINTED"
-              amount={collectionDerug.totalReminted}
-              desc=""
-            />
-          )}
         </Box>
       )}
       {collectionDerug && (
@@ -58,14 +56,21 @@ export const StickyHeader: FC<{
           />
           <HeadingItem
             descColor="#2dd4bf"
-            title="FIRST LISTING"
-            amount={dayjs
-              .unix(collection?.firstListed ?? 0)
-              .toDate()
-              .toDateString()
-              .slice(0, 10)}
+            title="STATUS"
+            amount={
+              collectionDerug.status[0].toUpperCase() +
+              collectionDerug.status.slice(1)
+            }
             desc=""
           />
+          {collectionDerug.status === DerugStatus.Reminting && (
+            <HeadingItem
+              descColor="#2dd4bf"
+              title="TOTAL REMINTED"
+              amount={collectionDerug.totalReminted}
+              desc=""
+            />
+          )}
           <HeadingItem
             descColor="#2dd4bf"
             title="REMAINING TIME"
