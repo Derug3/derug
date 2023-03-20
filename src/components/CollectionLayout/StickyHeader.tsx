@@ -20,7 +20,7 @@ export const StickyHeader: FC<{
   const slug = useSearchParams()[0].get("symbol");
 
   return (
-    <Box className="flex flex-row items-start justify-between w-full pl-12 mt-5">
+    <Box className="flex flex-row items-start justify-between w-full pl-10 mt-5">
       {collectionDerug && (
         <Box className="flex flex-col gap-5 border-1 w-1/2">
           <HeadingItem
