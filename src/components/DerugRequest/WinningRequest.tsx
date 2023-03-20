@@ -58,7 +58,7 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
   };
 
   return (
-    <Box className="flex flex-row justify-between items-center w-full relative">
+    <Box className="flex flex-row justify-between items-center w-full relative mt-5 pl-10 pr-4">
       <Box
         className="flex flex-col gap-5 w-full"
         sx={{
@@ -67,7 +67,6 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
           boxShadow: "0 0 0 1px #B78E1B",
         }}
         padding="2em"
-        margin="2.5rem"
       >
         <Box className="flex flex-row justify-between ">
           <Text className="font-mono text-neutral-400 flex justify-center text-sm">
