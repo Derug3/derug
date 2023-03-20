@@ -8,7 +8,7 @@ const TraitsList: FC<{ traits: ITrait[] }> = ({ traits }) => {
     return traits.map((t) => {
       return <Traits trait={t} key={t.name} />;
     });
-  }, []);
+  }, [traits]);
   return <Box className="flex flex-col gap-5 pl-0">{renderTraits}</Box>;
 };
 

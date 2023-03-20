@@ -19,7 +19,7 @@ export const RightPane: FC<{
 }> = ({ selectedData, traits, iframeRef, chainCollectionData }) => (
   <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS}>
     <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS} className="sticky">
-      <div className="ml-8">
+      <div className="pl-8">
         {selectedData === "traits" && traits && <TraitsList traits={traits} />}
         {selectedData === "statistics" && traits && <ListingsGraph />}
         {selectedData === "listed" && <ListedNfts />}
