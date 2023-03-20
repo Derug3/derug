@@ -36,6 +36,7 @@ import { Remint } from "../components/Remit/Remint";
 import { toast } from "react-hot-toast";
 import { getFloorPrice, getListings, getTraits } from "../api/tensor";
 import { IGraphData } from "../interface/derug.interface";
+import NoDerugRequests from "../components/DerugRequest/NoDerugRequests";
 export const Collections: FC = () => {
   dayjs.extend(utc);
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
@@ -227,12 +228,12 @@ export const Collections: FC = () => {
           </Box>
         </Box>
       </Box>
-      {collectionDerug && (
+      {collectionDerug ? (
         <>
           {(collectionDerug.status === DerugStatus.Initialized ||
             collectionDerug.status === DerugStatus.Voting) &&
           showDerugRequests ? (
-            <DerugRequest openDerugModal={setDerugRequestVisible} />
+            <DerugRequest />
           ) : (
             <>
               {collectionDerug &&
@@ -243,6 +244,8 @@ export const Collections: FC = () => {
             </>
           )}
         </>
+      ) : (
+        <NoDerugRequests openDerugModal={setDerugRequestVisible} />
       )}
     </CollectionContext.Provider>
   );
