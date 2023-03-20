@@ -98,7 +98,10 @@ const CollectionData = () => {
           </Box>
         </Box>
       </Box>
-      <Text className="text-left text-lg text-white opacity-80 font-mono max-h-24 overflow-auto">
+      <Text
+        className="text-left text-md text-white opacity-80 font-mono max-h-24 overflow-auto"
+        style={{ minHeight: "5.125em" }}
+      >
         {collection?.description ?? (
           <Skeleton
             baseColor="rgb(22,27,34)"
