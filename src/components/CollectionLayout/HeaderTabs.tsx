@@ -12,8 +12,6 @@ const getNavStyling = (tab: string, selected: string) => {
     fontSize: "1rem",
     fontWeight: "bold",
     fontFamily: "monospace",
-    border:
-      tab !== selected ? "1px solid #BBC4CD" : "1px solid rgba(9, 194, 246)",
     cursor: "pointer",
     borderBottom: "none",
     "&:hover": {
@@ -50,8 +48,8 @@ export const HeaderTabs: FC<{
   font-mono text-gray-700 leading-6 px-10 border-none justify-end"
     >
       <div className="w-full gap-5 flex justify-end">
-        <div className="w-1/2 flex">
-          <div className="w-full flex justify-between ml-10">
+        <div className="w-1/2 flex pl-8">
+          <div className="w-full flex justify-between">
             {wallet &&
               wallet.publicKey &&
               (!collectionDerug ||
@@ -61,13 +59,16 @@ export const HeaderTabs: FC<{
                 (dr) => dr.derugger.toString() === wallet.publicKey?.toString()
               ) && (
                 <Button
+                  className="ml-8"
                   sx={{
                     padding: "1.25em 3.25em",
-                    color: "white",
+                    color: "rgba(9, 194, 246)",
+                    borderRadius: 0,
+                    // backgroundColor: "rgba(9, 194, 246,.35)",
                   }}
                   onClick={() => openDerugModal(true)}
                 >
-                  <span className="text-sm uppercase ">Add derug request</span>
+                  <span className="text-sm uppercase">Add derug request</span>
                 </Button>
               )}
             <TabNav

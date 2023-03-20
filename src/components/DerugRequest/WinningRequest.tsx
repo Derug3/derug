@@ -58,22 +58,26 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
   };
 
   return (
-    <Box className="flex flex-row justify-between items-center w-full relative">
-      {/* <Box className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 h-1 w-full absolute top-0"></Box> */}
+    <Box className="flex flex-row justify-between items-center w-full relative mt-5 pl-10 pr-4">
       <Box
-        className="flex flex-col gap-5 w-full px-10"
+        className="flex flex-col gap-5 w-full"
         sx={{
           border:
             "1px solid animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500",
-          boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)",
+          boxShadow: "0 0 0 1px #B78E1B",
         }}
         padding="2em"
-        margin="2.5rem"
       >
-        <Box className="flex flex-row  ">
-          <Text className="font-mono text-neutral-400 flex justify-center text-">
+        <Box className="flex flex-row justify-between ">
+          <Text className="font-mono text-neutral-400 flex justify-center text-sm">
             {request.derugger.toString()}
           </Text>
+          <div className="flex items-center gap-1">
+            <Text className="font-mono flex justify-center text-sm text-yellow-500	">
+              Winning request
+            </Text>
+            ☀️
+          </div>
         </Box>
         <Box
           className="flex flex-row gap-3 justify-between w-full items-center"
@@ -94,7 +98,6 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
                   className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 "
                   sx={{
                     color: "white",
-                    // background: "rgba(9, 194, 246, 0.6)",
                     padding: "1.25em",
                     borderRadius: 0,
                     width: "30%",
@@ -119,6 +122,7 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
                   color: "rgb(45, 212, 191)",
                 }}
               />
+
               <Text className="text-white font-mono	" color={"rgb(9, 194, 246)"}>
                 {request.voteCount} / {collectionDerug?.totalSupply}
               </Text>

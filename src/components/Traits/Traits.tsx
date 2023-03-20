@@ -1,20 +1,21 @@
 import { Box, Text } from "@primer/react";
-import React, { FC, useMemo } from "react";
+import React, { FC, useContext, useMemo } from "react";
+import Skeleton from "react-loading-skeleton";
 import { ITrait } from "../../interface/collections.interface";
+import { CollectionContext } from "../../stores/collectionContext";
+import { generateSkeletonArrays } from "../../utilities/nft-fetching";
 const Traits: FC<{ trait: ITrait }> = ({ trait }) => {
+  const { loading } = useContext(CollectionContext);
   const renderTraits = useMemo(() => {
     return trait.values.map((t) => {
       return (
         <Box
           key={t.name}
-          className="flex flex-row gap-5 items-center justify-start"
-          sx={{
-            background: "rgb(9, 194, 246,.15)",
-          }}
+          className="flex flex-col gap-2 items-start justify-start mb-2"
         >
-          <img src={t.image} className="rounded-[4px] w-16" />
-          <Box className="flex flex-col items-center justify-center">
-            <Text className="text-sm text-left w-full" sx={{ color: "white" }}>
+          <img src={t.image} className="w-32" />
+          <Box className="flex flex-col items-start justify-start w-full">
+            <Text className="text-sm text-left" sx={{ color: "white" }}>
               {t.name}
             </Text>
             <Text
@@ -22,7 +23,7 @@ const Traits: FC<{ trait: ITrait }> = ({ trait }) => {
                 filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 15px)",
                 color: "rgb(9, 194, 246)",
               }}
-              className="text-xs  w-full text-left"
+              className="text-xs text-left"
             >
               {t.percentage}%
             </Text>
@@ -36,9 +37,17 @@ const Traits: FC<{ trait: ITrait }> = ({ trait }) => {
       <Text className=" font-mono text-white">
         {trait.name} [{trait.values.length}]
       </Text>
-      <Box className="h-0.5 bg-gray-200 w-full mb-3" />
-      <Box className="grid md:grid-cols-4 grid-cols-1 gap-1">
-        {renderTraits}
+      <Box className="grid grid-cols-6 mt-3 gap-2">
+        {loading
+          ? generateSkeletonArrays(32).map((_, i) => (
+              <Skeleton
+                height={128}
+                width={128}
+                baseColor="rgb(22,27,34)"
+                highlightColor="rgb(29,35,44)"
+              />
+            ))
+          : renderTraits}
       </Box>
     </Box>
   );

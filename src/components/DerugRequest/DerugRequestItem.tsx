@@ -132,8 +132,8 @@ export const DerugRequestItem: FC<{
                   backgroundColor: "#282C34",
                 },
               }}
-              direction="e"
-              aria-labderugRequest={u.description}
+              direction="n"
+              aria-label={u.description}
               noDelay={true}
             >
               <div

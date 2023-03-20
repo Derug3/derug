@@ -41,6 +41,7 @@ export const Collections: FC = () => {
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
 
   const [derugRequestVisible, setDerugRequestVisible] = useState(false);
+  const [loading, toggleLoading] = useState(true);
   const [traits, setTraits] = useState<ITrait[]>();
   const [selectedInfo, setSelectedInfo] = useState("description");
   const [selectedData, setSelectedData] = useState("listed");
@@ -86,6 +87,8 @@ export const Collections: FC = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      toggleLoading(false);
     }
   };
 
@@ -143,11 +146,11 @@ export const Collections: FC = () => {
     }
   }, [collectionDerug]);
 
-  const boxRef = useRef<HTMLDivElement | null>(null);
-
   return (
     <CollectionContext.Provider
       value={{
+        loading,
+        toggleLoading,
         chainCollectionData,
         setChainCollectionData,
         activeListings: listings,
@@ -168,7 +171,7 @@ export const Collections: FC = () => {
         setGraphData,
       }}
     >
-      <Box className="overflow-y-auto mt-16" style={{ zoom: "85%" }}>
+      <Box className="overflow-y-auto" style={{ zoom: "85%" }}>
         <Box className="sticky top-0 grid "></Box>
         <Box className="overflow-y-clip">
           <AddDerugRequst
@@ -190,56 +193,38 @@ export const Collections: FC = () => {
             sx={{
               display: "grid",
               gridTemplateColumns: "50% 50%",
-              height: "400px",
             }}
           >
             <div
-              ref={boxRef}
-              className="ASDSAD"
+              className="flex flex-col justify-between items-start"
               style={{
-                maxHeight: "27em",
                 transform: "translateY(-42px)",
-                overflow: "none",
               }}
             >
-              <LeftPane selectedInfo={selectedInfo} />
+              <div className="flex flex-col w-full justify-between h-full">
+                <LeftPane selectedInfo={selectedInfo} />
+                <StickyHeader
+                  collection={collectionStats}
+                  collectionDerug={collectionDerug}
+                  wallet={wallet}
+                  openDerugModal={setDerugRequestVisible}
+                />
+              </div>
             </div>
             <Box
               sx={{
-                maxHeight: "27em",
+                maxHeight: "30em",
                 overflowY: "scroll",
-                marginLeft: "2em",
               }}
             >
               <RightPane
                 selectedData={selectedData}
                 chainCollectionData={chainCollectionData}
-                parentRef={boxRef}
                 traits={traits}
                 iframeRef={iframeRef}
               />
             </Box>
           </Box>
-          <Marqee
-            pauseOnClick
-            loop={0}
-            speed={30}
-            direction={"right"}
-            gradient={false}
-            style={{
-              position: "absolute",
-              left: "16%",
-              top: "32px",
-              width: "65%",
-            }}
-          >
-            <StickyHeader
-              collection={collectionStats}
-              collectionDerug={collectionDerug}
-              wallet={wallet}
-              openDerugModal={setDerugRequestVisible}
-            />
-          </Marqee>
         </Box>
       </Box>
       {collectionDerug && (
