@@ -171,7 +171,7 @@ export const Collections: FC = () => {
         setGraphData,
       }}
     >
-      <Box className="overflow-y-auto mt-16" style={{ zoom: "85%" }}>
+      <Box className="overflow-y-auto" style={{ zoom: "85%" }}>
         <Box className="sticky top-0 grid "></Box>
         <Box className="overflow-y-clip">
           <AddDerugRequst
@@ -193,18 +193,23 @@ export const Collections: FC = () => {
             sx={{
               display: "grid",
               gridTemplateColumns: "50% 50%",
-              height: "400px",
             }}
           >
             <div
-              className="ASDSAD"
+              className="flex flex-col justify-between items-start"
               style={{
-                maxHeight: "27em",
                 transform: "translateY(-42px)",
-                overflow: "none",
               }}
             >
-              <LeftPane selectedInfo={selectedInfo} />
+              <div className="flex flex-col w-full justify-between h-full">
+                <LeftPane selectedInfo={selectedInfo} />
+                <StickyHeader
+                  collection={collectionStats}
+                  collectionDerug={collectionDerug}
+                  wallet={wallet}
+                  openDerugModal={setDerugRequestVisible}
+                />
+              </div>
             </div>
             <Box
               sx={{
@@ -220,26 +225,6 @@ export const Collections: FC = () => {
               />
             </Box>
           </Box>
-          <Marqee
-            pauseOnClick
-            loop={0}
-            speed={30}
-            direction={"right"}
-            gradient={false}
-            style={{
-              position: "absolute",
-              left: "16%",
-              top: "32px",
-              width: "65%",
-            }}
-          >
-            <StickyHeader
-              collection={collectionStats}
-              collectionDerug={collectionDerug}
-              wallet={wallet}
-              openDerugModal={setDerugRequestVisible}
-            />
-          </Marqee>
         </Box>
       </Box>
       {collectionDerug && (

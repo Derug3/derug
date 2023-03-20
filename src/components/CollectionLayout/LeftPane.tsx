@@ -1,27 +1,20 @@
-import { Box, Button, Text } from "@primer/react";
+import { Box, Text } from "@primer/react";
 import { motion } from "framer-motion";
 import { FC, useState } from "react";
 import { AiOutlineStar } from "react-icons/ai";
 import { useSearchParams } from "react-router-dom";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 import CollectionData from "../CollectionData/CollectionData";
-import ListedNfts from "../ListedNfts/ListedNfts";
 import tensorLogo from "../../assets/tensorLogo.png";
 import magicEdenLogo from "../../assets/magicEdenLogo.png";
-import { useWallet } from "@solana/wallet-adapter-react";
 
 export const LeftPane: FC<{
   selectedInfo: string;
 }> = ({ selectedInfo }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const slug = useSearchParams()[0].get("symbol");
-
-  const wallet = useWallet();
   return (
-    <motion.div
-      variants={FADE_DOWN_ANIMATION_VARIANTS}
-      style={{ overflow: "auto" }}
-    >
+    <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS}>
       <motion.div
         variants={FADE_DOWN_ANIMATION_VARIANTS}
         className="pl-10 sticky"
@@ -65,8 +58,8 @@ export const LeftPane: FC<{
                     />
                   </div>
                 </Box>
-                <CollectionData />
               </Text>
+              <CollectionData />
             </>
           )}
         </div>

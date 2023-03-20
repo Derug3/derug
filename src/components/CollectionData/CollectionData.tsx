@@ -8,7 +8,7 @@ import Skeleton from "react-loading-skeleton";
 const CollectionData = () => {
   const { collection, chainCollectionData } = useContext(CollectionContext);
   return (
-    <Box className="flex flex-col gap-5 pr-2">
+    <Box className="flex flex-col gap-5 pr-2 text-white">
       <Box className="flex flex-row items-start gap-5">
         {collection?.image ? (
           <img
@@ -42,9 +42,10 @@ const CollectionData = () => {
               Rugged by:
               <span
                 style={{
-                  color: "#FD5D5D",
+                  color: "rgb(154 52 18)",
                   filter: "drop-shadow(rgb(223, 46, 56),0 0 15px)",
                   fontSize: "1em",
+                  marginLeft: "0.5em",
                 }}
               >
                 {chainCollectionData.rugUpdateAuthority}
@@ -97,11 +98,11 @@ const CollectionData = () => {
           </Box>
         </Box>
       </Box>
-      <Text className="text-left text-lg">
+      <Text className="text-left text-lg text-white opacity-80 font-mono max-h-24 overflow-auto">
         {collection?.description ?? (
           <Skeleton
             baseColor="rgb(22,27,34)"
-            highlightColor="rgb(29,35,44)"
+            highlightColor="rgb(29,35,44m)"
             height={32}
           ></Skeleton>
         )}
