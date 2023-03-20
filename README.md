@@ -1,8 +1,8 @@
 # Getting Started with Create Derug App
-
 This project was bootstrapped with [Create Derug App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
+## Gitbook: https://derug-us.gitbook.io/derug_us/
 
 In the project directory, you can run:
 
