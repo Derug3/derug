@@ -36,11 +36,18 @@ const HeadingItem: FC<{
           {amount} <span>{desc}</span>
         </Text>
       ) : (
-        <Countdown
-          className="font-mono text-sm
- text-orange-800 p-2 w-1/2"
-          date={date}
-        />
+        <div
+          className="flex w-1/2 items-center justify-center"
+          style={{
+            border: "1px solid rgb(154 52 18)",
+          }}
+        >
+          <Countdown
+            className="font-mono text-sm
+   text-orange-800 p-2"
+            date={date}
+          />
+        </div>
       )}
     </Heading>
   );

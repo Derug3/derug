@@ -198,9 +198,7 @@ export const Collections: FC = () => {
             <div
               className="flex flex-col justify-between items-start"
               style={{
-                minHeight: "27em",
                 transform: "translateY(-42px)",
-                overflowY: "scroll",
               }}
             >
               <div className="flex flex-col w-full justify-between h-full">
