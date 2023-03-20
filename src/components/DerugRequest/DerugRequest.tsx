@@ -3,16 +3,13 @@ import { useWallet, WalletContextState } from "@solana/wallet-adapter-react";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import { FC, useContext, useMemo, useRef, useState } from "react";
-import { DerugStatus } from "../../enums/collections.enums";
 import { IRequest } from "../../interface/collections.interface";
 import { CollectionContext } from "../../stores/collectionContext";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 import DerugRequestItem from "./DerugRequestItem";
 import WinningRequest from "./WinningRequest";
 
-export const DerugRequest: FC<{
-  openDerugModal: (value: boolean) => void;
-}> = ({ openDerugModal }) => {
+export const DerugRequest: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentRequest, setCurrentRequest] = useState<IRequest>();
   const returnFocusRef = useRef(null);
@@ -66,18 +63,6 @@ export const DerugRequest: FC<{
     }
   }, [wallet, collectionDerug, derugRequests]);
 
-  const showAddDerugButton = useMemo(() => {
-    // if (!derugRequests || derugRequests.length == 0) {
-    //   return true;
-    // } else if (
-    //   collectionDerug &&
-    //   collectionDerug?.status === DerugStatus.Reminting
-    // ) {
-    //   return false;
-    // }
-    return true;
-  }, [derugRequests, collectionDerug]);
-
   return (
     <motion.div
       className="flex w-full flex-col mt-5"
@@ -99,7 +84,7 @@ export const DerugRequest: FC<{
       </Dialog>
       <div className="w-full">
         <div className="flex w-full flex-col gap-1 items-center justify-around p-3">
-          {derugRequests ? (
+          {derugRequests && (
             <>
               {getWinningRequest ? (
                 <WinningRequest request={getWinningRequest} />
@@ -107,18 +92,6 @@ export const DerugRequest: FC<{
                 <>{renderDerugRequests}</>
               )}
             </>
-          ) : (
-            <div className="text-base font-mono mt-3 text-white">
-              There is no derug request yet.
-              {showAddDerugButton && (
-                <Button
-                  className="bg-transparent w-full font-mono font-bold text-lg mt-5"
-                  onClick={() => openDerugModal(true)}
-                >
-                  Add derug request
-                </Button>
-              )}
-            </div>
           )}
         </div>
       </div>
