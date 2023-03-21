@@ -172,7 +172,7 @@ export const Collections: FC = () => {
         setGraphData,
       }}
     >
-      <Box className="overflow-y-auto" style={{ zoom: "85%" }}>
+      <Box className="overflow-y-auto pt-5" style={{ zoom: "85%" }}>
         <Box className="sticky top-0 grid "></Box>
         <Box className="overflow-y-clip">
           <AddDerugRequst
