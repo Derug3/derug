@@ -22,7 +22,7 @@ import { METAPLEX_PROGRAM, RPC_CONNECTION } from "../../utilities/utilities";
 import { mapUtilityAction } from "../helpers";
 import { derugDataSeed, metadataSeed, voteRecordSeed } from "../seeds";
 import { sendTransaction } from "../sendTransaction";
-import { derugProgramFactory } from "../utilities";
+import { derugProgramFactory, feeWallet } from "../utilities";
 import { createDerugDataIx } from "./derug";
 
 export const createOrUpdateDerugRequest = async (
@@ -66,6 +66,7 @@ export const createOrUpdateDerugRequest = async (
     .accounts({
       derugData: collection.derugDataAddress,
       derugRequest,
+      feeWallet: feeWallet,
       payer: wallet.publicKey!,
       systemProgram: SystemProgram.programId,
     })
@@ -188,6 +189,7 @@ export const castDerugRequestVote = async (
         derugData: collectionDerug.address,
         payer: wallet.publicKey!,
         derugRequest: derugRequest.address,
+        feeWallet: feeWallet,
         systemProgram: SystemProgram.programId,
       })
       .remainingAccounts(remainingAccounts)

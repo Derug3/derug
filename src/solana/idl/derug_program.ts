@@ -61,6 +61,11 @@ export type DerugProgram = {
           isSigner: true;
         },
         {
+          name: "feeWallet";
+          isMut: true;
+          isSigner: false;
+        },
+        {
           name: "systemProgram";
           isMut: false;
           isSigner: false;
@@ -87,6 +92,11 @@ export type DerugProgram = {
         },
         {
           name: "derugData";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "feeWallet";
           isMut: true;
           isSigner: false;
         },
@@ -148,6 +158,11 @@ export type DerugProgram = {
           isSigner: true;
         },
         {
+          name: "feeWallet";
+          isMut: true;
+          isSigner: false;
+        },
+        {
           name: "systemProgram";
           isMut: false;
           isSigner: false;
@@ -206,6 +221,11 @@ export type DerugProgram = {
         {
           name: "systemProgram";
           isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "feeWallet";
+          isMut: true;
           isSigner: false;
         },
         {
@@ -305,6 +325,11 @@ export type DerugProgram = {
           isSigner: false;
         },
         {
+          name: "feeWallet";
+          isMut: true;
+          isSigner: false;
+        },
+        {
           name: "metadataProgram";
           isMut: false;
           isSigner: false;
@@ -382,6 +407,16 @@ export type DerugProgram = {
         },
         {
           name: "metadataProgram";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "feeWallet";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "systemProgram";
           isMut: false;
           isSigner: false;
         }
@@ -790,6 +825,11 @@ export const IDL: DerugProgram = {
           isSigner: true,
         },
         {
+          name: "feeWallet",
+          isMut: true,
+          isSigner: false,
+        },
+        {
           name: "systemProgram",
           isMut: false,
           isSigner: false,
@@ -816,6 +856,11 @@ export const IDL: DerugProgram = {
         },
         {
           name: "derugData",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "feeWallet",
           isMut: true,
           isSigner: false,
         },
@@ -877,6 +922,11 @@ export const IDL: DerugProgram = {
           isSigner: true,
         },
         {
+          name: "feeWallet",
+          isMut: true,
+          isSigner: false,
+        },
+        {
           name: "systemProgram",
           isMut: false,
           isSigner: false,
@@ -935,6 +985,11 @@ export const IDL: DerugProgram = {
         {
           name: "systemProgram",
           isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "feeWallet",
+          isMut: true,
           isSigner: false,
         },
         {
@@ -1034,6 +1089,11 @@ export const IDL: DerugProgram = {
           isSigner: false,
         },
         {
+          name: "feeWallet",
+          isMut: true,
+          isSigner: false,
+        },
+        {
           name: "metadataProgram",
           isMut: false,
           isSigner: false,
@@ -1111,6 +1171,16 @@ export const IDL: DerugProgram = {
         },
         {
           name: "metadataProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "feeWallet",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "systemProgram",
           isMut: false,
           isSigner: false,
         },
