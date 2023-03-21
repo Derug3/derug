@@ -48,12 +48,13 @@ export const NoDerugRequests: FC<{
         {currentRequest?.derugger.toString()}
       </Dialog>
       <div className="w-full">
-        <div className="text-base font-mono mt-3 text-white">
+        <div className="text-base w-full flex items-center flex-col py-10 font-mono mt-3 text-white">
           There is no derug request yet.
           {showAddDerugButton && (
             <Button
-              className="bg-transparent w-40 font-mono font-bold text-lg mt-5"
+              className="bg-transparent font-mono font-bold text-lg mt-5"
               onClick={() => openDerugModal(true)}
+              sx={{ borderRadius: 0, padding: "0.5em 5em" }}
             >
               Add derug request
             </Button>
