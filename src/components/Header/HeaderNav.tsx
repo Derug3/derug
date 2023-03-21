@@ -14,7 +14,11 @@ const HeaderNav: FC = () => {
   return (
     <Header
       className="flex items-center w-full justify-between"
-      sx={{ p: 0, padding: "0.5em 1.5em" }}
+      sx={{
+        p: 0,
+        padding: "0.5em 1.5em",
+        boxShadow: "rgba(0, 0, 0, 0.5) 0px 0px 10px 0px;",
+      }}
     >
       <Header.Item onClick={() => navigate(HOME)}>
         <img
