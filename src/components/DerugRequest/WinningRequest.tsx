@@ -69,9 +69,6 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
         padding="2em"
       >
         <Box className="flex flex-row justify-between ">
-          <Text className="font-mono text-neutral-400 flex justify-center text-sm">
-            {request.derugger.toString()}
-          </Text>
           <div className="flex items-center gap-1">
             <Text className="font-mono flex justify-center text-sm text-yellow-500	">
               Winning request
@@ -87,7 +84,9 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
             padding: "1em",
           }}
         >
-          <Text className="font-mono text-white">{"Twitter handle"}</Text>
+          <Text className="font-mono text-neutral-400 flex justify-center text-sm">
+            {request.derugger.toString()}
+          </Text>
           <Box className="flex flex-row gap-3">{renderUtilities}</Box>
         </Box>
         <Box className="flex flex-col gap-5 items-center w-full">
