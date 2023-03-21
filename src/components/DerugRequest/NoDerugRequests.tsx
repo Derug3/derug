@@ -52,7 +52,7 @@ export const NoDerugRequests: FC<{
           There is no derug request yet.
           {showAddDerugButton && (
             <Button
-              className="bg-transparent w-full font-mono font-bold text-lg mt-5"
+              className="bg-transparent w-40 font-mono font-bold text-lg mt-5"
               onClick={() => openDerugModal(true)}
             >
               Add derug request

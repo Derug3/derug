@@ -107,6 +107,8 @@ export const Collections: FC = () => {
 
       setChainCollectionData(chainDetails);
       if (chainDetails.hasActiveDerugData) {
+        console.log(chainDetails.derugDataAddress.toString());
+
         setCollectionDerug(
           await getCollectionDerugData(chainDetails.derugDataAddress)
         );
