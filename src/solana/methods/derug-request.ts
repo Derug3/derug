@@ -9,6 +9,7 @@ import {
 import { getSingleCollection } from "../../api/collections.api";
 import {
   IChainCollectionData,
+  ICollectionData,
   ICollectionDerugData,
   ICollectionStats,
   INftListing,
@@ -44,7 +45,7 @@ export const createOrUpdateDerugRequest = async (
         collection,
         wallet,
         collectionStats,
-        new PublicKey("7PoQHoZ7jdFmFqf2Z539ezt45N95HPJmw4tk5mQMqThs")
+        new PublicKey("CCRQEcQmXxN5GDVkMKcgnXaSLv3KeD3Qfp9zEXaBB1Nx")
       )
     );
   }
@@ -139,29 +140,21 @@ export const getSingleDerugRequest = async (
   };
 };
 
-export const getAllActiveCollections = async (): Promise<any[]> => {
+export const getAllActiveCollections = async (): Promise<ICollectionData[]> => {
   const derugProgram = derugProgramFactory();
 
   const derugAccount = await derugProgram.account.derugData.all();
-  const arr = [];
+  const collections: ICollectionData[] = [];
 
   for (const da of derugAccount) {
     try {
-      // console.log(da, "dadaa");
-      console.log(da.account.slug, "slug");
-
       const request = await getSingleCollection(da.account.slug);
-
-      console.log(request, "request");
-      arr.push(request);
+      collections.push(request);
     } catch (error) {
       console.log(error);
     }
   }
-
-  console.log(arr, "arr");
-
-  return arr;
+  return collections;
 };
 
 export const castDerugRequestVote = async (

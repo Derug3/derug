@@ -16,12 +16,14 @@ import { useNavigate } from "react-router";
 import { selectStyles } from "../utilities/styles";
 import { ActiveListings } from "../components/ActiveListings/ActiveListings";
 import { getAllActiveCollections } from "../solana/methods/derug-request";
+import { generateSkeletonArrays } from "../utilities/nft-fetching";
+import Skeleton from "react-loading-skeleton";
 
 const HomePage = () => {
   const { setCollections, collections } = collectionsStore.getState();
   const [searchValue, setSearchValue] = useState<string>();
   const [activeCollections, setActiveCollections] =
-    useState<ICollectionStats[]>();
+    useState<ICollectionData[]>();
   const [searchLoading, toggleSearchLoading] = useState(false);
   const [filteredCollections, setFilteredCollections] = useState<
     ICollectionData[] | undefined
@@ -30,8 +32,6 @@ const HomePage = () => {
   const { name } = useDebounce(searchValue);
 
   const navigate = useNavigate();
-
-  // const getActiveListings = useMemo(() => {}, []);
 
   useEffect(() => {
     void getCollectionsData();
@@ -78,10 +78,7 @@ const HomePage = () => {
 
   const getActiveCollections = async () => {
     try {
-      const activeCollections = await getAllActiveCollections();
-      console.log(activeCollections, "activeCollections");
-
-      // setActiveCollections((pV) => [...(pV || []), ...activeCollections]);
+      setActiveCollections(await getAllActiveCollections());
     } catch (error) {
       console.log(error);
     }
@@ -158,9 +155,27 @@ const HomePage = () => {
       >
         {renderSelect}
       </Box>
-      <Box sx={{ width: "100%", display: "flex" }}>
-        <ActiveListings />
-      </Box>
+      {activeCollections ? (
+        <Box sx={{ width: "100%", display: "flex", padding: "1em 3em" }}>
+          <ActiveListings activeListings={activeCollections} />
+        </Box>
+      ) : (
+        <Box
+          className="grid grid-cols-5 gap-10 w-full"
+          sx={{ padding: "1em 3em" }}
+        >
+          {generateSkeletonArrays(5).map(() => {
+            return (
+              <Skeleton
+                height={350}
+                width={"25%"}
+                baseColor="rgb(22,27,34)"
+                highlightColor="rgb(29,35,44)"
+              />
+            );
+          })}
+        </Box>
+      )}
       {!loading && <CollectionsSlider />}
     </Box>
   );

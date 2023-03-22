@@ -13,14 +13,16 @@ export const ActiveListings: FC<{
 }> = ({ activeListings }) => (
   <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS}>
     <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS} className="sticky">
-      <Box className="flex flex-col w-full">
+      <Box className="flex flex-col w-full gap-5 mb-5">
         <Box className="flex flex-row justify-between items-center">
-          <Text className="text-2xl font-bold">Active Listings</Text>
-          <Text className="text-sm font-bold text-gray-500">
-            {activeListings && activeListings.length} Listings
+          <Text
+            className="text-3xl font-bold text-main-blue"
+            sx={{ fontFamily: "monospace" }}
+          >
+            Active Derugs
           </Text>
         </Box>
-        <Box className="flex flex-col w-full">
+        <Box className="grid grid-cols-5">
           {activeListings &&
             activeListings.map((cd) => {
               return <ActiveListingItem collectionData={cd} />;

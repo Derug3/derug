@@ -6,6 +6,9 @@ module.exports = {
       animation: {
         text: "text 5s ease infinite",
       },
+      colors: {
+        "main-blue": "rgb(9, 194, 246)",
+      },
       dropShadow: {
         "2xl": "white 0px 0px 10px",
         "3xl": "0 35px 35px rgba(0, 0, 0, 0.25)",
