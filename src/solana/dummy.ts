@@ -3,6 +3,7 @@ import { PublicKey } from "@solana/web3.js";
 import { derugDataSeed } from "./seeds";
 import { derugProgramFactory } from "./utilities";
 import { RPC_CONNECTION } from "../utilities/utilities";
+
 export const getDummyCollectionData =
   async (): Promise<IChainCollectionData> => {
     const derugProgram = derugProgramFactory();
@@ -10,7 +11,7 @@ export const getDummyCollectionData =
       [
         derugDataSeed,
         new PublicKey(
-          "6iS4MqfYQmh63VaMjm2RumivTKdCVV3HE9qQG2NEBsAc"
+          "9AiMvUTMiec1QfXb8ZJ1xUreNEuHu7nXpHb6g4YoFvtG"
         ).toBuffer(),
       ],
       derugProgram.programId
@@ -28,7 +29,7 @@ export const getDummyCollectionData =
     }
 
     return {
-      collectionMint: "6iS4MqfYQmh63VaMjm2RumivTKdCVV3HE9qQG2NEBsAc",
+      collectionMint: "9AiMvUTMiec1QfXb8ZJ1xUreNEuHu7nXpHb6g4YoFvtG",
       hasActiveDerugData,
       slug: "boogle_gen",
       totalSupply: 99,

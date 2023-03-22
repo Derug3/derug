@@ -3,7 +3,10 @@ import { Box, Text } from "@primer/react";
 import { useEffect, useMemo, useState } from "react";
 import { getByNameOrSlug, getRandomCollections } from "../api/collections.api";
 import useDebounce from "../hooks/useDebounce";
-import { ICollectionData } from "../interface/collections.interface";
+import {
+  ICollectionData,
+  ICollectionStats,
+} from "../interface/collections.interface";
 import Select from "react-select";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../utilities/constants";
 import Balancer from "react-wrap-balancer";
@@ -11,9 +14,14 @@ import { motion } from "framer-motion";
 import { collectionsStore } from "../stores/collectionsStore";
 import { useNavigate } from "react-router";
 import { selectStyles } from "../utilities/styles";
+import { ActiveListings } from "../components/ActiveListings/ActiveListings";
+import { getAllActiveCollections } from "../solana/methods/derug-request";
+
 const HomePage = () => {
   const { setCollections, collections } = collectionsStore.getState();
   const [searchValue, setSearchValue] = useState<string>();
+  const [activeCollections, setActiveCollections] =
+    useState<ICollectionStats[]>();
   const [searchLoading, toggleSearchLoading] = useState(false);
   const [filteredCollections, setFilteredCollections] = useState<
     ICollectionData[] | undefined
@@ -23,13 +31,16 @@ const HomePage = () => {
 
   const navigate = useNavigate();
 
+  // const getActiveListings = useMemo(() => {}, []);
+
   useEffect(() => {
     void getCollectionsData();
+    void getActiveCollections();
   }, []);
 
   useEffect(() => {
     void searchByName();
-  }, [name]);
+  }, [name, "activeCollections"]);
 
   const handleSearch = (e: any) => {
     if (e && e !== "") {
@@ -60,6 +71,17 @@ const HomePage = () => {
       setFilteredCollections(randomCollections);
       setCollections(randomCollections);
       setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getActiveCollections = async () => {
+    try {
+      const activeCollections = await getAllActiveCollections();
+      console.log(activeCollections, "activeCollections");
+
+      // setActiveCollections((pV) => [...(pV || []), ...activeCollections]);
     } catch (error) {
       console.log(error);
     }
@@ -135,6 +157,9 @@ const HomePage = () => {
         }}
       >
         {renderSelect}
+      </Box>
+      <Box sx={{ width: "100%", display: "flex" }}>
+        <ActiveListings />
       </Box>
       {!loading && <CollectionsSlider />}
     </Box>

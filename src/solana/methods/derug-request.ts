@@ -6,6 +6,7 @@ import {
   GetProgramAccountsFilter,
   AccountMeta,
 } from "@solana/web3.js";
+import { getSingleCollection } from "../../api/collections.api";
 import {
   IChainCollectionData,
   ICollectionDerugData,
@@ -136,6 +137,31 @@ export const getSingleDerugRequest = async (
     voteCount: derugAccount.voteCount,
     utility: derugAccount.utilityData,
   };
+};
+
+export const getAllActiveCollections = async (): Promise<any[]> => {
+  const derugProgram = derugProgramFactory();
+
+  const derugAccount = await derugProgram.account.derugData.all();
+  const arr = [];
+
+  for (const da of derugAccount) {
+    try {
+      // console.log(da, "dadaa");
+      console.log(da.account.slug, "slug");
+
+      const request = await getSingleCollection(da.account.slug);
+
+      console.log(request, "request");
+      arr.push(request);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  console.log(arr, "arr");
+
+  return arr;
 };
 
 export const castDerugRequestVote = async (
