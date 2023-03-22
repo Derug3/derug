@@ -6,10 +6,17 @@ import { ListingSource } from "../../enums/collections.enums";
 import { INftListing } from "../../interface/collections.interface";
 import solanaArtLogo from "../../assets/solanart_logo.png";
 import { CollectionContext } from "../../stores/collectionContext";
+import Skeleton from "react-loading-skeleton";
 
-const ListedNftItem: FC<{ listedNft: INftListing }> = ({ listedNft }) => {
+const ListedNftItem: FC<{ listedNft: INftListing; imageUrl: string }> = ({
+  listedNft,
+  imageUrl,
+}) => {
   const { collection } = useContext(CollectionContext);
   const [hover, setHover] = useState(false);
+
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [isValidSrc, setIsValidSrc] = useState(!!imageUrl);
 
   const getImgLogo = useMemo(() => {
     switch (listedNft.soruce) {
@@ -39,11 +46,32 @@ const ListedNftItem: FC<{ listedNft: INftListing }> = ({ listedNft }) => {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <img
-        src={listedNft.imageUrl}
-        alt="nftImg"
-        style={{ opacity: hover ? 0.2 : 1 }}
-      />
+      {isValidSrc ? (
+        <img
+          src={listedNft.imageUrl}
+          alt="nftImg"
+          style={{ opacity: hover ? 0.2 : 1 }}
+          onLoad={() => setImageLoaded(true)}
+          onError={() => setIsValidSrc(false)}
+        />
+      ) : (
+        <Skeleton
+          height={128}
+          width={156}
+          baseColor="rgb(22,27,34)"
+          highlightColor="rgb(29,35,44)"
+        />
+      )}
+      {isValidSrc && !imageLoaded && (
+        <div className="smooth-preloader">
+          <Skeleton
+            height={128}
+            width={156}
+            baseColor="rgb(22,27,34)"
+            highlightColor="rgb(29,35,44)"
+          />
+        </div>
+      )}
       {hover && (
         <Box className="flex absolute flex-col w-full h-full gap-2 items-center justify-center text-white font-mono">
           <Box className="flex flex-row  items-center">
