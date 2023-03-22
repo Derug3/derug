@@ -112,6 +112,7 @@ export const Collections: FC = () => {
       // );
       const chainDetails = await getDummyCollectionData();
 
+      chainDetails.slug = slug!;
       setChainCollectionData(chainDetails);
       if (chainDetails.hasActiveDerugData) {
         console.log(chainDetails.derugDataAddress.toString());
