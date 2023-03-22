@@ -150,24 +150,19 @@ const HomePage = () => {
           width: "50%",
           margin: "auto",
           position: "relative",
-          marginBottom: "120px",
+          marginBottom: "80px",
         }}
       >
         {renderSelect}
       </Box>
       {activeCollections ? (
-        <Box sx={{ width: "100%", display: "flex", padding: "1em 3em" }}>
-          <ActiveListings activeListings={activeCollections} />
-        </Box>
+        <ActiveListings activeListings={activeCollections} />
       ) : (
-        <Box
-          className="grid grid-cols-5 gap-10 w-full"
-          sx={{ padding: "1em 3em" }}
-        >
+        <Box className="grid grid-cols-6 w-full">
           {generateSkeletonArrays(5).map(() => {
             return (
               <Skeleton
-                height={350}
+                height={150}
                 width={"25%"}
                 baseColor="rgb(22,27,34)"
                 highlightColor="rgb(29,35,44)"

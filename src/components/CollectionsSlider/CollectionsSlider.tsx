@@ -1,11 +1,12 @@
 import React, { FC, useMemo, useState } from "react";
 import Marqee from "react-fast-marquee";
 import "react-alice-carousel/lib/alice-carousel.css";
-import { Box } from "@primer/react";
 import { collectionsStore } from "../../stores/collectionsStore";
 import Balancer from "react-wrap-balancer";
 import { useNavigate } from "react-router";
 import { COLLECTION } from "../../utilities/constants";
+import { Box, Text } from "@primer/react";
+
 const CollectionsSlider: FC = () => {
   const { collections } = collectionsStore.getState();
   const [hoveredCollection, setHoveredCollection] = useState<
@@ -47,7 +48,18 @@ const CollectionsSlider: FC = () => {
     });
   }, [collections, hoveredCollection]);
   return (
-    <Box>
+    <Box className="relative">
+      <Text
+        className="text-xl font-mono text-main-blue flex justify-center w-full absolute"
+        style={{ transform: "translateY(-100%)" }}
+      >
+        <span
+          className="border-r-4 border-t-4 border-l-4 border-slate-700 px-4"
+          style={{ backgroundColor: "#161B22" }}
+        >
+          browse derugs
+        </span>
+      </Text>
       <Marqee
         pauseOnHover
         loop={0}

@@ -12,23 +12,21 @@ export const ActiveListings: FC<{
   activeListings?: ICollectionData[];
 }> = ({ activeListings }) => (
   <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS}>
-    <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS} className="sticky">
-      <Box className="flex flex-col w-full gap-5 mb-5">
+    {activeListings && (
+      <Box className="flex flex-col w-full">
         <Box className="flex flex-row justify-between items-center">
-          <Text
-            className="text-3xl font-bold text-main-blue"
-            sx={{ fontFamily: "monospace" }}
-          >
-            Active Derugs
+          <Text className="text-xl font-mono text-main-blue flex justify-center w-full">
+            <span className="border-r-4 border-t-4 border-l-4 border-slate-700 px-4">
+              active derugs
+            </span>
           </Text>
         </Box>
-        <Box className="grid grid-cols-5">
-          {activeListings &&
-            activeListings.map((cd) => {
-              return <ActiveListingItem collectionData={cd} />;
-            })}
+        <Box className="grid grid-cols-6 grid-row-6 box-content cursor-pointer overflow-hidden border-t-4 p-4 border-slate-700 w-full">
+          {activeListings.map((cd) => {
+            return <ActiveListingItem collectionData={cd} />;
+          })}
         </Box>
       </Box>
-    </motion.div>
+    )}
   </motion.div>
 );
