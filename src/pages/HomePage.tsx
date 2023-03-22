@@ -3,7 +3,10 @@ import { Box, Text } from "@primer/react";
 import { useEffect, useMemo, useState } from "react";
 import { getByNameOrSlug, getRandomCollections } from "../api/collections.api";
 import useDebounce from "../hooks/useDebounce";
-import { ICollectionData } from "../interface/collections.interface";
+import {
+  ICollectionData,
+  ICollectionStats,
+} from "../interface/collections.interface";
 import Select from "react-select";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../utilities/constants";
 import Balancer from "react-wrap-balancer";
@@ -11,9 +14,16 @@ import { motion } from "framer-motion";
 import { collectionsStore } from "../stores/collectionsStore";
 import { useNavigate } from "react-router";
 import { selectStyles } from "../utilities/styles";
+import { ActiveListings } from "../components/ActiveListings/ActiveListings";
+import { getAllActiveCollections } from "../solana/methods/derug-request";
+import { generateSkeletonArrays } from "../utilities/nft-fetching";
+import Skeleton from "react-loading-skeleton";
+
 const HomePage = () => {
   const { setCollections, collections } = collectionsStore.getState();
   const [searchValue, setSearchValue] = useState<string>();
+  const [activeCollections, setActiveCollections] =
+    useState<ICollectionData[]>();
   const [searchLoading, toggleSearchLoading] = useState(false);
   const [filteredCollections, setFilteredCollections] = useState<
     ICollectionData[] | undefined
@@ -25,11 +35,12 @@ const HomePage = () => {
 
   useEffect(() => {
     void getCollectionsData();
+    void getActiveCollections();
   }, []);
 
   useEffect(() => {
     void searchByName();
-  }, [name]);
+  }, [name, "activeCollections"]);
 
   const handleSearch = (e: any) => {
     if (e && e !== "") {
@@ -60,6 +71,14 @@ const HomePage = () => {
       setFilteredCollections(randomCollections);
       setCollections(randomCollections);
       setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getActiveCollections = async () => {
+    try {
+      setActiveCollections(await getAllActiveCollections());
     } catch (error) {
       console.log(error);
     }
@@ -131,11 +150,27 @@ const HomePage = () => {
           width: "50%",
           margin: "auto",
           position: "relative",
-          marginBottom: "120px",
+          marginBottom: "80px",
         }}
       >
         {renderSelect}
       </Box>
+      {activeCollections ? (
+        <ActiveListings activeListings={activeCollections} />
+      ) : (
+        <Box className="grid grid-cols-6 w-full">
+          {generateSkeletonArrays(5).map(() => {
+            return (
+              <Skeleton
+                height={150}
+                width={"25%"}
+                baseColor="rgb(22,27,34)"
+                highlightColor="rgb(29,35,44)"
+              />
+            );
+          })}
+        </Box>
+      )}
       {!loading && <CollectionsSlider />}
     </Box>
   );

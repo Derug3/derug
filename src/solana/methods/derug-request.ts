@@ -6,8 +6,10 @@ import {
   GetProgramAccountsFilter,
   AccountMeta,
 } from "@solana/web3.js";
+import { getSingleCollection } from "../../api/collections.api";
 import {
   IChainCollectionData,
+  ICollectionData,
   ICollectionDerugData,
   ICollectionStats,
   INftListing,
@@ -43,7 +45,7 @@ export const createOrUpdateDerugRequest = async (
         collection,
         wallet,
         collectionStats,
-        new PublicKey("7PoQHoZ7jdFmFqf2Z539ezt45N95HPJmw4tk5mQMqThs")
+        new PublicKey("CCRQEcQmXxN5GDVkMKcgnXaSLv3KeD3Qfp9zEXaBB1Nx")
       )
     );
   }
@@ -136,6 +138,23 @@ export const getSingleDerugRequest = async (
     voteCount: derugAccount.voteCount,
     utility: derugAccount.utilityData,
   };
+};
+
+export const getAllActiveCollections = async (): Promise<ICollectionData[]> => {
+  const derugProgram = derugProgramFactory();
+
+  const derugAccount = await derugProgram.account.derugData.all();
+  const collections: ICollectionData[] = [];
+
+  for (const da of derugAccount) {
+    try {
+      const request = await getSingleCollection(da.account.slug);
+      collections.push(request);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  return collections;
 };
 
 export const castDerugRequestVote = async (
