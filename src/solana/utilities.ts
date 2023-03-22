@@ -12,3 +12,7 @@ export const derugProgramFactory = () => {
     })
   );
 };
+
+export const feeWallet = new PublicKey(
+  "DRG3YRmurqpWQ1jEjK8DiWMuqPX9yL32LXLbuRdoiQwt"
+);

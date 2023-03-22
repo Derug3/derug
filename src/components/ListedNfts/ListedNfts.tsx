@@ -9,23 +9,14 @@ const ListedNfts: FC = () => {
 
   const renderListedNfts = () => {
     return activeListings?.map((ln) => {
-      return <ListedNftItem listedNft={ln} key={ln.mint} />;
+      return (
+        <ListedNftItem listedNft={ln} key={ln.mint} imageUrl={ln.imageUrl} />
+      );
     });
   };
 
   return (
-    <div className="grid grid-cols-5">
-      {!loading
-        ? renderListedNfts()
-        : generateSkeletonArrays(25).map((_, i) => (
-            <Skeleton
-              height={128}
-              width={128}
-              baseColor="rgb(22,27,34)"
-              highlightColor="rgb(29,35,44)"
-            />
-          ))}
-    </div>
+    <div className="grid grid-cols-5">{!loading && renderListedNfts()}</div>
   );
 };
 

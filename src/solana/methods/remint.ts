@@ -21,7 +21,7 @@ import {
   metadataSeed,
 } from "../seeds";
 import { sendTransaction } from "../sendTransaction";
-import { derugProgramFactory } from "../utilities";
+import { derugProgramFactory, feeWallet } from "../utilities";
 import {
   AccountLayout,
   getMinimumBalanceForRentExemptAccount,
@@ -47,6 +47,7 @@ export const claimVictory = async (
       derugData: derug.address,
       derugRequest: request.address,
       payer: wallet.publicKey!,
+      feeWallet: feeWallet,
       systemProgram: SystemProgram.programId,
     })
     .instruction();
@@ -112,6 +113,7 @@ export const claimVictory = async (
       derugRequest: request.address,
       payer: wallet.publicKey!,
       pdaAuthority,
+      feeWallet: feeWallet,
       collectionAuthorityRecord: collectionAuthority,
       newCollection: collection.publicKey,
       tokenAccount: tokenAccount.publicKey,
@@ -219,6 +221,7 @@ export const remintNft = async (
         newToken: tokenAccount.publicKey,
         payer: wallet.publicKey!,
         oldMint: nft.mint,
+        feeWallet: feeWallet,
         pdaAuthority,
         newEdition: newMasterEdition,
         newMetadata: newMetadata,
@@ -276,6 +279,8 @@ export const remintNft = async (
         collectionMint: derugData.newCollection!,
         nftMint: mint.publicKey,
         nftMetadata: newMetadata,
+        feeWallet: feeWallet,
+        systemProgram: SystemProgram.programId,
         pdaAuthority,
         payer: wallet.publicKey!,
         derugRequest: request.address,

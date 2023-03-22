@@ -59,6 +59,7 @@ export const createDerugDataIx = async (
   }
 
   //TODO:PUT REAL VALUE BEFORE MAINNET
+
   const ix = await derugProgram.methods
     .initializeDerug(18, collection.slug)
     .accounts({
@@ -80,13 +81,6 @@ export const getCollectionDerugData = async (
     const derugProgram = derugProgramFactory();
     const derugDataAccount = await derugProgram.account.derugData.fetch(
       derugDataAddress
-    );
-
-    console.log(derugDataAccount.periodEnd.toNumber());
-
-    console.log(
-      dayjs.unix(derugDataAccount.periodEnd.toNumber()).utc(),
-      "PERIOD END"
     );
 
     return {

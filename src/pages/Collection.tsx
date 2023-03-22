@@ -37,6 +37,7 @@ import { toast } from "react-hot-toast";
 import { getFloorPrice, getListings, getTraits } from "../api/tensor";
 import { IGraphData } from "../interface/derug.interface";
 import NoDerugRequests from "../components/DerugRequest/NoDerugRequests";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 export const Collections: FC = () => {
   dayjs.extend(utc);
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
@@ -74,6 +75,12 @@ export const Collections: FC = () => {
       if (slug) {
         const collectionStats = await getFloorPrice(slug);
 
+        if (collectionStats.fp > 100 || collectionStats.marketCap > 100) {
+          collectionStats.fp = collectionStats.fp / LAMPORTS_PER_SOL;
+          collectionStats.marketCap =
+            collectionStats.marketCap / LAMPORTS_PER_SOL;
+        }
+
         setCollectionStats(collectionStats);
         let listingsData = await getListings(slug);
         if (listingsData.length === 0) {
@@ -107,6 +114,8 @@ export const Collections: FC = () => {
 
       setChainCollectionData(chainDetails);
       if (chainDetails.hasActiveDerugData) {
+        console.log(chainDetails.derugDataAddress.toString());
+
         setCollectionDerug(
           await getCollectionDerugData(chainDetails.derugDataAddress)
         );

@@ -1,5 +1,5 @@
 import { Box, Button, Text } from "@primer/react";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CollectionContext } from "../../stores/collectionContext";
 import { FaTwitter } from "react-icons/fa";
 import { FaDiscord } from "react-icons/fa";
@@ -7,6 +7,13 @@ import Skeleton from "react-loading-skeleton";
 
 const CollectionData = () => {
   const { collection, chainCollectionData } = useContext(CollectionContext);
+  const [unableToLoad, setUnableToLoad] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setUnableToLoad(true);
+    }, 2000);
+  }, [collection]);
   return (
     <Box className="flex flex-col gap-5 pr-2 text-white">
       <Box className="flex flex-row items-start gap-5">
@@ -69,6 +76,8 @@ const CollectionData = () => {
                   }}
                 />
               </a>
+            ) : unableToLoad ? (
+              <></>
             ) : (
               <Skeleton
                 height={32}
@@ -87,6 +96,8 @@ const CollectionData = () => {
                   }}
                 />
               </a>
+            ) : unableToLoad ? (
+              <></>
             ) : (
               <Skeleton
                 height={32}

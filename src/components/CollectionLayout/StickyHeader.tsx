@@ -37,6 +37,15 @@ export const StickyHeader: FC<{
           amount={collection?.marketCap}
           desc="SOL"
         />
+        {collectionDerug && (
+          <HeadingItem
+            descColor="#2dd4bf"
+            title="REMAINING TIME"
+            date={collectionDerug.periodEnd}
+            isCounter
+            desc=""
+          />
+        )}
       </Box>
 
       <Box className="flex flex-col gap-5 w-1/2">
@@ -75,15 +84,6 @@ export const StickyHeader: FC<{
               desc=""
             />
           )}
-        {collectionDerug && (
-          <HeadingItem
-            descColor="#2dd4bf"
-            title="REMAINING TIME"
-            date={collectionDerug.periodEnd}
-            isCounter
-            desc=""
-          />
-        )}
       </Box>
     </Box>
   );
