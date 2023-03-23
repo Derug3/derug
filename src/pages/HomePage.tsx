@@ -155,8 +155,12 @@ const HomePage = () => {
       >
         {renderSelect}
       </Box>
-      {activeCollections ? (
-        <ActiveListings activeListings={activeCollections} />
+      {activeCollections !== undefined ? (
+        activeCollections.length === 0 ? (
+          <></>
+        ) : (
+          <ActiveListings activeListings={activeCollections} />
+        )
       ) : (
         <Box className="grid grid-cols-6 w-full">
           {generateSkeletonArrays(5).map(() => {
