@@ -25,7 +25,6 @@ const HomePage = () => {
   const [activeCollections, setActiveCollections] =
     useState<ICollectionData[]>();
   const [searchLoading, toggleSearchLoading] = useState(false);
-  const [hideSkeletons, toggleHideSkeletons] = useState(false);
   const [filteredCollections, setFilteredCollections] = useState<
     ICollectionData[] | undefined
   >(collections);
@@ -42,12 +41,6 @@ const HomePage = () => {
   useEffect(() => {
     void searchByName();
   }, [name, "activeCollections"]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      toggleHideSkeletons(true);
-    }, 3000);
-  }, []);
 
   const handleSearch = (e: any) => {
     if (e && e !== "") {
@@ -87,7 +80,6 @@ const HomePage = () => {
     try {
       const activeCollections = await getAllActiveCollections();
       setActiveCollections(activeCollections);
-      if (activeCollections) toggleHideSkeletons(true);
     } catch (error) {
       console.log(error);
     }
