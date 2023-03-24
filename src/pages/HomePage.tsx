@@ -166,7 +166,7 @@ const HomePage = () => {
       </Box>
       {activeCollections ? (
         <ActiveListings activeListings={activeCollections} />
-      ) : hideSkeletons ? (
+      ) : (
         <Box className="grid grid-cols-6 w-full">
           {generateSkeletonArrays(5).map(() => {
             return (
@@ -179,8 +179,6 @@ const HomePage = () => {
             );
           })}
         </Box>
-      ) : (
-        <></>
       )}
       {!loading && <CollectionsSlider />}
     </Box>
