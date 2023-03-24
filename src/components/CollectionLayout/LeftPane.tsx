@@ -19,9 +19,25 @@ export const LeftPane: FC<{
         variants={FADE_DOWN_ANIMATION_VARIANTS}
         className="pl-10 sticky"
       >
-        <div className="">
+        <Box
+          sx={{
+            "@media screen and (max-width: 768px)": {
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+            },
+          }}
+        >
           {(selectedInfo === "description" || selectedInfo === "") && (
-            <>
+            <Box
+              sx={{
+                "@media screen and (max-width: 768px)": {
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "100%",
+                },
+              }}
+            >
               <Text
                 id="description"
                 as="p"
@@ -60,9 +76,9 @@ export const LeftPane: FC<{
                 </Box>
               </Text>
               <CollectionData />
-            </>
+            </Box>
           )}
-        </div>
+        </Box>
       </motion.div>
     </motion.div>
   );

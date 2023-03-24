@@ -21,7 +21,7 @@ export const ActiveListings: FC<{
             </span>
           </Text>
         </Box>
-        <Box className="grid grid-cols-6 grid-row-6 box-content cursor-pointer overflow-hidden border-t-4 p-4 border-slate-700 w-full">
+        <Box className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 box-content cursor-pointer overflow-hidden border-t-4 p-4 border-slate-700 w-full">
           {activeListings.map((cd) => {
             return <ActiveListingItem collectionData={cd} />;
           })}

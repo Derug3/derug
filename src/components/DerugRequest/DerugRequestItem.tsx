@@ -202,6 +202,9 @@ export const DerugRequestItem: FC<{
               height: "30px",
               borderRadius: 0,
               color: "rgb(45, 212, 191)",
+              "@media (max-width: 768px)": {
+                width: "200px",
+              },
             }}
           />
         </div>

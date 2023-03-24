@@ -186,7 +186,7 @@ export const Remint: FC<{
                 )}
               </Button>
             )}
-          <Box className="grid grid-cols-8 gap-5 px-10 ">
+          <Box className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 px-10 ">
             {loading ? (
               <>
                 {generateSkeletonArrays(5).map(() => {

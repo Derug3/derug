@@ -7,6 +7,7 @@ import { CollectionContext } from "../../stores/collectionContext";
 import { toast } from "react-hot-toast";
 import { getCollectionDerugData } from "../../solana/methods/derug";
 import { DerugStatus } from "../../enums/collections.enums";
+import { getTrimmedPublicKey } from "../../solana/helpers";
 const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
   const { collectionDerug, setCollectionDerug } = useContext(CollectionContext);
 
@@ -85,7 +86,7 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
           }}
         >
           <Text className="font-mono text-neutral-400 flex justify-center text-sm">
-            {request.derugger.toString()}
+            {getTrimmedPublicKey(request.derugger.toString())}
           </Text>
           <Box className="flex flex-row gap-3">{renderUtilities}</Box>
         </Box>
@@ -115,14 +116,22 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
                 bg="#2DD4BF"
                 sx={{
                   width: "380px",
-                  // filter: "drop-shadow(white 0px 0px 3px)",
                   height: "30px",
                   borderRadius: 0,
                   color: "rgb(45, 212, 191)",
+                  "@media (max-width: 768px)": {
+                    width: "200px",
+                  },
                 }}
               />
 
-              <Text className="text-white font-mono	" color={"rgb(9, 194, 246)"}>
+              <Text
+                className="text-white font-mono flex"
+                color={"rgb(9, 194, 246)"}
+                sx={{
+                  whiteSpace: "nowrap",
+                }}
+              >
                 {request.voteCount} / {collectionDerug?.totalSupply}
               </Text>
             </div>

@@ -10,14 +10,14 @@ import { useSearchParams } from "react-router-dom";
 import { WalletContextState } from "@solana/wallet-adapter-react";
 import dayjs from "dayjs";
 
-export const StickyHeader: FC<{
+export const CollectionStats: FC<{
   collection?: ICollectionStats;
   wallet: WalletContextState;
   openDerugModal: (value: boolean) => void;
   collectionDerug?: ICollectionDerugData;
 }> = ({ collection, collectionDerug }) => {
   return (
-    <Box className="flex flex-row items-start justify-between w-full pl-10 mt-5">
+    <Box className="flex flex-row items-start justify-between w-full px-10 mt-5">
       <Box className="flex flex-col gap-5 border-1 w-1/2">
         <HeadingItem
           amount={collection?.fp}
