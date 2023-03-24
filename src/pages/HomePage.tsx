@@ -25,6 +25,7 @@ const HomePage = () => {
   const [activeCollections, setActiveCollections] =
     useState<ICollectionData[]>();
   const [searchLoading, toggleSearchLoading] = useState(false);
+  const [hideSkeletons, toggleHideSkeletons] = useState(false);
   const [filteredCollections, setFilteredCollections] = useState<
     ICollectionData[] | undefined
   >(collections);
@@ -41,6 +42,12 @@ const HomePage = () => {
   useEffect(() => {
     void searchByName();
   }, [name, "activeCollections"]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      toggleHideSkeletons(true);
+    }, 3000);
+  }, []);
 
   const handleSearch = (e: any) => {
     if (e && e !== "") {
@@ -78,7 +85,9 @@ const HomePage = () => {
 
   const getActiveCollections = async () => {
     try {
-      setActiveCollections(await getAllActiveCollections());
+      const activeCollections = await getAllActiveCollections();
+      setActiveCollections(activeCollections);
+      if (activeCollections) toggleHideSkeletons(true);
     } catch (error) {
       console.log(error);
     }
@@ -155,13 +164,9 @@ const HomePage = () => {
       >
         {renderSelect}
       </Box>
-      {activeCollections !== undefined ? (
-        activeCollections.length === 0 ? (
-          <></>
-        ) : (
-          <ActiveListings activeListings={activeCollections} />
-        )
-      ) : (
+      {activeCollections ? (
+        <ActiveListings activeListings={activeCollections} />
+      ) : hideSkeletons ? (
         <Box className="grid grid-cols-6 w-full">
           {generateSkeletonArrays(5).map(() => {
             return (
@@ -174,6 +179,8 @@ const HomePage = () => {
             );
           })}
         </Box>
+      ) : (
+        <></>
       )}
       {!loading && <CollectionsSlider />}
     </Box>
