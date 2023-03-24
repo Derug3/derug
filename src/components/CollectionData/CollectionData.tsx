@@ -4,6 +4,7 @@ import { CollectionContext } from "../../stores/collectionContext";
 import { FaTwitter } from "react-icons/fa";
 import { FaDiscord } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
+import { getTrimmedPublicKey } from "../../solana/helpers";
 
 const CollectionData = () => {
   const { collection, chainCollectionData } = useContext(CollectionContext);
@@ -45,18 +46,31 @@ const CollectionData = () => {
             )}
           </Text>
           {chainCollectionData ? (
-            <Text>
+            <Text
+              sx={{
+                "@media screen and (max-width: 768px)": {
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  justifyContent: "flex-start",
+                  width: "100%",
+                },
+              }}
+            >
               Rugged by:
-              <span
-                style={{
+              <Text
+                sx={{
                   color: "rgb(154 52 18)",
                   filter: "drop-shadow(rgb(223, 46, 56),0 0 15px)",
                   fontSize: "1em",
                   marginLeft: "0.5em",
+                  "@media screen and (max-width: 768px)": {
+                    marginLeft: "0",
+                  },
                 }}
               >
-                {chainCollectionData.rugUpdateAuthority}
-              </span>
+                {getTrimmedPublicKey(chainCollectionData.rugUpdateAuthority)}
+              </Text>
             </Text>
           ) : (
             <Skeleton

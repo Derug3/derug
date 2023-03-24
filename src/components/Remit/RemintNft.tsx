@@ -28,8 +28,9 @@ const RemintNft: FC<{ nft: IDerugCollectionNft }> = ({ nft }) => {
             ? "#FD5D5D"
             : "rgb(9, 194, 246)"
         }`,
-        borderRadius: "4px",
         padding: "0.5em",
+        display: "flex",
+        flexWrap: "wrap",
         paddingBottom: "1.25em",
       }}
     >
@@ -37,7 +38,7 @@ const RemintNft: FC<{ nft: IDerugCollectionNft }> = ({ nft }) => {
         <Box className="flex flex-col items-center gap-5">
           <img
             src={imageUrl}
-            className={`w-full rounded-[4px] h-full ${
+            className={`w-full h-full ${
               nft.remintingStatus === RemintingStatus.InProgress && "blur-sm"
             }`}
           />

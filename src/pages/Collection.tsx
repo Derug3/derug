@@ -14,7 +14,7 @@ import {
 
 import Marqee from "react-fast-marquee";
 
-import { StickyHeader } from "../components/CollectionLayout/StickyHeader";
+import { CollectionStats } from "../components/CollectionLayout/CollectionStats";
 import { IRequest } from "../interface/collections.interface";
 import { useSearchParams } from "react-router-dom";
 import utc from "dayjs/plugin/utc";
@@ -183,8 +183,15 @@ export const Collections: FC = () => {
       }}
     >
       <Box className="overflow-y-auto pt-5" style={{ zoom: "85%" }}>
-        <Box className="sticky top-0 grid "></Box>
-        <Box className="overflow-y-clip">
+        <Box
+          className="overflow-y-clip flex flex-col"
+          sx={{
+            "@media screen and (max-width: 768px)": {
+              flexDirection: "column-reverse",
+              gap: "1em",
+            },
+          }}
+        >
           <AddDerugRequst
             isOpen={derugRequestVisible}
             setIsOpen={(val) => setDerugRequestVisible(val)}
@@ -204,6 +211,9 @@ export const Collections: FC = () => {
             sx={{
               display: "grid",
               gridTemplateColumns: "50% 50%",
+              "@media screen and (max-width: 768px)": {
+                gridTemplateColumns: "100%",
+              },
             }}
           >
             <div
@@ -214,7 +224,7 @@ export const Collections: FC = () => {
             >
               <div className="flex flex-col w-full justify-between h-full">
                 <LeftPane selectedInfo={selectedInfo} />
-                <StickyHeader
+                <CollectionStats
                   collection={collectionStats}
                   collectionDerug={collectionDerug}
                   wallet={wallet}

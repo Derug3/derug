@@ -14,11 +14,14 @@ const HeadingItem: FC<{
     <Heading className="flex flex-row items-center justify-between w-full">
       <Text
         className="text-sm border-1 p-2 w-1/2"
-        style={{
+        sx={{
           fontFamily: "monospace",
           color: "white",
           fontWeight: 200,
           border: "1px solid rgba(9,194,246,.15)",
+          "@media (max-width: 768px)": {
+            fontSize: "0.6rem",
+          },
         }}
       >
         {title}
@@ -26,11 +29,13 @@ const HeadingItem: FC<{
       {!isCounter ? (
         <Text
           className="text-sm p-2 w-1/2"
-          style={{
+          sx={{
             fontFamily: "monospace",
             color: `#2DD4BF`,
             border: "1px solid rgb(9,194,246)",
-            // filter: `${`drop-shadow(white 0px 0px 10px)`}`,
+            "@media (max-width: 768px)": {
+              fontSize: "0.6rem",
+            },
           }}
         >
           {amount} <span>{desc}</span>

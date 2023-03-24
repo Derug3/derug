@@ -1,4 +1,4 @@
-import { Button, TabNav } from "@primer/react";
+import { Box, Button, TabNav } from "@primer/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import dayjs from "dayjs";
 import { FC, useContext, useMemo } from "react";
@@ -48,7 +48,14 @@ export const HeaderTabs: FC<{
   font-mono text-gray-700 leading-6 px-10 border-none justify-end"
     >
       <div className="w-full gap-5 flex justify-end">
-        <div className="w-1/2 flex pl-8">
+        <Box
+          className="w-1/2 flex pl-8"
+          sx={{
+            "@media (max-width: 768px)": {
+              width: "100%",
+            },
+          }}
+        >
           <div className="w-full flex justify-between">
             {wallet &&
               wallet.publicKey &&
@@ -105,7 +112,7 @@ export const HeaderTabs: FC<{
               </TabNav.Link>
             </TabNav>
           </div>
-        </div>
+        </Box>
       </div>
     </div>
   );

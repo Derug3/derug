@@ -37,7 +37,7 @@ const HomePage = () => {
       // todo find better handling
       setUnableToLoad(true);
     }, 2000);
-  }, []);
+  }, [activeCollections]);
 
   const navigate = useNavigate();
 
@@ -149,9 +149,16 @@ const HomePage = () => {
           className="py-5 align-center"
           variants={FADE_DOWN_ANIMATION_VARIANTS}
         >
-          <Balancer className="w-full animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 text-5xl font-black bg-clip-text text-center font-display  tracking-[-0.02em] text-transparent drop-shadow-sm md:text-2xl align-center font-mono animate-[wiggle_1s_ease-in-out_infinite]">
+          <Text
+            className="w-full animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 text-5xl font-black bg-clip-text text-center font-display  tracking-[-0.02em] text-transparent drop-shadow-sm md:text-2xl align-center font-mono animate-[wiggle_1s_ease-in-out_infinite]"
+            sx={{
+              "@media (max-width: 768px)": {
+                fontSize: "1em",
+              },
+            }}
+          >
             Getting rugged collections back to life
-          </Balancer>
+          </Text>
         </motion.h1>
       </Box>
       <Box
