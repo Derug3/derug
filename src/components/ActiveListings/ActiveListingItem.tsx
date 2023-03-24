@@ -1,13 +1,8 @@
-import { Box, Button, Text } from "@primer/react";
+import { Box } from "@primer/react";
 import { motion } from "framer-motion";
-import { FC, useMemo, useState } from "react";
-import { FaDiscord, FaTwitter } from "react-icons/fa";
+import { FC, useState } from "react";
 import { useNavigate } from "react-router";
-import { SYMBOL } from "../../api/url.api";
-import {
-  IChainCollectionData,
-  ICollectionData,
-} from "../../interface/collections.interface";
+import { ICollectionData } from "../../interface/collections.interface";
 
 import {
   COLLECTION,

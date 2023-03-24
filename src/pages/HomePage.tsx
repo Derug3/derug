@@ -30,6 +30,14 @@ const HomePage = () => {
   >(collections);
   const [loading, setLoading] = useState(true);
   const { name } = useDebounce(searchValue);
+  const [unableToLoad, setUnableToLoad] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      // todo find better handling
+      setUnableToLoad(true);
+    }, 2000);
+  }, []);
 
   const navigate = useNavigate();
 
@@ -78,7 +86,8 @@ const HomePage = () => {
 
   const getActiveCollections = async () => {
     try {
-      setActiveCollections(await getAllActiveCollections());
+      const activeCollections = await getAllActiveCollections();
+      setActiveCollections(activeCollections);
     } catch (error) {
       console.log(error);
     }
@@ -155,12 +164,10 @@ const HomePage = () => {
       >
         {renderSelect}
       </Box>
-      {activeCollections !== undefined ? (
-        activeCollections.length === 0 ? (
-          <></>
-        ) : (
-          <ActiveListings activeListings={activeCollections} />
-        )
+      {activeCollections && activeCollections.length ? (
+        <ActiveListings activeListings={activeCollections} />
+      ) : unableToLoad ? (
+        <></>
       ) : (
         <Box className="grid grid-cols-6 w-full">
           {generateSkeletonArrays(5).map(() => {

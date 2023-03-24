@@ -140,9 +140,7 @@ export const getSingleDerugRequest = async (
   };
 };
 
-export const getAllActiveCollections = async (): Promise<
-  ICollectionData[] | undefined
-> => {
+export const getAllActiveCollections = async (): Promise<ICollectionData[]> => {
   const derugProgram = derugProgramFactory();
 
   const derugAccount = await derugProgram.account.derugData.all();
@@ -156,7 +154,7 @@ export const getAllActiveCollections = async (): Promise<
       console.log(error);
     }
   }
-  return collections.length > 0 ? collections : undefined;
+  return collections;
 };
 
 export const castDerugRequestVote = async (
