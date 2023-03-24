@@ -35,7 +35,14 @@ const CollectionData = () => {
           />
         )}
         <Box className="flex flex-col gap-4 items-start">
-          <Text className="font-bold font-monospace text-white-500 text-4xl">
+          <Text
+            className="font-bold font-monospace text-white-500 text-4xl"
+            sx={{
+              "@media screen and (max-width: 768px)": {
+                alignItems: "flex-start",
+              },
+            }}
+          >
             {collection?.name ?? (
               <Skeleton
                 width={200}
