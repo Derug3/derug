@@ -30,14 +30,6 @@ const HomePage = () => {
   >(collections);
   const [loading, setLoading] = useState(true);
   const { name } = useDebounce(searchValue);
-  const [unableToLoad, setUnableToLoad] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => {
-      // todo find better handling
-      setUnableToLoad(true);
-    }, 2000);
-  }, [activeCollections]);
 
   const navigate = useNavigate();
 
@@ -173,7 +165,7 @@ const HomePage = () => {
       </Box>
       {activeCollections && activeCollections.length ? (
         <ActiveListings activeListings={activeCollections} />
-      ) : unableToLoad ? (
+      ) : loading ? (
         <></>
       ) : (
         <Box className="grid grid-cols-6 w-full">
