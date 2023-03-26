@@ -14,11 +14,24 @@ export interface ICollectionData {
   numMints?: number;
 }
 
+export interface IReservedRights {
+  address: string;
+  amount: number;
+}
+
 export interface IRequest {
   address: PublicKey;
   derugger: PublicKey;
   createdAt: number;
   voteCount: number;
+  sellerFeeBasicPoints?: number;
+  publicMint?: boolean;
+  publicMintPrice?: number;
+  reservedRights?: IReservedRights[];
+  privateMintDuration?: number;
+  denominatedTokenMint?: PublicKey;
+  newSymbol?: string;
+  newName?: string;
   utility: IUtility[];
 }
 export interface IUtility {

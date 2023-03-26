@@ -56,7 +56,15 @@ export const HeaderTabs: FC<{
             },
           }}
         >
-          <div className="w-full flex justify-between">
+          <Box
+            className="w-full flex justify-between"
+            sx={{
+              "@media (max-width: 768px)": {
+                flexDirection: "column-reverse",
+                gap: "2em",
+              },
+            }}
+          >
             {wallet &&
               wallet.publicKey &&
               (!collectionDerug ||
@@ -111,7 +119,7 @@ export const HeaderTabs: FC<{
                 SOLANAFM
               </TabNav.Link>
             </TabNav>
-          </div>
+          </Box>
         </Box>
       </div>
     </div>
