@@ -1,4 +1,5 @@
 import { Button, Dialog } from "@primer/react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
 import { FC, useContext, useMemo, useRef, useState } from "react";
@@ -15,17 +16,18 @@ export const NoDerugRequests: FC<{
   const returnFocusRef = useRef(null);
 
   const { derugRequests, collectionDerug } = useContext(CollectionContext);
-
+  const wallet = useWallet();
   const showAddDerugButton = useMemo(() => {
-    if (!derugRequests || derugRequests.length === 0) {
-      return true;
-    } else if (
-      collectionDerug &&
-      collectionDerug?.status === DerugStatus.Reminting
-    ) {
-      return false;
-    }
-    return true;
+    return (
+      wallet &&
+      wallet.publicKey &&
+      (!collectionDerug ||
+        (collectionDerug &&
+          dayjs(collectionDerug?.periodEnd).isAfter(dayjs()))) &&
+      !derugRequests?.find(
+        (dr) => dr.derugger.toString() === wallet.publicKey?.toString()
+      )
+    );
   }, [derugRequests, collectionDerug]);
 
   return (

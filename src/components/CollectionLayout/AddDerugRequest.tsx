@@ -113,11 +113,14 @@ export const AddDerugRequst: FC<{
         isOpen={isOpen}
         onDismiss={() => setIsOpen(false)}
         sx={{
-          width: "600px",
+          width: "50%",
+          borderRadius: 0,
         }}
         aria-labelledby="header-id"
       >
-        <Dialog.Header id="header-id">Derug request</Dialog.Header>
+        <Dialog.Header id="header-id" sx={{ borderRadius: 0 }}>
+          Derug request
+        </Dialog.Header>
         <Box p={3} className="flex justify-center flex-col gap-3">
           <FormControl sx={{ display: "flex" }}>
             <FormControl.Label>Wallet</FormControl.Label>
@@ -125,12 +128,13 @@ export const AddDerugRequst: FC<{
               <TextInput
                 placeholder="title"
                 value={wallet.publicKey?.toString()}
-                sx={{ width: "100%", marginRight: "10px" }}
+                sx={{ width: "100%", marginRight: "10px", borderRadius: 0 }}
                 disabled
               />
               <Button
                 size="large"
                 variant="outline"
+                sx={{ marginRight: "10px", borderRadius: 0 }}
                 ref={returnFocusRef}
                 onClick={() => addUtility()}
               >
@@ -145,7 +149,7 @@ export const AddDerugRequst: FC<{
                   <TextInput
                     placeholder="Utility"
                     value={u.title}
-                    sx={{ width: "100%" }}
+                    sx={{ width: "100%", borderRadius: 0 }}
                     onChange={(e) => handleUtilityNameChange(e.target.value, i)}
                   />
                 </div>
@@ -153,12 +157,13 @@ export const AddDerugRequst: FC<{
                   <TextInput
                     placeholder="Enter a description"
                     value={u.description}
-                    sx={{ width: "100%" }}
+                    sx={{ width: "100%", borderRadius: 0 }}
                     onChange={(e) => handleUtilityDescChange(e.target.value, i)}
                   />
                 </div>
                 <Button
                   variant="danger"
+                  sx={{ borderRadius: 0 }}
                   ref={returnFocusRef}
                   onClick={() => removeUtility(i)}
                 >

@@ -19,7 +19,7 @@ const CollectionsSlider: FC = () => {
     return collections.map((c, index) => {
       return (
         <Box
-          className="box-content cursor-pointer h-48 w-48 overflow-hidden border-r-4 border-t-4 p-4 border-slate-700	"
+          className="box-content cursor-pointer h-36 w-36 overflow-hidden border-r-4 border-t-4 p-4 border-slate-700"
           key={index}
           onMouseEnter={() => setHoveredCollection(index)}
           onMouseLeave={() => setHoveredCollection(undefined)}
@@ -55,29 +55,31 @@ const CollectionsSlider: FC = () => {
       >
         <span
           className="border-r-4 border-t-4 border-l-4 border-slate-700 px-4"
-          style={{ backgroundColor: "#161B22" }}
+          style={{ backgroundColor: "#0d1117" }}
         >
           browse derugs
         </span>
       </Text>
-      <Marqee
-        pauseOnHover
-        loop={0}
-        speed={90}
-        direction={"right"}
-        gradient={false}
-      >
-        {renderCollections}
-      </Marqee>
-      <Marqee
-        pauseOnHover
-        loop={0}
-        speed={90}
-        direction={"left"}
-        gradient={false}
-      >
-        {renderCollections}
-      </Marqee>
+      <Box className="w-full">
+        <Marqee
+          pauseOnHover
+          loop={0}
+          speed={90}
+          direction={"left"}
+          gradient={false}
+        >
+          {renderCollections}
+        </Marqee>
+        <Marqee
+          pauseOnHover
+          loop={0}
+          speed={90}
+          direction={"right"}
+          gradient={false}
+        >
+          {renderCollections}
+        </Marqee>
+      </Box>
     </Box>
   );
 };

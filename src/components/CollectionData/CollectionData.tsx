@@ -35,13 +35,19 @@ const CollectionData = () => {
           />
         )}
         <Box className="flex flex-col gap-4 items-start">
-          <Text className="font-bold font-monospace text-white-500 text-4xl">
+          <Text
+            className="font-bold font-monospace text-white-500 text-4xl"
+            sx={{
+              "@media screen and (max-width: 768px)": {
+                alignItems: "flex-start",
+              },
+            }}
+          >
             {collection?.name ?? (
               <Skeleton
                 width={200}
                 baseColor="rgb(22,27,34)"
                 highlightColor="rgb(29,35,44)"
-                className="rounded-[50%]"
               />
             )}
           </Text>
@@ -59,11 +65,11 @@ const CollectionData = () => {
             >
               Rugged by:
               <Text
+                className="text-yellow-500 font-mon italic"
                 sx={{
-                  color: "rgb(154 52 18)",
-                  filter: "drop-shadow(rgb(223, 46, 56),0 0 15px)",
                   fontSize: "1em",
                   marginLeft: "0.5em",
+                  color: "rgba(9,194,246)",
                   "@media screen and (max-width: 768px)": {
                     marginLeft: "0",
                   },

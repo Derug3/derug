@@ -1,7 +1,7 @@
 export const selectStyles = {
   control(base: any, props: any) {
     return {
-      background: "#161b22",
+      background: "#0d1117",
       border: "1px solid rgb(9, 194, 246)",
       display: "flex",
       padding: "0.5em",

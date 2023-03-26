@@ -1,22 +1,19 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #161b22;
+  background-color: #0d1117;
   /* background-color: "#f8f8f9"; */
 }
 
-
-
-p,button{
+p,
+button {
   color: white;
-  font-family: monospace
+  font-family: monospace;
 }
-
-
 
 @tailwind base;
 @tailwind components;
