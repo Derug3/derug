@@ -28,11 +28,11 @@ const HeadingItem: FC<{
       </Text>
       {!isCounter ? (
         <Text
-          className="text-sm p-2 w-1/2"
+          className="text-sm p-2 w-1/2 "
           sx={{
             fontFamily: "monospace",
-            color: `#2DD4BF`,
-            border: "1px solid rgb(9,194,246)",
+            border: "1px solid rgba(9,194,246,.15)",
+            color: "rgba(9,194,246)",
             "@media (max-width: 768px)": {
               fontSize: "0.6rem",
             },

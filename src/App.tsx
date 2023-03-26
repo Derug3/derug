@@ -4,7 +4,7 @@ import Router from "./Router";
 import { ApolloProvider } from "@apollo/client";
 import WalletWrapper from "./WalletWrapper/WalletWrapper";
 import { gqlClient } from "./utilities/utilities";
-import { Toaster, toast } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import "react-loading-skeleton/dist/skeleton.css";
 
 function App() {

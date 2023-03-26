@@ -128,6 +128,7 @@ const HomePage = () => {
         flexDirection: "column",
         zoom: "85%",
         paddingTop: 5,
+        overflowX: "hidden",
       }}
     >
       <Box
@@ -168,18 +169,12 @@ const HomePage = () => {
       ) : loading ? (
         <></>
       ) : (
-        <Box className="grid grid-cols-6 w-full">
-          {generateSkeletonArrays(5).map(() => {
-            return (
-              <Skeleton
-                height={150}
-                width={"25%"}
-                baseColor="rgb(22,27,34)"
-                highlightColor="rgb(29,35,44)"
-              />
-            );
-          })}
-        </Box>
+        <Skeleton
+          height={150}
+          borderRadius={0}
+          baseColor="rgb(22,27,34)"
+          highlightColor="rgb(29,35,44)"
+        />
       )}
       {!loading && <CollectionsSlider />}
     </Box>

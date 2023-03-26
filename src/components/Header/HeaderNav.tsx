@@ -17,7 +17,8 @@ const HeaderNav: FC = () => {
       sx={{
         p: 0,
         padding: "0.5em 1.5em",
-        boxShadow: "rgba(0, 0, 0, 0.5) 0px 0px 10px 0px;",
+        background: "rgba(9,194,246, 0.2)",
+        filter: "drop-shadow(0px 0px 0 10px rgb(246, 242, 9))",
       }}
     >
       <Header.Item onClick={() => navigate(HOME)}>
