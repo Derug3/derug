@@ -6,6 +6,7 @@ import {
   GetProgramAccountsFilter,
   AccountMeta,
 } from "@solana/web3.js";
+import { BN } from "bn.js";
 import { getSingleCollection } from "../../api/collections.api";
 import {
   IChainCollectionData,
@@ -19,6 +20,7 @@ import {
   IUtilityData,
   IDerugInstruction,
   IDerugCollectionNft,
+  ICreator,
 } from "../../interface/derug.interface";
 import { METAPLEX_PROGRAM, RPC_CONNECTION } from "../../utilities/utilities";
 import { mapUtilityAction } from "../helpers";
@@ -32,6 +34,13 @@ export const createOrUpdateDerugRequest = async (
   utilities: IUtilityData[],
   collection: IChainCollectionData,
   collectionStats: ICollectionStats,
+  sellerFeeBps: number,
+  newSymbol: string,
+  newName: string,
+  creators?: ICreator[],
+  publicMintPrice?: number,
+  privateMintDuration?: number,
+  splTokenMint?: PublicKey,
   listedNft?: INftListing
 ) => {
   const instructions: TransactionInstruction[] = [];
@@ -59,11 +68,26 @@ export const createOrUpdateDerugRequest = async (
     derugProgram.programId
   );
 
+  const remainingAccounts: AccountMeta[] = [];
+  if (splTokenMint) {
+    remainingAccounts.push({
+      isSigner: false,
+      isWritable: false,
+      pubkey: splTokenMint,
+    });
+  }
+
   const initalizeDerugRequest = await derugProgram.methods
     .createOrUpdateDerugRequest(
       utilities.map((ut) => {
         return { ...ut, action: mapUtilityAction(ut.action) };
-      })
+      }),
+      sellerFeeBps,
+      publicMintPrice ? new BN(publicMintPrice) : null,
+      privateMintDuration ? new BN(privateMintDuration) : null,
+      newName,
+      newSymbol,
+      creators ?? []
     )
     .accounts({
       derugData: collection.derugDataAddress,
@@ -72,6 +96,7 @@ export const createOrUpdateDerugRequest = async (
       payer: wallet.publicKey!,
       systemProgram: SystemProgram.programId,
     })
+    .remainingAccounts(remainingAccounts)
     .instruction();
 
   instructions.push(initalizeDerugRequest);
@@ -112,6 +137,13 @@ export const getAllDerugRequest = async (
         voteCount: derug.account.voteCount,
         utility: derug.account.utilityData,
         address: derug.publicKey,
+        newName: derug.account.newName,
+        newSymbol: derug.account.newSymbol,
+        mintCurrency: derug.account.mintCurrency,
+        mintPrice: derug.account.mintPrice?.toNumber(),
+        sellerFeeBps: derug.account.sellerFeeBps,
+        privateMintDuration: derug.account.privateMintDuration?.toNumber(),
+        creators: derug.account.creators,
       });
     }
 
@@ -137,6 +169,13 @@ export const getSingleDerugRequest = async (
     derugger: derugAccount.derugger,
     voteCount: derugAccount.voteCount,
     utility: derugAccount.utilityData,
+    newName: derugAccount.newName,
+    newSymbol: derugAccount.newSymbol,
+    mintCurrency: derugAccount.mintCurrency,
+    mintPrice: derugAccount.mintPrice?.toNumber(),
+    sellerFeeBps: derugAccount.sellerFeeBps,
+    privateMintDuration: derugAccount.privateMintDuration?.toNumber(),
+    creators: derugAccount.creators,
   };
 };
 

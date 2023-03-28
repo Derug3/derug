@@ -73,3 +73,8 @@ export interface INonMinted {
   uri: string;
   creator: string;
 }
+
+export interface ICreator {
+  address: PublicKey;
+  share: number;
+}

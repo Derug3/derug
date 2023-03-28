@@ -100,6 +100,14 @@ export const AddDerugRequst: FC<{
           }),
           chainCollectionData,
           collectionStats,
+          //TODO:Put here real params after ui is done
+          500,
+          "",
+          "",
+          [],
+          undefined,
+          undefined,
+          undefined,
           activeListings ? activeListings[0] : undefined
         );
         const addedRequests = [...(derugRequests ?? [])];

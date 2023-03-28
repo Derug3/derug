@@ -19,6 +19,7 @@ import {
   derugDataSeed,
   editionSeed,
   metadataSeed,
+  remintConfigSeed,
 } from "../seeds";
 import { sendTransaction } from "../sendTransaction";
 import { derugProgramFactory, feeWallet } from "../utilities";
@@ -41,12 +42,19 @@ export const claimVictory = async (
 ) => {
   const derugProgram = derugProgramFactory();
   const instructions: IDerugInstruction[] = [];
+
+  const [remintConfig] = PublicKey.findProgramAddressSync(
+    [remintConfigSeed, derug.address.toBuffer()],
+    derugProgram.programId
+  );
+
   const claimVictoryIx = await derugProgram.methods
     .claimVictory()
     .accounts({
       derugData: derug.address,
       derugRequest: request.address,
       payer: wallet.publicKey!,
+      remintConfig,
       feeWallet: feeWallet,
       systemProgram: SystemProgram.programId,
     })
