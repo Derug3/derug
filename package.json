@@ -95,6 +95,8 @@
     "postcss-cli": "^10.1.0",
     "scss": "^0.2.4",
     "tailwindcss": "^3.2.7",
-    "zlib": "^1.0.4"
+    "zlib": "^1.0.5",
+    "zlib-browserify": "^0.0.3",
+    "zlib-sync": "^0.1.8"
   }
 }

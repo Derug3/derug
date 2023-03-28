@@ -1,3 +1,4 @@
+import { Metaplex } from "@metaplex-foundation/js";
 import { AnchorProvider, Program } from "@project-serum/anchor";
 import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet";
 import { Keypair, PublicKey } from "@solana/web3.js";
@@ -16,3 +17,5 @@ export const derugProgramFactory = () => {
 export const feeWallet = new PublicKey(
   "DRG3YRmurqpWQ1jEjK8DiWMuqPX9yL32LXLbuRdoiQwt"
 );
+
+export const metaplex = new Metaplex(RPC_CONNECTION);
