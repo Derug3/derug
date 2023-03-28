@@ -22,6 +22,7 @@ export interface IRequest {
   voteCount: number;
   sellerFeeBps: number;
   mintPrice?: number;
+  publicMint: boolean;
   creators: ICreator[];
   privateMintDuration?: number;
   mintCurrency: PublicKey | null;

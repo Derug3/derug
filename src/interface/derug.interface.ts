@@ -43,12 +43,14 @@ export interface IGraphData {
 }
 
 export interface IRemintConfig {
+  address: PublicKey;
   newName: string;
   newSymbol: string;
   derugRequest: PublicKey;
   privateMintFee: number | null;
   mintPrice: number;
   collection: PublicKey;
+  candyMachineCreator: PublicKey;
   authority: PublicKey;
   privateMintEnd: DateTime;
   mintCurrency?: PublicKey;

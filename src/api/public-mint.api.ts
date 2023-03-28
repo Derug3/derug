@@ -17,3 +17,10 @@ export const getNonMinted = async (
 ): Promise<INonMinted[]> => {
   return get(`${PUBLIC_REMINT}${COLLECTION}${NON_MINTED}/${derugData}`);
 };
+
+export const storeAllNfts = async (
+  updateAuthority: string,
+  derugData: string
+) => {
+  return get(`${PUBLIC_REMINT}${COLLECTION}/${updateAuthority}/${derugData}`);
+};

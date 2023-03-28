@@ -144,6 +144,7 @@ export const getAllDerugRequest = async (
         sellerFeeBps: derug.account.sellerFeeBps,
         privateMintDuration: derug.account.privateMintDuration?.toNumber(),
         creators: derug.account.creators,
+        publicMint: !!derug.account.mintPrice,
       });
     }
 
@@ -176,6 +177,7 @@ export const getSingleDerugRequest = async (
     sellerFeeBps: derugAccount.sellerFeeBps,
     privateMintDuration: derugAccount.privateMintDuration?.toNumber(),
     creators: derugAccount.creators,
+    publicMint: !!derugAccount.mintPrice,
   };
 };
 

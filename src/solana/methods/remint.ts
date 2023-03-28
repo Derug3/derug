@@ -9,12 +9,14 @@ import {
   SYSVAR_RENT_PUBKEY,
 } from "@solana/web3.js";
 import {
+  IChainCollectionData,
   ICollectionDerugData,
   IRequest,
 } from "../../interface/collections.interface";
 import { METAPLEX_PROGRAM, RPC_CONNECTION } from "../../utilities/utilities";
 import {
   authoritySeed,
+  candyMachineSeed,
   collectionAuthoritySeed,
   derugDataSeed,
   editionSeed,
@@ -22,7 +24,11 @@ import {
   remintConfigSeed,
 } from "../seeds";
 import { sendTransaction } from "../sendTransaction";
-import { derugProgramFactory, feeWallet } from "../utilities";
+import {
+  candyMachineProgramId,
+  derugProgramFactory,
+  feeWallet,
+} from "../utilities";
 import {
   AccountLayout,
   getMinimumBalanceForRentExemptAccount,
@@ -33,20 +39,65 @@ import {
 import {
   IDerugCollectionNft,
   IDerugInstruction,
+  IRemintConfig,
 } from "../../interface/derug.interface";
+import { saveCandyMachineData, storeAllNfts } from "../../api/public-mint.api";
+import { candyMachineProgram } from "@metaplex-foundation/js";
+import toast from "react-hot-toast";
 
 export const claimVictory = async (
   wallet: WalletContextState,
   derug: ICollectionDerugData,
+  chainCollectionData: IChainCollectionData,
+  remintConfig: IRemintConfig,
   request: IRequest
 ) => {
   const derugProgram = derugProgramFactory();
   const instructions: IDerugInstruction[] = [];
 
-  const [remintConfig] = PublicKey.findProgramAddressSync(
-    [remintConfigSeed, derug.address.toBuffer()],
-    derugProgram.programId
-  );
+  const remainingAccounts: AccountMeta[] = [];
+
+  if (request.publicMint) {
+    try {
+      const candyMachine = Keypair.generate();
+      await saveCandyMachineData({
+        candyMachineKey: candyMachine.publicKey.toString(),
+        candyMachineSecretKey: JSON.stringify(candyMachine.secretKey),
+        derugData: derug.address.toString(),
+      });
+      await storeAllNfts(
+        chainCollectionData.rugUpdateAuthority.toString(),
+        derug.address.toString()
+      );
+      remainingAccounts.push({
+        isSigner: false,
+        isWritable: false,
+        pubkey: candyMachine.publicKey,
+      });
+      const [candyMachineCreator] = PublicKey.findProgramAddressSync(
+        [candyMachineSeed, candyMachine.publicKey.toBuffer()],
+        candyMachineProgramId
+      );
+      remainingAccounts.push({
+        isSigner: false,
+        isWritable: false,
+        pubkey: candyMachineCreator,
+      });
+      if (remintConfig.mintCurrency) {
+        remainingAccounts.push({
+          isSigner: false,
+          isWritable: false,
+          pubkey: remintConfig.mintCurrency,
+        });
+      }
+    } catch (error: any) {
+      toast.error(
+        "Failed to get all necessary data for Candy Machine:",
+        error.message
+      );
+      return;
+    }
+  }
 
   const claimVictoryIx = await derugProgram.methods
     .claimVictory()
@@ -54,10 +105,11 @@ export const claimVictory = async (
       derugData: derug.address,
       derugRequest: request.address,
       payer: wallet.publicKey!,
-      remintConfig,
+      remintConfig: remintConfig.address,
       feeWallet: feeWallet,
       systemProgram: SystemProgram.programId,
     })
+    .remainingAccounts(remainingAccounts)
     .instruction();
 
   const tokenAccount = Keypair.generate();
@@ -121,6 +173,7 @@ export const claimVictory = async (
       derugRequest: request.address,
       payer: wallet.publicKey!,
       pdaAuthority,
+      remintConfig: remintConfig.address,
       feeWallet: feeWallet,
       collectionAuthorityRecord: collectionAuthority,
       newCollection: collection.publicKey,
@@ -152,6 +205,11 @@ export const remintNft = async (
 ) => {
   const instructions: IDerugInstruction[] = [];
   const derugProgram = derugProgramFactory();
+
+  const [remintConfig] = PublicKey.findProgramAddressSync(
+    [remintConfigSeed, derugData.address.toBuffer()],
+    derugProgram.programId
+  );
 
   for (const nft of nfts) {
     const tokenAccount = Keypair.generate();
@@ -226,6 +284,7 @@ export const remintNft = async (
         oldMetadata: oldMetadata,
         newMint: mint.publicKey,
         oldToken: nft.tokenAccount,
+        remintConfig,
         newToken: tokenAccount.publicKey,
         payer: wallet.publicKey!,
         oldMint: nft.mint,

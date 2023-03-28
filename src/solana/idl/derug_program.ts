@@ -642,6 +642,10 @@ export type DerugProgram = {
         kind: "struct";
         fields: [
           {
+            name: "derugRequest";
+            type: "publicKey";
+          },
+          {
             name: "newName";
             type: "string";
           },
@@ -691,6 +695,10 @@ export type DerugProgram = {
           },
           {
             name: "candyMachineKey";
+            type: "publicKey";
+          },
+          {
+            name: "candyMachineCreator";
             type: "publicKey";
           },
           {
@@ -1629,6 +1637,10 @@ export const IDL: DerugProgram = {
         kind: "struct",
         fields: [
           {
+            name: "derugRequest",
+            type: "publicKey",
+          },
+          {
             name: "newName",
             type: "string",
           },
@@ -1678,6 +1690,10 @@ export const IDL: DerugProgram = {
           },
           {
             name: "candyMachineKey",
+            type: "publicKey",
+          },
+          {
+            name: "candyMachineCreator",
             type: "publicKey",
           },
           {
