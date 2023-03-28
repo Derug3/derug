@@ -372,3 +372,36 @@ export const remintNft = async (
   }
   await sendTransaction(RPC_CONNECTION, instructions, wallet);
 };
+
+export async function getRemintConfig(
+  derug: PublicKey
+): Promise<IRemintConfig | undefined> {
+  const derugProgram = derugProgramFactory();
+  const [remintConfigAddress] = PublicKey.findProgramAddressSync(
+    [remintConfigSeed, derug.toBuffer()],
+    derugProgram.programId
+  );
+
+  try {
+    const remintConfigAccount = await derugProgram.account.remintConfig.fetch(
+      remintConfigAddress
+    );
+
+    return {
+      address: remintConfigAddress,
+      authority: remintConfigAccount.authority,
+      candyMachine: remintConfigAccount.candyMachineKey,
+      candyMachineCreator: remintConfigAccount.candyMachineCreator,
+      collection: remintConfigAccount.collection,
+      mintCurrency: remintConfigAccount.mintCurrency ?? undefined,
+      mintPrice: remintConfigAccount.mintPrice?.toNumber(),
+      derugRequest: remintConfigAccount.derugRequest,
+      newName: remintConfigAccount.newName,
+      newSymbol: remintConfigAccount.newSymbol,
+      sellerFeeBps: remintConfigAccount.sellerFeeBps,
+      privateMintEnd: remintConfigAccount.privateMintEnd?.toNumber(),
+    };
+  } catch (error) {
+    return undefined;
+  }
+}

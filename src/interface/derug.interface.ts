@@ -47,16 +47,14 @@ export interface IRemintConfig {
   newName: string;
   newSymbol: string;
   derugRequest: PublicKey;
-  privateMintFee: number | null;
-  mintPrice: number;
+  mintPrice?: number;
   collection: PublicKey;
   candyMachineCreator: PublicKey;
   authority: PublicKey;
-  privateMintEnd: DateTime;
+  privateMintEnd?: number;
   mintCurrency?: PublicKey;
   candyMachine: PublicKey;
   sellerFeeBps: number;
-  decimals: number;
 }
 
 export interface CandyMachineDto {

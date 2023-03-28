@@ -12,8 +12,6 @@ import {
   ITrait,
 } from "../interface/collections.interface";
 
-import Marqee from "react-fast-marquee";
-
 import { CollectionStats } from "../components/CollectionLayout/CollectionStats";
 import { IRequest } from "../interface/collections.interface";
 import { useSearchParams } from "react-router-dom";
@@ -35,9 +33,10 @@ import { Remint } from "../components/Remit/Remint";
 
 import { toast } from "react-hot-toast";
 import { getFloorPrice, getListings, getTraits } from "../api/tensor";
-import { IGraphData } from "../interface/derug.interface";
+import { IGraphData, IRemintConfig } from "../interface/derug.interface";
 import NoDerugRequests from "../components/DerugRequest/NoDerugRequests";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { getRemintConfig } from "../solana/methods/remint";
 export const Collections: FC = () => {
   dayjs.extend(utc);
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
@@ -61,6 +60,7 @@ export const Collections: FC = () => {
   const [derugRequests, setDerugRequests] = useState<IRequest[]>();
   const iframeRef = useRef(null);
   let slug = useSearchParams()[0].get("symbol");
+  const [remintConfig, setRemintConfig] = useState<IRemintConfig | undefined>();
   const [isOpen, setIsOpen] = useState(true);
 
   const wallet = useWallet();
@@ -115,7 +115,7 @@ export const Collections: FC = () => {
       chainDetails.slug = slug!;
       setChainCollectionData(chainDetails);
       if (chainDetails.hasActiveDerugData) {
-        console.log(chainDetails.derugDataAddress.toString());
+        setRemintConfig(await getRemintConfig(chainDetails.derugDataAddress));
 
         setCollectionDerug(
           await getCollectionDerugData(chainDetails.derugDataAddress)
@@ -134,20 +134,6 @@ export const Collections: FC = () => {
       derugRequests.length - 1
     ];
   }, [derugRequests]);
-
-  const shouldShowWinningModal = (status?: DerugStatus) => {
-    if (
-      derugRequests &&
-      derugRequests.some(
-        (el) => el.derugger.toString() === wallet.publicKey?.toString()
-      ) &&
-      getWinningRequest &&
-      status === DerugStatus.Voting
-    ) {
-      setIsOpen(true);
-      return true;
-    }
-  };
 
   const showDerugRequests = useMemo(() => {
     if (collectionDerug) {
@@ -180,6 +166,8 @@ export const Collections: FC = () => {
         setRequests: setDerugRequests,
         graphData,
         setGraphData,
+        remintConfig,
+        setRemintConfig,
       }}
     >
       <Box
