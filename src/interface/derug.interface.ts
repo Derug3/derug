@@ -43,6 +43,9 @@ export interface IGraphData {
 }
 
 export interface IRemintConfig {
+  newName: string;
+  newSymbol: string;
+  derugRequest: PublicKey;
   privateMintFee: number | null;
   mintPrice: number;
   collection: PublicKey;
@@ -52,4 +55,21 @@ export interface IRemintConfig {
   candyMachine: PublicKey;
   sellerFeeBps: number;
   decimals: number;
+}
+
+export interface CandyMachineDto {
+  derugData: string;
+  candyMachineKey: string;
+  candyMachineSecretKey: string;
+}
+
+export interface INonMinted {
+  nftMetadata: string;
+  derugData: string;
+  hasReminted: boolean;
+  dateReminted: Date;
+  remintAuthority: string;
+  name: string;
+  uri: string;
+  creator: string;
 }

@@ -20,3 +20,13 @@ export const splitTimestamps = (
 
   return result;
 };
+
+export const getNftName = (totalReminted: number) => {
+  let name = "#";
+  for (let i = 0; i < 4 - totalReminted.toString().length; i++) {
+    name += "0";
+  }
+  name += totalReminted.toString();
+
+  return name;
+};

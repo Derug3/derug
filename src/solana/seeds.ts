@@ -6,3 +6,4 @@ export const authoritySeed = Buffer.from("authority");
 export const metadataSeed = Buffer.from("metadata");
 export const editionSeed = Buffer.from("edition");
 export const collectionAuthoritySeed = Buffer.from("collection_authority");
+export const remintConfigSeed = Buffer.from("remint-config");

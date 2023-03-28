@@ -79,6 +79,38 @@ export type DerugProgram = {
               defined: "UpdateUtilityDataDto";
             };
           };
+        },
+        {
+          name: "sellerFeeBps";
+          type: "u32";
+        },
+        {
+          name: "publicMintPrice";
+          type: {
+            option: "u64";
+          };
+        },
+        {
+          name: "privateMintDuration";
+          type: {
+            option: "i64";
+          };
+        },
+        {
+          name: "newName";
+          type: "string";
+        },
+        {
+          name: "newSymbol";
+          type: "string";
+        },
+        {
+          name: "creators";
+          type: {
+            vec: {
+              defined: "DeruggerCreator";
+            };
+          };
         }
       ];
     },
@@ -158,6 +190,11 @@ export type DerugProgram = {
           isSigner: true;
         },
         {
+          name: "remintConfig";
+          isMut: true;
+          isSigner: false;
+        },
+        {
           name: "feeWallet";
           isMut: true;
           isSigner: false;
@@ -206,6 +243,11 @@ export type DerugProgram = {
         {
           name: "pdaAuthority";
           isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "remintConfig";
+          isMut: true;
           isSigner: false;
         },
         {
@@ -297,6 +339,11 @@ export type DerugProgram = {
         {
           name: "newMetadata";
           isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "remintConfig";
+          isMut: false;
           isSigner: false;
         },
         {
@@ -523,6 +570,14 @@ export type DerugProgram = {
             type: "publicKey";
           },
           {
+            name: "newName";
+            type: "string";
+          },
+          {
+            name: "newSymbol";
+            type: "string";
+          },
+          {
             name: "derugger";
             type: "publicKey";
           },
@@ -541,12 +596,106 @@ export type DerugProgram = {
             };
           },
           {
+            name: "mintPrice";
+            type: {
+              option: "u64";
+            };
+          },
+          {
+            name: "mintCurrency";
+            type: {
+              option: "publicKey";
+            };
+          },
+          {
+            name: "privateMintDuration";
+            type: {
+              option: "i64";
+            };
+          },
+          {
+            name: "creators";
+            type: {
+              vec: {
+                defined: "DeruggerCreator";
+              };
+            };
+          },
+          {
+            name: "sellerFeeBps";
+            type: "u32";
+          },
+          {
             name: "utilityData";
             type: {
               vec: {
                 defined: "UtilityData";
               };
             };
+          }
+        ];
+      };
+    },
+    {
+      name: "remintConfig";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "newName";
+            type: "string";
+          },
+          {
+            name: "newSymbol";
+            type: "string";
+          },
+          {
+            name: "authority";
+            type: "publicKey";
+          },
+          {
+            name: "collection";
+            type: "publicKey";
+          },
+          {
+            name: "publicMintPrice";
+            type: {
+              option: "u64";
+            };
+          },
+          {
+            name: "mintCurrency";
+            type: {
+              option: "publicKey";
+            };
+          },
+          {
+            name: "mintFeeTreasury";
+            type: {
+              option: "publicKey";
+            };
+          },
+          {
+            name: "privateMintEnd";
+            type: {
+              option: "i64";
+            };
+          },
+          {
+            name: "creators";
+            type: {
+              vec: {
+                defined: "DeruggerCreator";
+              };
+            };
+          },
+          {
+            name: "candyMachineKey";
+            type: "publicKey";
+          },
+          {
+            name: "sellerFeeBps";
+            type: "u32";
           }
         ];
       };
@@ -581,6 +730,22 @@ export type DerugProgram = {
           {
             name: "winning";
             type: "bool";
+          }
+        ];
+      };
+    },
+    {
+      name: "DeruggerCreator";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "address";
+            type: "publicKey";
+          },
+          {
+            name: "share";
+            type: "u8";
           }
         ];
       };
@@ -645,6 +810,9 @@ export type DerugProgram = {
             name: "Reminting";
           },
           {
+            name: "PublicMint";
+          },
+          {
             name: "Completed";
           }
         ];
@@ -668,6 +836,9 @@ export type DerugProgram = {
             name: "Reminting";
           },
           {
+            name: "PublicMint";
+          },
+          {
             name: "Completed";
           }
         ];
@@ -686,6 +857,38 @@ export type DerugProgram = {
           }
         ];
       };
+    }
+  ];
+  events: [
+    {
+      name: "NftRemintedEvent";
+      fields: [
+        {
+          name: "reminter";
+          type: "publicKey";
+          index: false;
+        },
+        {
+          name: "newNftMint";
+          type: "publicKey";
+          index: false;
+        },
+        {
+          name: "newNftMetadata";
+          type: "publicKey";
+          index: false;
+        },
+        {
+          name: "oldNftMint";
+          type: "publicKey";
+          index: false;
+        },
+        {
+          name: "oldNftMetadata";
+          type: "publicKey";
+          index: false;
+        }
+      ];
     }
   ];
   errors: [
@@ -758,6 +961,26 @@ export type DerugProgram = {
       code: 6013;
       name: "WrongCollection";
       msg: "Wrong collection sent ";
+    },
+    {
+      code: 6014;
+      name: "InvalidSellerFeeBps";
+      msg: "Invalid seller fee basis points amount";
+    },
+    {
+      code: 6015;
+      name: "InvalidMintCurrency";
+      msg: "Invalid mint currency";
+    },
+    {
+      code: 6016;
+      name: "InvalidTokenOwner";
+      msg: "Invalid token owner";
+    },
+    {
+      code: 6017;
+      name: "TooManyCreators";
+      msg: "Too many creators";
     }
   ];
 };
@@ -844,6 +1067,38 @@ export const IDL: DerugProgram = {
             },
           },
         },
+        {
+          name: "sellerFeeBps",
+          type: "u32",
+        },
+        {
+          name: "publicMintPrice",
+          type: {
+            option: "u64",
+          },
+        },
+        {
+          name: "privateMintDuration",
+          type: {
+            option: "i64",
+          },
+        },
+        {
+          name: "newName",
+          type: "string",
+        },
+        {
+          name: "newSymbol",
+          type: "string",
+        },
+        {
+          name: "creators",
+          type: {
+            vec: {
+              defined: "DeruggerCreator",
+            },
+          },
+        },
       ],
     },
     {
@@ -922,6 +1177,11 @@ export const IDL: DerugProgram = {
           isSigner: true,
         },
         {
+          name: "remintConfig",
+          isMut: true,
+          isSigner: false,
+        },
+        {
           name: "feeWallet",
           isMut: true,
           isSigner: false,
@@ -970,6 +1230,11 @@ export const IDL: DerugProgram = {
         {
           name: "pdaAuthority",
           isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "remintConfig",
+          isMut: true,
           isSigner: false,
         },
         {
@@ -1061,6 +1326,11 @@ export const IDL: DerugProgram = {
         {
           name: "newMetadata",
           isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "remintConfig",
+          isMut: false,
           isSigner: false,
         },
         {
@@ -1287,6 +1557,14 @@ export const IDL: DerugProgram = {
             type: "publicKey",
           },
           {
+            name: "newName",
+            type: "string",
+          },
+          {
+            name: "newSymbol",
+            type: "string",
+          },
+          {
             name: "derugger",
             type: "publicKey",
           },
@@ -1305,12 +1583,106 @@ export const IDL: DerugProgram = {
             },
           },
           {
+            name: "mintPrice",
+            type: {
+              option: "u64",
+            },
+          },
+          {
+            name: "mintCurrency",
+            type: {
+              option: "publicKey",
+            },
+          },
+          {
+            name: "privateMintDuration",
+            type: {
+              option: "i64",
+            },
+          },
+          {
+            name: "creators",
+            type: {
+              vec: {
+                defined: "DeruggerCreator",
+              },
+            },
+          },
+          {
+            name: "sellerFeeBps",
+            type: "u32",
+          },
+          {
             name: "utilityData",
             type: {
               vec: {
                 defined: "UtilityData",
               },
             },
+          },
+        ],
+      },
+    },
+    {
+      name: "remintConfig",
+      type: {
+        kind: "struct",
+        fields: [
+          {
+            name: "newName",
+            type: "string",
+          },
+          {
+            name: "newSymbol",
+            type: "string",
+          },
+          {
+            name: "authority",
+            type: "publicKey",
+          },
+          {
+            name: "collection",
+            type: "publicKey",
+          },
+          {
+            name: "publicMintPrice",
+            type: {
+              option: "u64",
+            },
+          },
+          {
+            name: "mintCurrency",
+            type: {
+              option: "publicKey",
+            },
+          },
+          {
+            name: "mintFeeTreasury",
+            type: {
+              option: "publicKey",
+            },
+          },
+          {
+            name: "privateMintEnd",
+            type: {
+              option: "i64",
+            },
+          },
+          {
+            name: "creators",
+            type: {
+              vec: {
+                defined: "DeruggerCreator",
+              },
+            },
+          },
+          {
+            name: "candyMachineKey",
+            type: "publicKey",
+          },
+          {
+            name: "sellerFeeBps",
+            type: "u32",
           },
         ],
       },
@@ -1345,6 +1717,22 @@ export const IDL: DerugProgram = {
           {
             name: "winning",
             type: "bool",
+          },
+        ],
+      },
+    },
+    {
+      name: "DeruggerCreator",
+      type: {
+        kind: "struct",
+        fields: [
+          {
+            name: "address",
+            type: "publicKey",
+          },
+          {
+            name: "share",
+            type: "u8",
           },
         ],
       },
@@ -1409,6 +1797,9 @@ export const IDL: DerugProgram = {
             name: "Reminting",
           },
           {
+            name: "PublicMint",
+          },
+          {
             name: "Completed",
           },
         ],
@@ -1432,6 +1823,9 @@ export const IDL: DerugProgram = {
             name: "Reminting",
           },
           {
+            name: "PublicMint",
+          },
+          {
             name: "Completed",
           },
         ],
@@ -1450,6 +1844,38 @@ export const IDL: DerugProgram = {
           },
         ],
       },
+    },
+  ],
+  events: [
+    {
+      name: "NftRemintedEvent",
+      fields: [
+        {
+          name: "reminter",
+          type: "publicKey",
+          index: false,
+        },
+        {
+          name: "newNftMint",
+          type: "publicKey",
+          index: false,
+        },
+        {
+          name: "newNftMetadata",
+          type: "publicKey",
+          index: false,
+        },
+        {
+          name: "oldNftMint",
+          type: "publicKey",
+          index: false,
+        },
+        {
+          name: "oldNftMetadata",
+          type: "publicKey",
+          index: false,
+        },
+      ],
     },
   ],
   errors: [
@@ -1522,6 +1948,26 @@ export const IDL: DerugProgram = {
       code: 6013,
       name: "WrongCollection",
       msg: "Wrong collection sent ",
+    },
+    {
+      code: 6014,
+      name: "InvalidSellerFeeBps",
+      msg: "Invalid seller fee basis points amount",
+    },
+    {
+      code: 6015,
+      name: "InvalidMintCurrency",
+      msg: "Invalid mint currency",
+    },
+    {
+      code: 6016,
+      name: "InvalidTokenOwner",
+      msg: "Invalid token owner",
+    },
+    {
+      code: 6017,
+      name: "TooManyCreators",
+      msg: "Too many creators",
     },
   ],
 };
