@@ -1,3 +1,4 @@
+import { DateTime } from "@metaplex-foundation/js";
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import { Keypair, TransactionInstruction } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
@@ -39,4 +40,16 @@ export interface IGraphData {
   largestPrice: number;
   months: string[];
   prices: number[];
+}
+
+export interface IRemintConfig {
+  privateMintFee: number | null;
+  mintPrice: number;
+  collection: PublicKey;
+  authority: PublicKey;
+  privateMintEnd: DateTime;
+  mintCurrency?: PublicKey;
+  candyMachine: PublicKey;
+  sellerFeeBps: number;
+  decimals: number;
 }
