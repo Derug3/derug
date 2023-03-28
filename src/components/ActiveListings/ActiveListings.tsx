@@ -16,12 +16,21 @@ export const ActiveListings: FC<{
       <Box className="flex flex-col w-full">
         <Box className="flex flex-row justify-between items-center">
           <Text className="text-xl font-mono text-main-blue flex justify-center w-full">
-            <span className="border-r-4 border-t-4 border-l-4 border-slate-700 px-4">
+            <span
+              className="px-4"
+              style={{
+                border: "1px solid rgb(9, 194, 246)",
+                borderBottom: "none",
+              }}
+            >
               active derugs
             </span>
           </Text>
         </Box>
-        <Box className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 box-content cursor-pointer overflow-hidden border-t-4 p-4 border-slate-700 w-full">
+        <Box
+          className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 box-content cursor-pointer overflow-hidden w-full"
+          style={{ border: "1px solid rgb(9, 194, 246)" }}
+        >
           {activeListings.map((cd) => {
             return <ActiveListingItem collectionData={cd} />;
           })}

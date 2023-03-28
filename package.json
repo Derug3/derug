@@ -36,6 +36,7 @@
     "path": "^0.12.7",
     "path-browserify": "^1.0.1",
     "randomcolor": "^0.6.2",
+    "rc-slider": "^10.1.1",
     "react": "^18.2.0",
     "react-alice-carousel": "^2.7.0",
     "react-app-rewired": "^2.2.1",

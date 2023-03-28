@@ -182,7 +182,12 @@ export const Collections: FC = () => {
         setGraphData,
       }}
     >
-      <Box className="overflow-y-auto pt-5" style={{ zoom: "85%" }}>
+      <Box
+        className="overflow-y-auto pt-5"
+        style={{
+          zoom: "85%",
+        }}
+      >
         <Box
           className="overflow-y-clip flex flex-col"
           sx={{

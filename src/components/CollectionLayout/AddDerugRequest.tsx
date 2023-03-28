@@ -1,7 +1,15 @@
-import { Box, Button, Dialog, FormControl, TextInput } from "@primer/react";
+import {
+  Box,
+  Button,
+  Dialog,
+  FormControl,
+  TextInput,
+  Text,
+  ToggleSwitch,
+} from "@primer/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { motion } from "framer-motion";
-import { FC, useContext, useRef, useState } from "react";
+import { ChangeEvent, FC, useContext, useRef, useState } from "react";
 import { IRequest, IUtility } from "../../interface/collections.interface";
 import { UtilityAction } from "../../interface/derug.interface";
 import { getCollectionDerugData } from "../../solana/methods/derug";
@@ -11,6 +19,8 @@ import {
 } from "../../solana/methods/derug-request";
 import { CollectionContext } from "../../stores/collectionContext";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
 
 export const AddDerugRequst: FC<{
   isOpen: boolean;
@@ -20,6 +30,7 @@ export const AddDerugRequst: FC<{
 }> = ({ isOpen, setIsOpen }) => {
   const returnFocusRef = useRef(null);
   const [utility, setUtility] = useState<IUtility[]>();
+  const [sellerFee, setSellerFee] = useState<number>();
 
   const {
     chainCollectionData,
@@ -39,6 +50,10 @@ export const AddDerugRequst: FC<{
     };
     const oldValue = utility || [];
     setUtility([...oldValue, newElement]);
+  };
+
+  const handleSellerFeeChange = (points: number) => {
+    setSellerFee(points);
   };
 
   const handleUtilityNameChange = (value: string, index: number) => {
@@ -113,7 +128,7 @@ export const AddDerugRequst: FC<{
         isOpen={isOpen}
         onDismiss={() => setIsOpen(false)}
         sx={{
-          width: "50%",
+          width: "30%",
           borderRadius: 0,
         }}
         aria-labelledby="header-id"
@@ -134,7 +149,7 @@ export const AddDerugRequst: FC<{
               <Button
                 size="large"
                 variant="outline"
-                sx={{ marginRight: "10px", borderRadius: 0 }}
+                sx={{ borderRadius: 0 }}
                 ref={returnFocusRef}
                 onClick={() => addUtility()}
               >
@@ -142,6 +157,43 @@ export const AddDerugRequst: FC<{
               </Button>
             </div>
           </FormControl>
+          <div className="flex w-full items-center gap-5">
+            <Text className="text-white font-mono flex whitespace-nowrap">
+              Seller basic fee
+            </Text>
+            <Slider
+              value={Number(sellerFee)}
+              onChange={(e) =>
+                typeof e === "number" && handleSellerFeeChange(e)
+              }
+            />
+            <TextInput
+              placeholder="Seller fee"
+              value={sellerFee}
+              sx={{ borderRadius: 0 }}
+              onChange={(e) => handleSellerFeeChange(Number(e.target.value))}
+            />
+          </div>
+          <Box className="flex w-full justify-start items-center">
+            <Box flexGrow={1}>
+              <Text fontSize={2} color="white">
+                Public mint
+              </Text>
+              <Text
+                color="fg.subtle"
+                fontSize={1}
+                id="switchCaption"
+                display="block"
+              >
+                Notifications will be delivered via email and the GitHub
+                notification center
+              </Text>
+            </Box>
+            <ToggleSwitch
+              aria-labelledby="switchLabel"
+              aria-describedby="switchCaption"
+            />
+          </Box>
           {utility &&
             utility.map((u, i) => (
               <div className="flex w-full justify-between items-end gap-3">
@@ -152,8 +204,6 @@ export const AddDerugRequst: FC<{
                     sx={{ width: "100%", borderRadius: 0 }}
                     onChange={(e) => handleUtilityNameChange(e.target.value, i)}
                   />
-                </div>
-                <div className="flex w-full">
                   <TextInput
                     placeholder="Enter a description"
                     value={u.description}

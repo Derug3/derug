@@ -27,9 +27,9 @@ export const ActiveListingItem: FC<{
           onMouseLeave={() => setHover(false)}
           alt="colectionImg"
           style={{
-            opacity: hover ? 0.4 : 1,
-            transform: hover ? "scale(1.3)" : "scale(1)",
-            transition: "all .3s ease-out",
+            opacity: hover ? 0.6 : 1,
+            transform: hover ? "scale(1.1)" : "scale(1)",
+            transition: "all .2s ease-out",
           }}
           className="w-full h-40 object-cover"
         />

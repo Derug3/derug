@@ -199,7 +199,7 @@ export const DerugRequestItem: FC<{
             bg="#2DD4BF"
             sx={{
               width: "380px",
-              height: "30px",
+              height: "12px",
               borderRadius: 0,
               color: "rgb(45, 212, 191)",
               "@media (max-width: 768px)": {
@@ -208,10 +208,7 @@ export const DerugRequestItem: FC<{
             }}
           />
         </div>
-        <Balancer
-          className="text-lg cursor-pointer text-white font-mono px-5"
-          style={{ fontSize: "1em", opacity: 0.2 }}
-        >
+        <Balancer className="text-lg cursor-pointer text-white font-mono px-5">
           <span
             style={{
               padding: "10px",
@@ -225,13 +222,14 @@ export const DerugRequestItem: FC<{
               .slice(0, 10)}
           </span>
         </Balancer>
-        <p
+        <span
+          className="text-white font-mono"
           style={{
-            fontSize: "1.5em",
+            fontSize: "0.75em",
           }}
         >
           {derugRequest.voteCount} / {collectionDerug?.totalSupply}
-        </p>
+        </span>
       </div>
     </div>
   );
