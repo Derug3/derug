@@ -1,15 +1,7 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  FormControl,
-  TextInput,
-  Text,
-  ToggleSwitch,
-} from "@primer/react";
+import { Box, Button, Dialog, TextInput, Label } from "@primer/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { motion } from "framer-motion";
-import { ChangeEvent, FC, useContext, useRef, useState } from "react";
+import { FC, useContext, useEffect, useRef, useState } from "react";
 import { IRequest, IUtility } from "../../interface/collections.interface";
 import { UtilityAction } from "../../interface/derug.interface";
 import { getCollectionDerugData } from "../../solana/methods/derug";
@@ -21,6 +13,15 @@ import { CollectionContext } from "../../stores/collectionContext";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import UtilityArray from "./UtilityArray";
+import useDebounce from "../../hooks/useDebounce";
+import CreatorsArray from "./CreatorsArray";
+import PublicMint from "./PublicMint";
+
+interface ICreator {
+  address: string | undefined;
+  percentage: number;
+}
 
 export const AddDerugRequst: FC<{
   isOpen: boolean;
@@ -28,9 +29,25 @@ export const AddDerugRequst: FC<{
   derugRequests: IRequest[] | undefined;
   setDerugRequest: (derugRequest: IRequest[] | undefined) => void;
 }> = ({ isOpen, setIsOpen }) => {
+  const wallet = useWallet();
   const returnFocusRef = useRef(null);
-  const [utility, setUtility] = useState<IUtility[]>();
-  const [sellerFee, setSellerFee] = useState<number>();
+  const [utility, setUtility] = useState<IUtility[]>([
+    {
+      title: "",
+      description: "",
+      isActive: true,
+    },
+  ]);
+  const [creators, setCreator] = useState<ICreator[]>([]);
+
+  const [selectedUtility, setSelectedUtility] = useState<number>(0);
+  const [sellerFee, setSellerFee] = useState<number>(0);
+  const [symbol, setSymbol] = useState<string>();
+  const [price, setPrice] = useState<string>();
+  const [duration, setDuration] = useState<string>();
+  const [searchValue, setSearchValue] = useState<string>();
+
+  const { name } = useDebounce(searchValue);
 
   const {
     chainCollectionData,
@@ -40,8 +57,6 @@ export const AddDerugRequst: FC<{
     derugRequests,
   } = useContext(CollectionContext);
 
-  const wallet = useWallet();
-
   const addUtility = () => {
     const newElement = {
       title: "",
@@ -49,41 +64,21 @@ export const AddDerugRequst: FC<{
       isActive: true,
     };
     const oldValue = utility || [];
+    setSelectedUtility(oldValue.length);
     setUtility([...oldValue, newElement]);
+  };
+
+  const addCreator = () => {
+    const newElement = {
+      address: "",
+      percentage: 0,
+    };
+    const oldValue = creators || [];
+    setCreator([...oldValue, newElement]);
   };
 
   const handleSellerFeeChange = (points: number) => {
     setSellerFee(points);
-  };
-
-  const handleUtilityNameChange = (value: string, index: number) => {
-    if (!utility) return;
-    const updatedTodo = { ...utility[index], title: value };
-    const newUtility = [
-      ...utility.slice(0, index),
-      updatedTodo,
-      ...utility.slice(index + 1),
-    ];
-    setUtility(newUtility);
-  };
-
-  const handleUtilityDescChange = (value: string, index: number) => {
-    if (!utility) return;
-    const updatedTodo = { ...utility[index], description: value };
-    const newUtility = [
-      ...utility.slice(0, index),
-      updatedTodo,
-      ...utility.slice(index + 1),
-    ];
-    setUtility(newUtility);
-  };
-
-  const removeUtility = (index: number) => {
-    if (!utility) return;
-    const temp = [...utility];
-    temp.splice(index, 1);
-
-    setUtility(temp);
   };
 
   const submitRequest = async () => {
@@ -118,6 +113,14 @@ export const AddDerugRequst: FC<{
     }
   };
 
+  useEffect(() => {
+    const newElement = {
+      address: wallet.publicKey?.toString(),
+      percentage: 100,
+    };
+    setCreator([newElement]);
+  }, [wallet]);
+
   return (
     <motion.div
       className="flex w-full flex-col"
@@ -128,7 +131,9 @@ export const AddDerugRequst: FC<{
         isOpen={isOpen}
         onDismiss={() => setIsOpen(false)}
         sx={{
-          width: "30%",
+          width: "80%",
+          height: "90%",
+          overflow: "auto",
           borderRadius: 0,
         }}
         aria-labelledby="header-id"
@@ -136,100 +141,135 @@ export const AddDerugRequst: FC<{
         <Dialog.Header id="header-id" sx={{ borderRadius: 0 }}>
           Derug request
         </Dialog.Header>
-        <Box p={3} className="flex justify-center flex-col gap-3">
-          <FormControl sx={{ display: "flex" }}>
-            <FormControl.Label>Wallet</FormControl.Label>
-            <div className="flex w-full">
-              <TextInput
-                placeholder="title"
-                value={wallet.publicKey?.toString()}
-                sx={{ width: "100%", marginRight: "10px", borderRadius: 0 }}
-                disabled
-              />
-              <Button
-                size="large"
-                variant="outline"
-                sx={{ borderRadius: 0 }}
-                ref={returnFocusRef}
-                onClick={() => addUtility()}
-              >
-                Add utility
-              </Button>
-            </div>
-          </FormControl>
-          <div className="flex w-full items-center gap-5">
-            <Text className="text-white font-mono flex whitespace-nowrap">
-              Seller basic fee
-            </Text>
-            <Slider
-              value={Number(sellerFee)}
-              onChange={(e) =>
-                typeof e === "number" && handleSellerFeeChange(e)
-              }
-            />
-            <TextInput
-              placeholder="Seller fee"
-              value={sellerFee}
-              sx={{ borderRadius: 0 }}
-              onChange={(e) => handleSellerFeeChange(Number(e.target.value))}
-            />
-          </div>
-          <Box className="flex w-full justify-start items-center">
-            <Box flexGrow={1}>
-              <Text fontSize={2} color="white">
-                Public mint
-              </Text>
-              <Text
-                color="fg.subtle"
-                fontSize={1}
-                id="switchCaption"
-                display="block"
-              >
-                Notifications will be delivered via email and the GitHub
-                notification center
-              </Text>
-            </Box>
-            <ToggleSwitch
-              aria-labelledby="switchLabel"
-              aria-describedby="switchCaption"
-            />
-          </Box>
-          {utility &&
-            utility.map((u, i) => (
-              <div className="flex w-full justify-between items-end gap-3">
-                <div className="flex w-full">
+        <Box className="grid grid-cols-2 gap-4 m-5">
+          <Box
+            className="flex justify-between flex-row text-gray-400 p-3 font-mono"
+            style={{
+              border: "1px solid rgb(9, 194, 246)",
+            }}
+          >
+            <div className="flex flex-col justify-between w-full gap-5">
+              <div className="flex justify-between w-full">
+                <span className="pr-2 text-white">Wallet:</span>
+                <span className="font-mono">
+                  {wallet.publicKey?.toString()}
+                </span>
+              </div>
+              <div className="flex justify-between w-full ">
+                <span className="pr-2 text-white">New name:</span>
+                <TextInput
+                  placeholder="new collection name"
+                  className="text-gray-400"
+                  value={name}
+                  sx={{
+                    borderRadius: 0,
+                    width: "50%",
+                  }}
+                />
+              </div>
+              <div className="flex justify-between w-full ">
+                <span className="pr-2 text-white">New symbol:</span>
+                <TextInput
+                  placeholder="new collection symbol"
+                  value={symbol}
+                  sx={{
+                    borderRadius: 0,
+                    width: "50%",
+                  }}
+                />
+              </div>
+              <div className="flex justify-between w-full gap-3 items-center">
+                <span className="pr-2 text-white"> Seller basic fee</span>
+                <div className="flex w-1/2 items-center gap-5">
                   <TextInput
-                    placeholder="Utility"
-                    value={u.title}
-                    sx={{ width: "100%", borderRadius: 0 }}
-                    onChange={(e) => handleUtilityNameChange(e.target.value, i)}
+                    placeholder="Fee"
+                    value={sellerFee}
+                    sx={{ borderRadius: 0, width: "30%" }}
+                    onChange={(e) =>
+                      handleSellerFeeChange(Number(e.target.value))
+                    }
                   />
-                  <TextInput
-                    placeholder="Enter a description"
-                    value={u.description}
-                    sx={{ width: "100%", borderRadius: 0 }}
-                    onChange={(e) => handleUtilityDescChange(e.target.value, i)}
+                  <Slider
+                    value={Number(sellerFee)}
+                    onChange={(e) =>
+                      typeof e === "number" && handleSellerFeeChange(e)
+                    }
                   />
                 </div>
-                <Button
-                  variant="danger"
-                  sx={{ borderRadius: 0 }}
-                  ref={returnFocusRef}
-                  onClick={() => removeUtility(i)}
-                >
-                  remove
-                </Button>
               </div>
-            ))}
-          <div className="flex justify-end">
+            </div>
+          </Box>
+          <Box
+            className="flex justify-between flex-col text-white p-3 font-mono"
+            style={{ border: "1px solid rgb(9, 194, 246)" }}
+          >
+            <CreatorsArray creators={creators} setCreators={setCreator} />
             <Button
-              className="mt-3"
+              size="large"
+              variant="outline"
+              sx={{ borderRadius: 0 }}
               ref={returnFocusRef}
-              onClick={() => submitRequest()}
+              disabled={creators.length >= 4}
+              onClick={() => addCreator()}
             >
-              Submit request
+              Add creator
             </Button>
-          </div>
+          </Box>
+        </Box>
+        <Box className="grid grid-cols-2 gap-4 mx-5">
+          <Box
+            className="flex justify-between flex-col font-mono"
+            style={{
+              border: "1px solid rgb(9, 194, 246)",
+            }}
+          >
+            <PublicMint
+              price={price}
+              setPrice={setPrice}
+              duration={duration}
+              setDuration={setDuration}
+            />
+          </Box>
+          <Box
+            className="flex justify-between flex-col text-white gap-5 p-3 font-mono w-full"
+            style={{ border: "1px solid rgb(9, 194, 246)" }}
+          >
+            <Box className="flex flex-wrap">
+              {utility.map(
+                (item, index) =>
+                  item.title && (
+                    <Label
+                      onClick={() => {
+                        setSelectedUtility(index);
+                      }}
+                      variant="accent"
+                      className="cursor-pointer"
+                    >
+                      {item.title}
+                    </Label>
+                  )
+              )}
+            </Box>
+            <Box className="flex flex-col w-full justify-start items-start">
+              {utility && (
+                <UtilityArray
+                  selectedUtility={selectedUtility}
+                  placeholder="Utility"
+                  items={utility}
+                  setItems={setUtility}
+                ></UtilityArray>
+              )}
+            </Box>
+            <Button
+              size="large"
+              variant="outline"
+              sx={{ borderRadius: 0 }}
+              ref={returnFocusRef}
+              onClick={() => addUtility()}
+            >
+              Add utility
+            </Button>
+          </Box>
         </Box>
       </Dialog>
     </motion.div>
