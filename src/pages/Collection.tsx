@@ -37,6 +37,7 @@ import { IGraphData, IRemintConfig } from "../interface/derug.interface";
 import NoDerugRequests from "../components/DerugRequest/NoDerugRequests";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { getRemintConfig } from "../solana/methods/remint";
+import PublicMint from "../components/Remit/PublicMint";
 export const Collections: FC = () => {
   dayjs.extend(utc);
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
@@ -258,7 +259,8 @@ export const Collections: FC = () => {
           )}
         </>
       ) : (
-        <NoDerugRequests openDerugModal={setDerugRequestVisible} />
+        <PublicMint />
+        // <NoDerugRequests openDerugModal={setDerugRequestVisible} />
       )}
     </CollectionContext.Provider>
   );

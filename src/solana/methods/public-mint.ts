@@ -77,7 +77,9 @@ export const initCandyMachine = async (
       authority: remintConfigAccount.authority,
       collection: remintConfigAccount.collection,
       candyMachine,
+
       tokenMint: remintConfigAccount.mintCurrency,
+      maxEditionSupply: toBigNumber(0),
       goLiveDate: toDateTime(privateMintEnd),
       retainAuthority: true,
       isMutable: true,
@@ -159,9 +161,11 @@ export const mintNftFromCandyMachine = async (
       address: remintConfig.candyMachine,
     });
 
-    await metaplex.candyMachinesV2().mint({
+    const minted = await metaplex.candyMachinesV2().mint({
       candyMachine,
     });
+
+    return minted.nft;
   } catch (error: any) {
     toast.error("Failed to mint:", error.message);
   }

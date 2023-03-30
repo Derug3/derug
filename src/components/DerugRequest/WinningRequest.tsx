@@ -9,7 +9,12 @@ import { getCollectionDerugData } from "../../solana/methods/derug";
 import { DerugStatus } from "../../enums/collections.enums";
 import { getTrimmedPublicKey } from "../../solana/helpers";
 const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
-  const { collectionDerug, setCollectionDerug } = useContext(CollectionContext);
+  const {
+    collectionDerug,
+    setCollectionDerug,
+    remintConfig,
+    chainCollectionData,
+  } = useContext(CollectionContext);
 
   const wallet = useWallet();
 
@@ -46,8 +51,20 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
 
   const claimDerugVictory = async () => {
     try {
-      if (wallet && collectionDerug && request) {
-        await claimVictory(wallet!, collectionDerug, request);
+      if (
+        wallet &&
+        collectionDerug &&
+        request &&
+        chainCollectionData &&
+        remintConfig
+      ) {
+        await claimVictory(
+          wallet!,
+          collectionDerug,
+          chainCollectionData,
+          remintConfig,
+          request
+        );
         const updatedDerug = await getCollectionDerugData(
           collectionDerug.address
         );

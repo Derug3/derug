@@ -7,14 +7,13 @@ module.exports = function override(config) {
     stream: require.resolve("stream-browserify"),
     fs: false,
     "process/browser": require.resolve("process/browser"),
-    zlib: false,
+    zlib: require.resolve("zlib-browserify"),
   });
   config.resolve.fallback = fallback;
   config.plugins = (config.plugins || []).concat([
     new webpack.ProvidePlugin({
       process: "process/browser",
       Buffer: ["buffer", "Buffer"],
-      zlib: "zlib",
     }),
   ]);
   config.module.rules.push({
