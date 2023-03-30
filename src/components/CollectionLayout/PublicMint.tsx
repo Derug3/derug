@@ -151,7 +151,7 @@ const PublicMint: FC<{
     );
   }, [availableTokensList, searchLoading]);
   return (
-    <div className="flex justify-evenly flex-col text-gray-400 gap-5 p-3 font-mono h-full">
+    <div className="flex justify-evenly flex-col text-gray-400 gap-5 p-3 font-mono">
       <Box className="flex flex-row w-full justify-start items-center">
         <Box className="flex flex-col items-start text-start">
           <Text fontSize={2} color="white">
@@ -213,8 +213,8 @@ const PublicMint: FC<{
               id="switchCaption"
               display="block"
             >
-              In case you want to sell your token on the marketplace, after
-              private mint
+              Private mint is a period of time when holders can burn rugged nfts
+              and get a new ones
             </Text>
           </div>
           <div className="flex justify-end items-center gap-3 w-64">

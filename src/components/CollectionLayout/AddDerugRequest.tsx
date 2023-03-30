@@ -17,6 +17,8 @@ import UtilityArray from "./UtilityArray";
 import useDebounce from "../../hooks/useDebounce";
 import CreatorsArray from "./CreatorsArray";
 import PublicMint from "./PublicMint";
+import { getTrimmedPublicKey } from "../../solana/helpers";
+import { PublicKey } from "@solana/web3.js";
 
 interface ICreator {
   address: string | undefined;
@@ -132,30 +134,49 @@ export const AddDerugRequst: FC<{
         onDismiss={() => setIsOpen(false)}
         sx={{
           width: "80%",
-          height: "90%",
-          overflow: "auto",
+          maxHeight: "100%",
+
           borderRadius: 0,
         }}
         aria-labelledby="header-id"
       >
-        <Dialog.Header id="header-id" sx={{ borderRadius: 0 }}>
-          Derug request
+        <Dialog.Header
+          id="header-id"
+          className="flex justify-between items-center bg-gray-800"
+          sx={{
+            borderRadius: 0,
+          }}
+        >
+          <span className="text-white font-mono">Derug Request</span>
         </Dialog.Header>
+
         <Box className="grid grid-cols-2 gap-4 m-5">
           <Box
-            className="flex justify-between flex-row text-gray-400 p-3 font-mono"
+            className="flex justify-between flex-row text-gray-400 font-mono"
             style={{
               border: "1px solid rgb(9, 194, 246)",
             }}
           >
-            <div className="flex flex-col justify-between w-full gap-5">
-              <div className="flex justify-between w-full">
-                <span className="pr-2 text-white">Wallet:</span>
+            <div className="flex flex-col justify-start items-start w-full gap-5">
+              <span
+                className="flex text-white font-mono w-full text-lg px-3"
+                style={{
+                  borderBottom: "1px solid #6e7681",
+                  backgroundColor: "rgba(9, 194, 246, 0.2)",
+                }}
+              >
+                Derug request details
+              </span>
+              <div className="flex justify-between w-full px-3">
+                <span className="pr-2 text-white font-mono">Wallet:</span>
                 <span className="font-mono">
-                  {wallet.publicKey?.toString()}
+                  {wallet.publicKey &&
+                    getTrimmedPublicKey(
+                      new PublicKey(wallet.publicKey.toString())
+                    )}
                 </span>
               </div>
-              <div className="flex justify-between w-full ">
+              <div className="flex justify-between w-full px-3">
                 <span className="pr-2 text-white">New name:</span>
                 <TextInput
                   placeholder="new collection name"
@@ -167,7 +188,7 @@ export const AddDerugRequst: FC<{
                   }}
                 />
               </div>
-              <div className="flex justify-between w-full ">
+              <div className="flex justify-between w-full px-3">
                 <span className="pr-2 text-white">New symbol:</span>
                 <TextInput
                   placeholder="new collection symbol"
@@ -178,7 +199,7 @@ export const AddDerugRequst: FC<{
                   }}
                 />
               </div>
-              <div className="flex justify-between w-full gap-3 items-center">
+              <div className="flex justify-between w-full gap-3 items-center px-3 pb-3">
                 <span className="pr-2 text-white"> Seller basic fee</span>
                 <div className="flex w-1/2 items-center gap-5">
                   <TextInput
@@ -200,29 +221,49 @@ export const AddDerugRequst: FC<{
             </div>
           </Box>
           <Box
-            className="flex justify-between flex-col text-white p-3 font-mono"
+            className="flex justify-start flex-col text-white font-mono"
             style={{ border: "1px solid rgb(9, 194, 246)" }}
           >
-            <CreatorsArray creators={creators} setCreators={setCreator} />
-            <Button
-              size="large"
-              variant="outline"
-              sx={{ borderRadius: 0 }}
-              ref={returnFocusRef}
-              disabled={creators.length >= 4}
-              onClick={() => addCreator()}
+            <span
+              className="flex text-white font-mono w-full text-lg px-3"
+              style={{
+                borderBottom: "1px solid #6e7681",
+                backgroundColor: "rgba(9, 194, 246, 0.2)",
+              }}
             >
-              Add creator
-            </Button>
+              Creators
+            </span>
+            <div className="flex justify-between flex-col h-full p-3">
+              <CreatorsArray creators={creators} setCreators={setCreator} />
+              <Button
+                size="large"
+                variant="outline"
+                sx={{ borderRadius: 0, backgroundColor: "transparent" }}
+                ref={returnFocusRef}
+                disabled={creators.length >= 4}
+                onClick={() => addCreator()}
+              >
+                Add creator
+              </Button>
+            </div>
           </Box>
         </Box>
         <Box className="grid grid-cols-2 gap-4 mx-5">
           <Box
-            className="flex justify-between flex-col font-mono"
+            className="flex justify-start flex-col font-mono"
             style={{
               border: "1px solid rgb(9, 194, 246)",
             }}
           >
+            <span
+              className="flex text-white font-mono w-full text-lg px-3"
+              style={{
+                borderBottom: "1px solid #6e7681",
+                backgroundColor: "rgba(9, 194, 246, 0.2)",
+              }}
+            >
+              Mint details
+            </span>
             <PublicMint
               price={price}
               setPrice={setPrice}
@@ -231,10 +272,19 @@ export const AddDerugRequst: FC<{
             />
           </Box>
           <Box
-            className="flex justify-between flex-col text-white gap-5 p-3 font-mono w-full"
+            className="flex justify-between flex-col text-white gap-5 font-mono w-full"
             style={{ border: "1px solid rgb(9, 194, 246)" }}
           >
-            <Box className="flex flex-wrap">
+            <span
+              className="flex text-white font-mono w-full text-lg px-3"
+              style={{
+                borderBottom: "1px solid #6e7681",
+                backgroundColor: "rgba(9, 194, 246, 0.2)",
+              }}
+            >
+              Utilities
+            </span>
+            <Box className="flex flex-wrap px-3">
               {utility.map(
                 (item, index) =>
                   item.title && (
@@ -263,13 +313,34 @@ export const AddDerugRequst: FC<{
             <Button
               size="large"
               variant="outline"
-              sx={{ borderRadius: 0 }}
+              sx={{ borderRadius: 0, backgroundColor: "transparent" }}
               ref={returnFocusRef}
               onClick={() => addUtility()}
             >
               Add utility
             </Button>
           </Box>
+          <Button
+            size="large"
+            sx={{
+              borderRadius: 0,
+            }}
+            disabled={false}
+            onClick={() => submitRequest()}
+          >
+            Submit request
+          </Button>
+          <Button
+            size="large"
+            variant="danger"
+            sx={{
+              borderRadius: 0,
+            }}
+            disabled={false}
+            onClick={() => submitRequest()}
+          >
+            Cancel request
+          </Button>
         </Box>
       </Dialog>
     </motion.div>

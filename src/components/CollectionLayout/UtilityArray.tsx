@@ -22,6 +22,7 @@ const UtilityArray: FC<{
   const handleItemsDescChange = (value: string, index: number) => {
     if (!items) return;
     const updatedTodo = { ...items[index], description: value };
+
     const newItems = [
       ...items.slice(0, index),
       updatedTodo,
@@ -39,7 +40,7 @@ const UtilityArray: FC<{
   };
 
   return (
-    <Box className="w-full">
+    <Box className="w-full px-3">
       {items &&
         items.map(
           (u, index) =>
