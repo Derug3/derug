@@ -259,8 +259,8 @@ export const Collections: FC = () => {
           )}
         </>
       ) : (
-        <PublicMint />
-        // <NoDerugRequests openDerugModal={setDerugRequestVisible} />
+        // <PublicMint />
+        <NoDerugRequests openDerugModal={setDerugRequestVisible} />
       )}
     </CollectionContext.Provider>
   );

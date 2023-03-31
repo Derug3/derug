@@ -2,10 +2,11 @@ export const selectStyles = {
   control(base: any, props: any) {
     return {
       background: "#0d1117",
-      border: "1px solid rgb(9, 194, 246)",
+      border: "1px solid #30363d",
+      fontFamily: "monospace",
+      height: "32px",
       display: "flex",
-      padding: "0.5em",
-      borderRadius: "4px",
+      alignItems: "center",
     };
   },
   dropdownIndicator(base: any, props: any) {
@@ -25,7 +26,7 @@ export const selectStyles = {
     return {
       ...base,
       border: "1px solid rgba(9, 194, 246, 0.5)",
-      borderRadius: "4px",
+      zIndex: 999,
     };
   },
   menuList(base: any, props: any) {
@@ -33,7 +34,6 @@ export const selectStyles = {
       ...base,
       background: "#161b22",
       color: "white",
-      fontWeight: "bold",
     };
   },
   option(base: any, props: any) {

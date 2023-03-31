@@ -40,7 +40,7 @@ const HomePage = () => {
 
   useEffect(() => {
     void searchByName();
-  }, [name, "activeCollections"]);
+  }, [name, activeCollections]);
 
   const handleSearch = (e: any) => {
     if (e && e !== "") {
