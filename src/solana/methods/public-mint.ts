@@ -34,6 +34,10 @@ export const initCandyMachine = async (
   try {
     const derugProgram = derugProgramFactory();
 
+    const nonMintedNfts = await getNonMinted(
+      collectionDerug.address.toString()
+    );
+
     const [remintConfig] = PublicKey.findProgramAddressSync(
       [remintConfigSeed, collectionDerug.address.toBuffer()],
       derugProgram.programId
@@ -74,7 +78,7 @@ export const initCandyMachine = async (
         : sol(
             remintConfigAccount.publicMintPrice?.toNumber() / LAMPORTS_PER_SOL
           ),
-      itemsAvailable: toBigNumber(45),
+      itemsAvailable: toBigNumber(nonMintedNfts.length),
       sellerFeeBasisPoints: remintConfigAccount.sellerFeeBps,
       authority: remintConfigAccount.authority,
       // collection: remintConfigAccount.collection,
@@ -112,7 +116,7 @@ export const storeCandyMachineItems = async (
     ) {
       throw new Error("Derug request missmatch");
     }
-    debugger;
+
     const nonMintedNfts = await getNonMinted(derug.address.toString());
     const nonMinted = nonMintedNfts
       .filter((nm) => !nm.hasReminted)
