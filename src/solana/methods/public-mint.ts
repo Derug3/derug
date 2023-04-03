@@ -5,8 +5,8 @@ import {
   token,
   walletAdapterIdentity,
 } from "@metaplex-foundation/js";
-import { AnchorWallet } from "@solana/wallet-adapter-react";
-import { Keypair, PublicKey } from "@solana/web3.js";
+import { AnchorWallet, WalletContextState } from "@solana/wallet-adapter-react";
+import { Keypair, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import toast from "react-hot-toast";
 import { getCandyMachine, getNonMinted } from "../../api/public-mint.api";
 import {
@@ -23,13 +23,13 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { chunk } from "lodash";
 import { RPC_CONNECTION } from "../../utilities/utilities";
-import { getNftName } from "../../common/helpers";
+import { getNftName, parseKeyArray } from "../../common/helpers";
 
 dayjs.extend(utc);
 
 export const initCandyMachine = async (
   collectionDerug: ICollectionDerugData,
-  wallet: AnchorWallet
+  wallet: WalletContextState
 ) => {
   try {
     const derugProgram = derugProgramFactory();
@@ -52,32 +52,33 @@ export const initCandyMachine = async (
     }
 
     const candyMachine = Keypair.fromSecretKey(
-      JSON.parse(candyMachineData.candyMachineSecretKey)
+      parseKeyArray(candyMachineData.candyMachineSecretKey)
     );
 
     if (
-      !remintConfigAccount.mintPrice ||
-      !remintConfigAccount.privateMintDuration
+      !remintConfigAccount.publicMintPrice ||
+      !remintConfigAccount.privateMintEnd
     ) {
       toast.error("You did not select public mint!");
       return;
     }
 
-    const privateMintEnd = dayjs()
-      .add(remintConfigAccount.privateMintDuration?.toNumber(), "seconds")
+    const privateMintEnd = dayjs
+      .unix(remintConfigAccount.privateMintEnd.toNumber() / 1000)
       .toDate();
 
     metaplex.use(walletAdapterIdentity(wallet));
     await metaplex.candyMachinesV2().create({
       price: remintConfigAccount.mintCurrency
-        ? token(remintConfigAccount.mintPrice?.toNumber())
-        : sol(remintConfigAccount.mintPrice?.toNumber()),
+        ? token(remintConfigAccount.publicMintPrice?.toNumber())
+        : sol(
+            remintConfigAccount.publicMintPrice?.toNumber() / LAMPORTS_PER_SOL
+          ),
       itemsAvailable: toBigNumber(collectionDerug.totalSupply),
       sellerFeeBasisPoints: remintConfigAccount.sellerFeeBps,
       authority: remintConfigAccount.authority,
-      collection: remintConfigAccount.collection,
+      // collection: remintConfigAccount.collection,
       candyMachine,
-
       tokenMint: remintConfigAccount.mintCurrency,
       maxEditionSupply: toBigNumber(0),
       goLiveDate: toDateTime(privateMintEnd),
@@ -94,27 +95,32 @@ export const initCandyMachine = async (
       wallet: remintConfigAccount.mintFeeTreasury ?? undefined,
     });
   } catch (error: any) {
-    toast.error("Failed to init Candy Machine:", error.message);
+    console.log(error);
+
+    throw error;
   }
 };
 
 export const storeCandyMachineItems = async (
   remintConfig: IRemintConfig,
-  wallet: AnchorWallet,
+  wallet: WalletContextState,
   derug: ICollectionDerugData
 ) => {
   try {
-    if (derug.winningRequest !== remintConfig.derugRequest) {
+    if (
+      derug.winningRequest?.toString() !== remintConfig.derugRequest.toString()
+    ) {
       throw new Error("Derug request missmatch");
     }
 
-    const nonMinted = (await getNonMinted(derug.address.toString())).filter(
-      (nm) => !nm.hasReminted
-    );
+    const nonMintedNfts = await getNonMinted(derug.address.toString());
+    const nonMinted = nonMintedNfts
+      .filter((nm) => !nm.hasReminted)
+      .slice(0, derug.totalSupply);
 
-    if (nonMinted.length > 500) {
-      toast.loading(
-        "You will have to sign multiple transactions as there are more than 500 NFTs"
+    if (nonMinted.length > 10) {
+      toast.success(
+        "You will have to sign multiple transactions as there are more than 50 NFTs"
       );
     }
 
@@ -125,28 +131,28 @@ export const storeCandyMachineItems = async (
     });
     metaplex.use(walletAdapterIdentity(wallet));
 
-    await metaplex.candyMachinesV2().update({
-      candyMachine: candyMachineAccount,
-      itemsAvailable: toBigNumber(nonMinted.length),
-    });
+    // await metaplex.candyMachinesV2().update({
+    //   candyMachine: candyMachineAccount,
 
-    const chunkedNonMinted = chunk(nonMinted, 500);
+    // });
+
+    const chunkedNonMinted = chunk(nonMinted, 10);
 
     for (const nonMintedChunk of chunkedNonMinted) {
       await metaplex.candyMachinesV2().insertItems({
         candyMachine: candyMachineAccount,
-        items: nonMintedChunk.map((nm, index) => {
+        items: nonMintedChunk.map((nm) => {
           return {
             uri: nm.uri,
-            name: `${remintConfig.newName} ${getNftName(
-              derug.totalReminted + index + 1
-            )}`,
+            name: remintConfig.newName,
           };
         }),
       });
     }
   } catch (error: any) {
-    toast.error("Failed to init Candy Machine:", error.message);
+    console.log(error);
+
+    throw error;
   }
 };
 
@@ -155,7 +161,6 @@ export const mintNftFromCandyMachine = async (
   wallet: AnchorWallet
 ) => {
   metaplex.use(walletAdapterIdentity(wallet));
-
   try {
     const candyMachine = await metaplex.candyMachinesV2().findByAddress({
       address: remintConfig.candyMachine,
@@ -167,6 +172,28 @@ export const mintNftFromCandyMachine = async (
 
     return minted.nft;
   } catch (error: any) {
-    toast.error("Failed to mint:", error.message);
+    throw error;
   }
+};
+
+export const upCm = async (
+  cmKey: PublicKey,
+  wallet: AnchorWallet,
+  request: IRequest
+) => {
+  const cm = await metaplex.candyMachinesV2().findByAddress({
+    address: cmKey,
+  });
+
+  metaplex.use(walletAdapterIdentity(wallet));
+  await metaplex.candyMachinesV2().update({
+    candyMachine: cm,
+    creators: request.creators.map((c) => {
+      return {
+        address: c.address,
+        share: c.share,
+        verified: true,
+      };
+    }),
+  });
 };

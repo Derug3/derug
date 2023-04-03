@@ -36,8 +36,9 @@ import { getFloorPrice, getListings, getTraits } from "../api/tensor";
 import { IGraphData, IRemintConfig } from "../interface/derug.interface";
 import NoDerugRequests from "../components/DerugRequest/NoDerugRequests";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { getRemintConfig } from "../solana/methods/remint";
+import { getCandyMachine, getRemintConfig } from "../solana/methods/remint";
 import PublicMint from "../components/Remit/PublicMint";
+import { CandyMachineV2 } from "@metaplex-foundation/js";
 export const Collections: FC = () => {
   dayjs.extend(utc);
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
@@ -57,6 +58,7 @@ export const Collections: FC = () => {
   const [collectionDerug, setCollectionDerug] =
     useState<ICollectionDerugData>();
   const [graphData, setGraphData] = useState<IGraphData>();
+  const [candyMachine, setCandyMachine] = useState<CandyMachineV2>();
 
   const [derugRequests, setDerugRequests] = useState<IRequest[]>();
   const iframeRef = useRef(null);
@@ -116,7 +118,13 @@ export const Collections: FC = () => {
       chainDetails.slug = slug!;
       setChainCollectionData(chainDetails);
       if (chainDetails.hasActiveDerugData) {
-        setRemintConfig(await getRemintConfig(chainDetails.derugDataAddress));
+        const remintConfigData = await getRemintConfig(
+          chainDetails.derugDataAddress
+        );
+        setRemintConfig(remintConfigData);
+        if (remintConfigData) {
+          setCandyMachine(await getCandyMachine(remintConfigData.candyMachine));
+        }
 
         setCollectionDerug(
           await getCollectionDerugData(chainDetails.derugDataAddress)
@@ -142,7 +150,18 @@ export const Collections: FC = () => {
     } else {
       return false;
     }
-  }, [collectionDerug]);
+  }, [collectionDerug, derugRequests]);
+
+  const hasWinning = useMemo(() => {
+    if (collectionDerug)
+      return (
+        dayjs(collectionDerug.periodEnd).isBefore(dayjs()) &&
+        derugRequests?.find(
+          (dr) => dr.voteCount >= collectionDerug.thresholdDenominator
+        )
+      );
+    else return false;
+  }, [collectionDerug, derugRequests]);
 
   return (
     <CollectionContext.Provider
@@ -169,6 +188,8 @@ export const Collections: FC = () => {
         setGraphData,
         remintConfig,
         setRemintConfig,
+        candyMachine,
+        setCandyMachine,
       }}
     >
       <Box
@@ -186,12 +207,14 @@ export const Collections: FC = () => {
             },
           }}
         >
-          <AddDerugRequst
-            isOpen={derugRequestVisible}
-            setIsOpen={(val) => setDerugRequestVisible(val)}
-            derugRequests={derugRequests}
-            setDerugRequest={setDerugRequests}
-          />
+          {wallet && (
+            <AddDerugRequst
+              isOpen={derugRequestVisible}
+              setIsOpen={(val) => setDerugRequestVisible(val)}
+              derugRequests={derugRequests}
+              setDerugRequest={setDerugRequests}
+            />
+          )}
           <Box className="sticky top-0 grid">
             <HeaderTabs
               setSelectedInfo={setSelectedInfo}
@@ -246,20 +269,28 @@ export const Collections: FC = () => {
         <>
           {(collectionDerug.status === DerugStatus.Initialized ||
             collectionDerug.status === DerugStatus.Voting) &&
-          showDerugRequests ? (
+          showDerugRequests &&
+          !hasWinning ? (
             <DerugRequest />
           ) : (
             <>
-              {collectionDerug &&
-                collectionDerug.addedRequests.find((ar) => ar.winning) &&
+              {remintConfig &&
+              dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) &&
+              candyMachine &&
+              candyMachine.itemsLoaded.toNumber() > 0 ? (
+                <PublicMint />
+              ) : (
+                collectionDerug &&
+                (hasWinning ||
+                  collectionDerug.addedRequests.find((ar) => ar.winning)) &&
                 derugRequests && (
                   <Remint getWinningRequest={getWinningRequest} />
-                )}
+                )
+              )}
             </>
           )}
         </>
       ) : (
-        // <PublicMint />
         <NoDerugRequests openDerugModal={setDerugRequestVisible} />
       )}
     </CollectionContext.Provider>

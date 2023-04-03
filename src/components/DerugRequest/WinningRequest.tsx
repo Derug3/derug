@@ -1,20 +1,30 @@
 import { Box, Button, ProgressBar, Text, Tooltip } from "@primer/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import React, { FC, useContext, useMemo } from "react";
+import React, { FC, useContext, useMemo, useState } from "react";
 import { IRequest } from "../../interface/collections.interface";
-import { claimVictory } from "../../solana/methods/remint";
+import { claimVictory, getCandyMachine } from "../../solana/methods/remint";
 import { CollectionContext } from "../../stores/collectionContext";
 import { toast } from "react-hot-toast";
 import { getCollectionDerugData } from "../../solana/methods/derug";
 import { DerugStatus } from "../../enums/collections.enums";
 import { getTrimmedPublicKey } from "../../solana/helpers";
+import dayjs from "dayjs";
+import {
+  initCandyMachine,
+  storeCandyMachineItems,
+} from "../../solana/methods/public-mint";
+import { Oval } from "react-loader-spinner";
 const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
   const {
     collectionDerug,
     setCollectionDerug,
     remintConfig,
     chainCollectionData,
+    candyMachine,
+    setCandyMachine,
   } = useContext(CollectionContext);
+
+  const [loading, toggleLoading] = useState(false);
 
   const wallet = useWallet();
 
@@ -51,18 +61,11 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
 
   const claimDerugVictory = async () => {
     try {
-      if (
-        wallet &&
-        collectionDerug &&
-        request &&
-        chainCollectionData &&
-        remintConfig
-      ) {
+      if (wallet && collectionDerug && request && chainCollectionData) {
         await claimVictory(
           wallet!,
           collectionDerug,
           chainCollectionData,
-          remintConfig,
           request
         );
         const updatedDerug = await getCollectionDerugData(
@@ -71,7 +74,26 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
         setCollectionDerug(updatedDerug);
       }
     } catch (error: any) {
+      console.log(error);
+
       toast.error(error.message);
+    }
+  };
+
+  const initPublicMinting = async () => {
+    try {
+      toggleLoading(true);
+      if (collectionDerug && wallet && remintConfig) {
+        if (!candyMachine) await initCandyMachine(collectionDerug, wallet);
+        await storeCandyMachineItems(remintConfig, wallet, collectionDerug);
+        setCandyMachine(await getCandyMachine(remintConfig.candyMachine));
+      }
+      toast.success("Public minting successfully initialized");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to initialize public minting");
+    } finally {
+      toggleLoading(false);
     }
   };
 
@@ -110,7 +132,8 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
         <Box className="flex flex-col gap-5 items-center w-full">
           <Box className="flex font-mono flex-row items-center justify-between w-full gap-4 ">
             {collectionDerug &&
-              collectionDerug.status !== DerugStatus.Reminting && (
+              collectionDerug.status !== DerugStatus.Reminting &&
+              wallet.publicKey?.toString() === request.derugger.toString() && (
                 <Button
                   className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 "
                   sx={{
@@ -124,33 +147,56 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
                   <span className="text-xl lowercase">Claim victory</span>
                 </Button>
               )}
-            <div className="flex items-center gap-5">
-              <ProgressBar
-                progress={
-                  (request.voteCount / (collectionDerug?.totalSupply ?? 1)) *
-                  100
-                }
-                bg="#2DD4BF"
-                sx={{
-                  width: "380px",
-                  height: "30px",
-                  borderRadius: 0,
-                  color: "rgb(45, 212, 191)",
-                  "@media (max-width: 768px)": {
-                    width: "200px",
-                  },
-                }}
-              />
+            <div className="flex w-full justify-between">
+              <div className="flex items-center gap-5">
+                <ProgressBar
+                  progress={
+                    (request.voteCount / (collectionDerug?.totalSupply ?? 1)) *
+                    100
+                  }
+                  bg="#2DD4BF"
+                  sx={{
+                    width: "380px",
+                    height: "30px",
+                    borderRadius: 0,
+                    color: "rgb(45, 212, 191)",
+                    "@media (max-width: 768px)": {
+                      width: "200px",
+                    },
+                  }}
+                />
 
-              <Text
-                className="text-white font-mono flex"
-                color={"rgb(9, 194, 246)"}
-                sx={{
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {request.voteCount} / {collectionDerug?.totalSupply}
-              </Text>
+                <Text
+                  className="text-white font-mono flex"
+                  color={"rgb(9, 194, 246)"}
+                  sx={{
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {request.voteCount} / {collectionDerug?.totalSupply}
+                </Text>
+              </div>
+              {remintConfig &&
+                dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) &&
+                wallet.publicKey?.toString() ===
+                  request.derugger.toString() && (
+                  <Button
+                    className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 p-1 "
+                    sx={{
+                      color: "white",
+                      borderRadius: 0,
+                    }}
+                    onClick={initPublicMinting}
+                  >
+                    {!loading ? (
+                      <span className="text-xl lowercase">
+                        Initialize public mint
+                      </span>
+                    ) : (
+                      <Oval color="rgb(9, 194, 246)" height={"3em"} />
+                    )}
+                  </Button>
+                )}
             </div>
           </Box>
         </Box>

@@ -11,23 +11,17 @@ const CreatorsArray: FC<{
   const handleItemsAddressChange = (value: string, index: number) => {
     if (!creators) return;
     const updatedTodo = { ...creators[index], address: value };
-    const newItems = [
-      ...creators.slice(0, index),
-      updatedTodo,
-      ...creators.slice(index + 1),
-    ];
-    setCreators(newItems);
+    const storedCreators = [...creators];
+    storedCreators[index] = { ...updatedTodo };
+    setCreators(storedCreators);
   };
 
   const handleItemsPercentageChange = (value: string, index: number) => {
     if (!creators) return;
-    const updatedTodo = { ...creators[index], percentage: value };
-    const newItems = [
-      ...creators.slice(0, index),
-      updatedTodo,
-      ...creators.slice(index + 1),
-    ];
-    setCreators(newItems);
+    const updatedTodo = { ...creators[index], share: +value };
+    const storedCreators = [...creators];
+    storedCreators[index] = { ...updatedTodo };
+    setCreators(storedCreators);
   };
 
   const removeItems = (index: number) => {
@@ -55,7 +49,7 @@ const CreatorsArray: FC<{
               />
               <TextInput
                 placeholder="Percentage"
-                value={creator.percentage}
+                value={creator.share}
                 sx={{ width: "30%", borderRadius: 0 }}
                 onChange={(e) =>
                   handleItemsPercentageChange(e.target.value, index)

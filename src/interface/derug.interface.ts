@@ -51,7 +51,7 @@ export interface IRemintConfig {
   collection: PublicKey;
   candyMachineCreator: PublicKey;
   authority: PublicKey;
-  privateMintEnd?: number;
+  privateMintEnd?: Date;
   mintCurrency?: PublicKey;
   candyMachine: PublicKey;
   sellerFeeBps: number;

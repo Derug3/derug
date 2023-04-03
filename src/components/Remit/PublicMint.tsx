@@ -4,20 +4,26 @@ import { PublicKey } from "@solana/web3.js";
 import { useContext, useEffect, useMemo, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import solanaLogo from "../../assets/solanaLogo.jpeg";
-import {
-  getNftsFromDeruggedCollection,
-  getQuestionMarkPattern,
-} from "../../common/helpers";
+import { getNftsFromDeruggedCollection } from "../../common/helpers";
 import { CollectionContext } from "../../stores/collectionContext";
-import Flip from "react-reveal/Flip";
 import { generateSkeletonArrays } from "../../utilities/nft-fetching";
 import { NftWithToken } from "@metaplex-foundation/js";
-import { mintNftFromCandyMachine } from "../../solana/methods/public-mint";
+import {
+  mintNftFromCandyMachine,
+  upCm,
+} from "../../solana/methods/public-mint";
 import toast from "react-hot-toast";
+import { getCandyMachine } from "../../solana/methods/remint";
+import { Oval } from "react-loader-spinner";
 
 const PublicMint = () => {
-  const { collection, remintConfig, collectionDerug, activeListings } =
-    useContext(CollectionContext);
+  const {
+    collection,
+    remintConfig,
+    collectionDerug,
+    candyMachine,
+    setCandyMachine,
+  } = useContext(CollectionContext);
   const [loading, toggleLoading] = useState(false);
   const [isMinting, toggleIsMinting] = useState(false);
   const [hasMinted, setHasMinted] = useState(false);
@@ -28,6 +34,8 @@ const PublicMint = () => {
   const [mintedNft, setMintedNft] = useState<NftWithToken>();
 
   const [nftImage, setNftImage] = useState<string>();
+
+  console.log(candyMachine);
 
   useEffect(() => {
     if (!nfts) void getNfts();
@@ -67,11 +75,23 @@ const PublicMint = () => {
       if (wallet && remintConfig) {
         const minted = await mintNftFromCandyMachine(remintConfig, wallet);
         if (!minted) throw new Error();
-        setNftImage((await (await fetch(minted?.uri!)).json()).image);
+        const nftImg = (await (await fetch(minted?.uri!)).json()).image;
+
+        setNftImage(nftImg);
+
+        setCandyMachine(await getCandyMachine(remintConfig.candyMachine));
         toast.success(`Successfully minted ${minted.name}`);
+        setNfts((prevValue) => [
+          ...prevValue,
+          { name: minted.name, image: nftImg },
+        ]);
       }
     } catch (error) {
+      console.log(error);
+
       toast.error("Failed to mint");
+    } finally {
+      toggleIsMinting(false);
     }
   };
 
@@ -119,31 +139,29 @@ const PublicMint = () => {
   //   );
   // }, []);
 
-  const renderNftPlaceholders = useMemo(() => {
-    return (
-      <div className="relative grid grid-cols-3 gap-1" style={{ width: "40%" }}>
-        {activeListings
-          ?.reverse()
-          .slice(0, 9)
-          .map((al) => {
-            return (
-              <Flip left opposite when={!hasMinted}>
-                <img
-                  src={al.imageUrl}
-                  alt="nftImg"
-                  className="rounded-md opacity-50 z-10"
-                />
-              </Flip>
-            );
-          })}
+  // const renderNftPlaceholders = useMemo(() => {
+  //   return (
+  //     <div className="grid grid-cols-3 gap-1" style={{ width: "40%" }}>
+  //       {activeListings
+  //         ?.reverse()
+  //         .slice(0, 9)
+  //         .map((al) => {
+  //           return (
+  //             <img
+  //               src={al.imageUrl}
+  //               alt="nftImg"
+  //               className="rounded-md opacity-50 z-10"
+  //             />
+  //           );
+  //         })}
 
-        <img
-          src={nftImage ?? collection?.image}
-          className="z-0 absolute top-0 left-0 rounded-md"
-        />
-      </div>
-    );
-  }, [activeListings, mintedNft, hasMinted, nftImage, collection]);
+  //       <img
+  //         src={nftImage ?? collection?.image}
+  //         className="z-0 absolute top-0 left-0 rounded-md"
+  //       />
+  //     </div>
+  //   );
+  // }, [activeListings, mintedNft, hasMinted, nftImage, collection]);
 
   return (
     <Box className="w-11/12 m-auto grid grid-cols-3 gap-10 my-10">
@@ -164,9 +182,14 @@ const PublicMint = () => {
             : renderNfts}
         </Box>
       </Box>
-      <Box className="relative flex flex-col gap-10 items-center">
+      <Box className="flex flex-col gap-10 items-center">
         {collection ? (
-          <> {renderNftPlaceholders}</>
+          <img
+            style={{ width: "15em" }}
+            className="rounded-md"
+            src={nftImage ?? collection.image}
+            alt=""
+          />
         ) : (
           <Skeleton
             height={128}
@@ -180,10 +203,15 @@ const PublicMint = () => {
         )}
         <button
           className="w-40  border-[1px] border-main-blue text-main-blue py-1 
+          flex flex-row items-center justify-center
           hover:bg-main-blue hover:text-black font-bold hover:border-black hover:border-[1px]"
           onClick={mintNfts}
         >
-          Mint
+          {isMinting ? (
+            <Oval color="rgb(9, 194, 246)" height={"2em"} />
+          ) : (
+            <span>Mint</span>
+          )}
         </button>
       </Box>
       <Box className="flex flex-col items-start gap-3 ">
@@ -211,34 +239,46 @@ const PublicMint = () => {
             </p>
           </Box>
         </Box>
-        <Box className="flex flex-col gap-3 items-start">
-          <p className="text-bold text-main-blue text-md">Public Mint</p>
-          <Box className="flex gap-5 items-center">
-            <ProgressBar
-              width={"100%"}
-              progress={45}
-              bg="rgb(9, 194, 246)"
-              sx={{
-                width: "380px",
-                height: "8px",
-                borderRadius: 0,
-                color: "rgb(45, 212, 191)",
-                "@media (max-width: 768px)": {
-                  width: "200px",
-                },
-              }}
-            />
-            <p>
-              {collectionDerug?.totalReminted ?? 200}/
-              {collectionDerug?.totalSupply ?? 400}
-            </p>
+        {candyMachine && (
+          <Box className="flex flex-col gap-3 items-start">
+            <p className="text-bold text-main-blue text-md">Public Mint</p>
+            <Box className="flex gap-5 items-center">
+              <ProgressBar
+                width={"100%"}
+                progress={
+                  (candyMachine.itemsMinted.toNumber() +
+                    collectionDerug?.totalReminted! /
+                      collectionDerug?.totalSupply!) *
+                  100
+                }
+                bg="rgb(9, 194, 246)"
+                sx={{
+                  width: "380px",
+                  height: "8px",
+                  borderRadius: 0,
+                  color: "rgb(45, 212, 191)",
+                  "@media (max-width: 768px)": {
+                    width: "200px",
+                  },
+                }}
+              />
+              <p>
+                {candyMachine.itemsMinted.toNumber()}/
+                {collectionDerug?.totalSupply ?? 400}
+              </p>
+            </Box>
           </Box>
-        </Box>
+        )}
         <Box className="w-full flex">
           <Box className="flex gap-5 items-center">
-            <p className="text-main-blue font-bold text-lg">
-              MINT PRICE : {1.5} {getMintCurrencyData?.currency}
-            </p>
+            {candyMachine && (
+              <p className="text-main-blue font-bold text-lg">
+                MINT PRICE :{" "}
+                {candyMachine?.price.basisPoints.toNumber() /
+                  Math.pow(10, candyMachine?.price.currency.decimals)}{" "}
+                {getMintCurrencyData?.currency}
+              </p>
+            )}
           </Box>
         </Box>
       </Box>

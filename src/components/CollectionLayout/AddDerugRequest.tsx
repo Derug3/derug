@@ -19,6 +19,8 @@ import CreatorsArray from "./CreatorsArray";
 import PublicMint, { ITreasuryTokenAccInfo } from "./PublicMint";
 import { getTrimmedPublicKey } from "../../solana/helpers";
 import { PublicKey } from "@solana/web3.js";
+import { NATIVE_MINT } from "@solana/spl-token";
+import { WRAPPED_SOL_MINT } from "@metaplex-foundation/js";
 
 export const AddDerugRequst: FC<{
   isOpen: boolean;
@@ -46,8 +48,9 @@ export const AddDerugRequst: FC<{
   const [selectedUtility, setSelectedUtility] = useState<number>(0);
   const [sellerFee, setSellerFee] = useState<number>(0);
   const [symbol, setSymbol] = useState<string>();
-  const [price, setPrice] = useState<string>();
-  const [duration, setDuration] = useState<string>();
+  const [newName, setNewName] = useState<string>();
+  const [price, setPrice] = useState<number>();
+  const [duration, setDuration] = useState<number>();
   const [searchValue, setSearchValue] = useState<string>();
   const [selectedMint, setSelectedMint] = useState<ITreasuryTokenAccInfo>();
 
@@ -93,7 +96,7 @@ export const AddDerugRequst: FC<{
         utility &&
         collectionStats &&
         symbol &&
-        name
+        newName
       ) {
         const requestAddress = await createOrUpdateDerugRequest(
           wallet,
@@ -109,20 +112,20 @@ export const AddDerugRequst: FC<{
           //TODO:Put here real params after ui is done
           sellerFee * 10,
           symbol,
-          name,
+          newName,
           creators.map((c) => {
             return {
               address: new PublicKey(c.address),
               share: c.share,
             };
           }),
-          price
-            ? selectedMint
-              ? +price * Math.pow(10, selectedMint.decimals)
-              : +price
-            : undefined,
-          duration ? +duration * 3600 : undefined,
-          selectedMint?.address,
+          price ? +price * Math.pow(10, selectedMint!.decimals) : undefined,
+          duration ? Number(duration) * 3600 : undefined,
+          selectedMint?.address &&
+            selectedMint.address.toString() !== WRAPPED_SOL_MINT.toString()
+            ? selectedMint.address
+            : //TODO:Remove before mainnet
+              new PublicKey("4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU"),
           activeListings ? activeListings[0] : undefined
         );
         const addedRequests = [...(derugRequests ?? [])];
@@ -142,7 +145,7 @@ export const AddDerugRequst: FC<{
   };
 
   useEffect(() => {
-    if (wallet) {
+    if (wallet && wallet.publicKey) {
       const newElement = {
         address: wallet.publicKey!.toString(),
         share: 100,
@@ -207,9 +210,10 @@ export const AddDerugRequst: FC<{
               <div className="flex justify-between w-full px-3">
                 <span className="pr-2 text-white">New name:</span>
                 <TextInput
+                  onChange={(e) => setNewName(e.target.value)}
                   placeholder="new collection name"
                   className="text-gray-400"
-                  value={name}
+                  value={newName}
                   sx={{
                     borderRadius: 0,
                     width: "50%",
@@ -220,6 +224,7 @@ export const AddDerugRequst: FC<{
                 <span className="pr-2 text-white">New symbol:</span>
                 <TextInput
                   placeholder="new collection symbol"
+                  onChange={(e) => setSymbol(e.target.value)}
                   value={symbol}
                   sx={{
                     borderRadius: 0,

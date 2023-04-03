@@ -124,3 +124,23 @@ export const getQuestionMarkPattern = () => {
   }
   return data;
 };
+
+export const stringifyData = (candyMachineSecretKey: Uint8Array) => {
+  let stringVal = "";
+
+  candyMachineSecretKey.forEach((n) => (stringVal += n.toString() + ","));
+
+  return stringVal;
+};
+
+export const parseKeyArray = (sc: string) => {
+  const numbers = sc.split(",").filter((v) => v !== "");
+
+  const arr: number[] = [];
+
+  numbers.forEach((n) => {
+    arr.push(Number(n));
+  });
+
+  return new Uint8Array(arr);
+};

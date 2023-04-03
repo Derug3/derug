@@ -28,12 +28,17 @@ import {
   candyMachineProgramId,
   derugProgramFactory,
   feeWallet,
+  metaplex,
 } from "../utilities";
 import {
   AccountLayout,
+  createAssociatedTokenAccountInstruction,
+  getAssociatedTokenAddress,
+  getAssociatedTokenAddressSync,
   getMinimumBalanceForRentExemptAccount,
   getMinimumBalanceForRentExemptMint,
   MintLayout,
+  TOKEN_2022_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 import {
@@ -44,12 +49,16 @@ import {
 import { saveCandyMachineData, storeAllNfts } from "../../api/public-mint.api";
 import { candyMachineProgram } from "@metaplex-foundation/js";
 import toast from "react-hot-toast";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import { stringifyData } from "../../common/helpers";
+
+dayjs.extend(utc);
 
 export const claimVictory = async (
   wallet: WalletContextState,
   derug: ICollectionDerugData,
   chainCollectionData: IChainCollectionData,
-  remintConfig: IRemintConfig,
   request: IRequest
 ) => {
   const derugProgram = derugProgramFactory();
@@ -60,13 +69,15 @@ export const claimVictory = async (
   if (request.publicMint) {
     try {
       const candyMachine = Keypair.generate();
+
       await saveCandyMachineData({
         candyMachineKey: candyMachine.publicKey.toString(),
-        candyMachineSecretKey: JSON.stringify(candyMachine.secretKey),
+        candyMachineSecretKey: stringifyData(candyMachine.secretKey),
         derugData: derug.address.toString(),
       });
-      await storeAllNfts(
-        chainCollectionData.rugUpdateAuthority.toString(),
+      storeAllNfts(
+        "FqBWf1J3KzhqKMnwEobocVmzysVbgxEwgUvTPEiY2ahP",
+        // chainCollectionData.rugUpdateAuthority.toString(),
         derug.address.toString()
       );
       remainingAccounts.push({
@@ -83,14 +94,39 @@ export const claimVictory = async (
         isWritable: false,
         pubkey: candyMachineCreator,
       });
-      if (remintConfig.mintCurrency) {
-        remainingAccounts.push({
-          isSigner: false,
-          isWritable: false,
-          pubkey: remintConfig.mintCurrency,
-        });
+
+      if (request.mintCurrency) {
+        const tokenAcc = getAssociatedTokenAddressSync(
+          request.mintCurrency,
+          wallet.publicKey!
+        );
+        const accInfo = await RPC_CONNECTION.getAccountInfo(tokenAcc);
+
+        if (accInfo) {
+          remainingAccounts.push({
+            isSigner: false,
+            isWritable: true,
+            pubkey: tokenAcc,
+          });
+        } else {
+          const ix = createAssociatedTokenAccountInstruction(
+            wallet.publicKey!,
+            tokenAcc,
+            TOKEN_PROGRAM_ID,
+            request.mintCurrency
+          );
+
+          instructions.push({
+            instructions: [ix],
+            pendingDescription:
+              "Creating token account for accepting public mint royalites",
+            successDescription: "Successfully created token account",
+          });
+        }
       }
     } catch (error: any) {
+      console.log(error);
+
       toast.error(
         "Failed to get all necessary data for Candy Machine:",
         error.message
@@ -99,13 +135,18 @@ export const claimVictory = async (
     }
   }
 
+  const [remintConfigAddress] = PublicKey.findProgramAddressSync(
+    [remintConfigSeed, derug.address.toBuffer()],
+    derugProgram.programId
+  );
+
   const claimVictoryIx = await derugProgram.methods
     .claimVictory()
     .accounts({
       derugData: derug.address,
       derugRequest: request.address,
       payer: wallet.publicKey!,
-      remintConfig: remintConfig.address,
+      remintConfig: remintConfigAddress,
       feeWallet: feeWallet,
       systemProgram: SystemProgram.programId,
     })
@@ -173,7 +214,7 @@ export const claimVictory = async (
       derugRequest: request.address,
       payer: wallet.publicKey!,
       pdaAuthority,
-      remintConfig: remintConfig.address,
+      remintConfig: remintConfigAddress,
       feeWallet: feeWallet,
       collectionAuthorityRecord: collectionAuthority,
       newCollection: collection.publicKey,
@@ -394,14 +435,28 @@ export async function getRemintConfig(
       candyMachineCreator: remintConfigAccount.candyMachineCreator,
       collection: remintConfigAccount.collection,
       mintCurrency: remintConfigAccount.mintCurrency ?? undefined,
-      mintPrice: remintConfigAccount.mintPrice?.toNumber(),
+      mintPrice: remintConfigAccount.publicMintPrice?.toNumber(),
       derugRequest: remintConfigAccount.derugRequest,
       newName: remintConfigAccount.newName,
       newSymbol: remintConfigAccount.newSymbol,
       sellerFeeBps: remintConfigAccount.sellerFeeBps,
-      privateMintEnd: remintConfigAccount.privateMintEnd?.toNumber(),
+      privateMintEnd: remintConfigAccount.privateMintEnd
+        ? dayjs.unix(remintConfigAccount.privateMintEnd?.toNumber()).toDate()
+        : undefined,
     };
   } catch (error) {
     return undefined;
   }
 }
+
+export const getCandyMachine = async (candyMachineKey: PublicKey) => {
+  try {
+    const candyMachine = await metaplex.candyMachinesV2().findByAddress({
+      address: candyMachineKey,
+    });
+
+    return candyMachine;
+  } catch (error) {
+    return undefined;
+  }
+};

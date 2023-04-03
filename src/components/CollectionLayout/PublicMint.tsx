@@ -27,10 +27,10 @@ export interface ITreasuryTokenAccInfo {
 }
 
 const PublicMint: FC<{
-  price?: string;
-  setPrice?: (price: string) => void;
-  duration?: string;
-  setDuration?: (price: string) => void;
+  price?: number;
+  setPrice?: (price: number) => void;
+  duration?: number;
+  setDuration?: (price: number) => void;
   handleMintChange: (mint: ITreasuryTokenAccInfo) => void;
 }> = ({ price, duration, setPrice, setDuration, handleMintChange }) => {
   const [isPublicMint, setIsPublicMint] = useState<boolean>(false);
@@ -189,13 +189,15 @@ const PublicMint: FC<{
             </Box>
             <Box className="flex flex-row items-start text-start">
               <TextInput
+                type={"number"}
                 placeholder="price"
                 value={price}
+                min="0.000000001"
                 accept="number"
                 className="w-32"
                 sx={{ borderRadius: 0 }}
                 onChange={(e) => {
-                  setPrice && setPrice(e.target.value);
+                  setPrice && setPrice(+e.target.value);
                 }}
               />
               {renderSelect}
@@ -221,11 +223,12 @@ const PublicMint: FC<{
           </div>
           <div className="flex justify-end items-center gap-3 w-64">
             <TextInput
+              type={"number"}
               placeholder="duration"
               value={duration}
               sx={{ borderRadius: 0, width: "100%" }}
               onChange={(e) => {
-                setDuration && setDuration(e.target.value);
+                setDuration && setDuration(+e.target.value);
               }}
             />
             <Text fontSize={1} color="white">
