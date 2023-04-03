@@ -76,7 +76,7 @@ export const claimVictory = async (
         derugData: derug.address.toString(),
       });
       storeAllNfts(
-        "FqBWf1J3KzhqKMnwEobocVmzysVbgxEwgUvTPEiY2ahP",
+        "6x1bmYkoPFs2oWjoRg7v4NAW4pzjxid2DVooyJmC4emH",
         // chainCollectionData.rugUpdateAuthority.toString(),
         derug.address.toString()
       );
@@ -251,7 +251,6 @@ export const remintNft = async (
     [remintConfigSeed, derugData.address.toBuffer()],
     derugProgram.programId
   );
-
   for (const nft of nfts) {
     const tokenAccount = Keypair.generate();
     const mint = Keypair.generate();

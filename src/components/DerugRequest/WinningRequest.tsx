@@ -84,6 +84,7 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
     try {
       toggleLoading(true);
       if (collectionDerug && wallet && remintConfig) {
+        debugger;
         if (!candyMachine) await initCandyMachine(collectionDerug, wallet);
         await storeCandyMachineItems(remintConfig, wallet, collectionDerug);
         setCandyMachine(await getCandyMachine(remintConfig.candyMachine));

@@ -35,8 +35,6 @@ const PublicMint = () => {
 
   const [nftImage, setNftImage] = useState<string>();
 
-  console.log(candyMachine);
-
   useEffect(() => {
     if (!nfts) void getNfts();
   }, []);
@@ -74,6 +72,8 @@ const PublicMint = () => {
     try {
       if (wallet && remintConfig) {
         const minted = await mintNftFromCandyMachine(remintConfig, wallet);
+        console.log(minted);
+
         if (!minted) throw new Error();
         const nftImg = (await (await fetch(minted?.uri!)).json()).image;
 

@@ -39,6 +39,7 @@ import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { getCandyMachine, getRemintConfig } from "../solana/methods/remint";
 import PublicMint from "../components/Remit/PublicMint";
 import { CandyMachineV2 } from "@metaplex-foundation/js";
+import { storeAllNfts } from "../api/public-mint.api";
 export const Collections: FC = () => {
   dayjs.extend(utc);
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();

@@ -74,7 +74,7 @@ export const initCandyMachine = async (
         : sol(
             remintConfigAccount.publicMintPrice?.toNumber() / LAMPORTS_PER_SOL
           ),
-      itemsAvailable: toBigNumber(collectionDerug.totalSupply),
+      itemsAvailable: toBigNumber(45),
       sellerFeeBasisPoints: remintConfigAccount.sellerFeeBps,
       authority: remintConfigAccount.authority,
       // collection: remintConfigAccount.collection,
@@ -112,36 +112,35 @@ export const storeCandyMachineItems = async (
     ) {
       throw new Error("Derug request missmatch");
     }
-
+    debugger;
     const nonMintedNfts = await getNonMinted(derug.address.toString());
     const nonMinted = nonMintedNfts
       .filter((nm) => !nm.hasReminted)
       .slice(0, derug.totalSupply);
-
     if (nonMinted.length > 10) {
       toast.success(
         "You will have to sign multiple transactions as there are more than 50 NFTs"
       );
     }
 
+    metaplex.use(walletAdapterIdentity(wallet));
+
+    const chunkedNonMinted = chunk(nonMinted, 10);
     const candyMachineData = await getCandyMachine(derug.address.toString());
 
     const candyMachineAccount = await metaplex.candyMachinesV2().findByAddress({
       address: new PublicKey(candyMachineData.candyMachineKey),
     });
-    metaplex.use(walletAdapterIdentity(wallet));
-
-    // await metaplex.candyMachinesV2().update({
-    //   candyMachine: candyMachineAccount,
-
-    // });
-
-    const chunkedNonMinted = chunk(nonMinted, 10);
-
     for (const nonMintedChunk of chunkedNonMinted) {
+      const fileted = nonMintedChunk.filter((nm) => nm.uri !== "");
+
+      const cm = await metaplex
+        .candyMachinesV2()
+        .refresh(new PublicKey(candyMachineData.candyMachineKey));
+
       await metaplex.candyMachinesV2().insertItems({
-        candyMachine: candyMachineAccount,
-        items: nonMintedChunk.map((nm) => {
+        candyMachine: cm,
+        items: fileted.map((nm) => {
           return {
             uri: nm.uri,
             name: remintConfig.newName,
