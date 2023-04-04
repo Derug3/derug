@@ -4,9 +4,10 @@ import { PublicKey } from "@solana/web3.js";
 import dayjs from "dayjs";
 import toast from "react-hot-toast";
 import { ICollectionRecentActivities } from "../interface/collections.interface";
-import { metaplex } from "../solana/utilities";
+import { derugProgramFactory, metaplex } from "../solana/utilities";
 import { generateSkeletonArrays } from "../utilities/nft-fetching";
 import { RPC_CONNECTION } from "../utilities/utilities";
+import { ANCHOR_ERROR, ERROR_NUMBER } from "./constants";
 
 export const splitTimestamps = (
   recentCollections: ICollectionRecentActivities[]
@@ -143,4 +144,14 @@ export const parseKeyArray = (sc: string) => {
   });
 
   return new Uint8Array(arr);
+};
+
+export const parseTransactionError = (data: any) => {
+  const parsedData = JSON.parse(JSON.stringify(data));
+  const derugProgram = derugProgramFactory();
+  const log = parsedData.logs.find((log: string) => log.includes(ANCHOR_ERROR));
+  if (log) {
+    const slicedData = +log.split(ERROR_NUMBER)[1].split(".")[0].trim();
+    return derugProgram.idl.errors.find((err) => err.code === slicedData)?.msg;
+  }
 };

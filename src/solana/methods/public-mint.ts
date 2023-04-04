@@ -22,8 +22,7 @@ import { derugProgramFactory, metaplex } from "../utilities";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { chunk } from "lodash";
-import { RPC_CONNECTION } from "../../utilities/utilities";
-import { getNftName, parseKeyArray } from "../../common/helpers";
+import { parseKeyArray } from "../../common/helpers";
 
 dayjs.extend(utc);
 

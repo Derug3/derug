@@ -9,6 +9,8 @@ import { IDerugInstruction } from "../interface/derug.interface";
 import { toast } from "react-hot-toast";
 import nftStore from "../stores/nftStore";
 import { RemintingStatus } from "../enums/collections.enums";
+import { derugProgramFactory } from "./utilities";
+import { parseTransactionError } from "../common/helpers";
 export const sendTransaction = async (
   connection: Connection,
   instructions: IDerugInstruction[],
@@ -35,9 +37,10 @@ export const sendTransaction = async (
 
     const sigendTransactions = await wallet.signAllTransactions!(transactions);
 
+    const program = derugProgramFactory();
+
     for (const [index, tx] of sigendTransactions.entries()) {
       const txSim = await connection.simulateTransaction(tx);
-      console.log(txSim.value.logs);
 
       const savedNfts = [...nfts];
 
@@ -48,7 +51,7 @@ export const sendTransaction = async (
           }),
           {
             error: (data) => {
-              console.log(data);
+              console.log("ERRR:", JSON.parse(JSON.stringify(data)));
 
               if (instructions[index].remintingNft) {
                 savedNfts.push({
@@ -58,7 +61,9 @@ export const sendTransaction = async (
                 setNfts(savedNfts);
               }
 
-              return "Failed to send transaction";
+              return (
+                "Failed to send transaction:" + parseTransactionError(data)
+              );
             },
             loading: instructions[index].pendingDescription,
             success: (data) => {

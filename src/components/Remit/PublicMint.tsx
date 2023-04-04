@@ -23,6 +23,7 @@ const PublicMint = () => {
     collectionDerug,
     candyMachine,
     setCandyMachine,
+    setCollectionDerug,
   } = useContext(CollectionContext);
   const [loading, toggleLoading] = useState(false);
   const [isMinting, toggleIsMinting] = useState(false);
@@ -86,10 +87,8 @@ const PublicMint = () => {
           { name: minted.name, image: nftImg },
         ]);
       }
-    } catch (error) {
-      console.log(error);
-
-      toast.error("Failed to mint");
+    } catch (error: any) {
+      toast.error(`Failed to mint:${error.message}`);
     } finally {
       toggleIsMinting(false);
     }
