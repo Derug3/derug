@@ -1,3 +1,4 @@
+import { CandyMachineV2 } from "@metaplex-foundation/js";
 import React from "react";
 import {
   IChainCollectionData,
@@ -9,7 +10,7 @@ import {
   IRequest,
   ITrait,
 } from "../interface/collections.interface";
-import { IGraphData } from "../interface/derug.interface";
+import { IGraphData, IRemintConfig } from "../interface/derug.interface";
 
 export interface CollectionContext {
   loading: boolean;
@@ -22,6 +23,8 @@ export interface CollectionContext {
   collectionDerug: ICollectionDerugData | undefined;
   derugRequests: IRequest[] | undefined;
   graphData: IGraphData | undefined;
+  remintConfig: IRemintConfig | undefined;
+  candyMachine: CandyMachineV2 | undefined;
   toggleLoading(loading: boolean): void;
   setGraphData: (data: IGraphData) => void;
   setRequests: (requests: IRequest[]) => void;
@@ -32,6 +35,8 @@ export interface CollectionContext {
   setTraits: (traits: ITrait[]) => void;
   setActiveListings: (activeListings: INftListing[]) => void;
   setCollectionStats: (stats: ICollectionStats) => void;
+  setRemintConfig: (config: IRemintConfig) => void;
+  setCandyMachine: (candyMachine: CandyMachineV2 | undefined) => void;
 }
 
 export const CollectionContext = React.createContext({} as CollectionContext);

@@ -4,11 +4,12 @@ import {
   ICollectionStats,
 } from "../../interface/collections.interface";
 import HeadingItem from "./HeadingItem";
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import { DerugStatus } from "../../enums/collections.enums";
 import { useSearchParams } from "react-router-dom";
 import { WalletContextState } from "@solana/wallet-adapter-react";
 import dayjs from "dayjs";
+import { CollectionContext } from "../../stores/collectionContext";
 
 export const CollectionStats: FC<{
   collection?: ICollectionStats;
@@ -16,6 +17,13 @@ export const CollectionStats: FC<{
   openDerugModal: (value: boolean) => void;
   collectionDerug?: ICollectionDerugData;
 }> = ({ collection, collectionDerug }) => {
+  const { remintConfig } = useContext(CollectionContext);
+
+  const remintConfigTime =
+    remintConfig && dayjs(remintConfig.privateMintEnd).isAfter(dayjs())
+      ? remintConfig.privateMintEnd
+      : undefined;
+
   return (
     <Box className="flex flex-row items-start justify-between w-full px-10 mt-5">
       <Box className="flex flex-col gap-5 border-1 w-1/2">
@@ -40,8 +48,8 @@ export const CollectionStats: FC<{
         {collectionDerug && (
           <HeadingItem
             descColor="#2dd4bf"
-            title="REMAINING TIME"
-            date={collectionDerug.periodEnd}
+            title={remintConfigTime ? "PRIVATE MINT END" : "REMAINING TIME"}
+            date={remintConfigTime ?? collectionDerug.periodEnd}
             isCounter
             desc=""
           />

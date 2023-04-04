@@ -9,3 +9,6 @@ export const TENSOR = "/tensor";
 export const FLOOR_PRICE = "/fp";
 export const TRAITS = "/traits";
 export const ACTIVITIES = "/activities";
+export const PUBLIC_REMINT = "/public-remint";
+export const COLLECTION = "/collection";
+export const NON_MINTED = "/non-minted";
