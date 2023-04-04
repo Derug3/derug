@@ -16,7 +16,7 @@ export const ActiveListingItem: FC<{
 
   const navigate = useNavigate();
   return (
-    <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS} className="flex w-full">
+    <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS} className="flex">
       <Box className="flex flex-row items-start gap-5 p-2 bg-transparent">
         <img
           src={collectionData.image}

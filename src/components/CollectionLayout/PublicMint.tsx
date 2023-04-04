@@ -4,7 +4,7 @@ import { TokenListProvider } from "@solana/spl-token-registry";
 import { PublicKey } from "@solana/web3.js";
 import React, { FC, useEffect, useMemo, useState } from "react";
 import Select from "react-select";
-import { selectStyles } from "../../utilities/styles";
+import { selectStylesSM } from "../../utilities/styles";
 
 export const mint: PublicKey = new PublicKey(
   "UNQtEecZ5Zb4gSSVHCAWUQEoNnSVEbWiKCi1v9kdUJJ"
@@ -128,7 +128,7 @@ const PublicMint: FC<{
         isLoading={searchLoading}
         onInputChange={handleSearch}
         onChange={(e) => handleMintChange(e!)}
-        styles={selectStyles}
+        styles={selectStylesSM}
         options={availableTokensList}
         getOptionLabel={(option: ITreasuryTokenAccInfo) => option.name}
         getOptionValue={(option: ITreasuryTokenAccInfo) => option.symbol}
