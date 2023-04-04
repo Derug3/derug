@@ -42,42 +42,50 @@ export const sendTransaction = async (
       const savedNfts = [...nfts];
 
       try {
-        await toast.promise(
-          connection.sendRawTransaction(tx.serialize(), {
-            preflightCommitment: "confirmed",
-          }),
-          {
-            error: (data) => {
-              console.log(data);
+        await toast.promise(sendAndConfirmVersionedTx(tx, connection), {
+          error: (data) => {
+            console.log(data);
 
-              if (instructions[index].remintingNft) {
-                savedNfts.push({
-                  mint: instructions[index].remintingNft?.mint!,
-                  status: RemintingStatus.Failed,
-                });
-                setNfts(savedNfts);
-              }
+            if (instructions[index].remintingNft) {
+              savedNfts.push({
+                mint: instructions[index].remintingNft?.mint!,
+                status: RemintingStatus.Failed,
+              });
+              setNfts(savedNfts);
+            }
 
-              return "Failed to send transaction";
-            },
-            loading: instructions[index].pendingDescription,
-            success: (data) => {
-              if (instructions[index].remintingNft) {
-                savedNfts.push({
-                  mint: instructions[index].remintingNft?.mint!,
-                  status: RemintingStatus.Succeded,
-                });
-                setNfts(savedNfts);
-              }
+            return "Failed to send transaction";
+          },
+          loading: instructions[index].pendingDescription,
+          success: (data) => {
+            if (instructions[index].remintingNft) {
+              savedNfts.push({
+                mint: instructions[index].remintingNft?.mint!,
+                status: RemintingStatus.Succeded,
+              });
+              setNfts(savedNfts);
+            }
 
-              return instructions[index].successDescription;
-            },
-          }
-        );
+            return instructions[index].successDescription;
+          },
+        });
       } catch (error) {}
     }
   } catch (error: any) {
     toast.error("Failed to send transaction:", error.message);
     console.log(error);
   }
+};
+
+export const sendAndConfirmVersionedTx = async (
+  tx: VersionedTransaction,
+  connection: Connection
+) => {
+  const txSig = await connection.sendRawTransaction(tx.serialize(), {
+    preflightCommitment: "confirmed",
+  });
+
+  await connection.confirmTransaction(txSig);
+
+  return txSig;
 };

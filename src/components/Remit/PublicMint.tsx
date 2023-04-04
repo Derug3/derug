@@ -23,6 +23,7 @@ const PublicMint = () => {
     collectionDerug,
     candyMachine,
     setCandyMachine,
+    setCollectionDerug,
   } = useContext(CollectionContext);
   const [loading, toggleLoading] = useState(false);
   const [isMinting, toggleIsMinting] = useState(false);
