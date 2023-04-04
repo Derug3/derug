@@ -85,7 +85,8 @@ export const AddDerugRequst: FC<{
   };
 
   const handleSellerFeeChange = (points: number) => {
-    setSellerFee(points);
+    if (points > 100) setSellerFee(100) 
+    else setSellerFee(points);
   };
 
   const submitRequest = async () => {
@@ -238,6 +239,9 @@ export const AddDerugRequst: FC<{
                   <TextInput
                     placeholder="Fee"
                     value={sellerFee}
+                    type={"number"}
+                    accept="number"
+                    max="100"
                     sx={{ borderRadius: 0, width: "30%" }}
                     onChange={(e) =>
                       handleSellerFeeChange(Number(e.target.value))
