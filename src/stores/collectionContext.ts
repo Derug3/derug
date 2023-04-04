@@ -35,7 +35,7 @@ export interface CollectionContext {
   setTraits: (traits: ITrait[]) => void;
   setActiveListings: (activeListings: INftListing[]) => void;
   setCollectionStats: (stats: ICollectionStats) => void;
-  setRemintConfig: (config: IRemintConfig) => void;
+  setRemintConfig: (config: IRemintConfig | undefined) => void;
   setCandyMachine: (candyMachine: CandyMachineV2 | undefined) => void;
 }
 

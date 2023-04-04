@@ -2,7 +2,11 @@ import { Box, Button, ProgressBar, Text, Tooltip } from "@primer/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import React, { FC, useContext, useMemo, useState } from "react";
 import { IRequest } from "../../interface/collections.interface";
-import { claimVictory, getCandyMachine } from "../../solana/methods/remint";
+import {
+  claimVictory,
+  getCandyMachine,
+  getRemintConfig,
+} from "../../solana/methods/remint";
 import { CollectionContext } from "../../stores/collectionContext";
 import { toast } from "react-hot-toast";
 import { getCollectionDerugData } from "../../solana/methods/derug";
@@ -22,6 +26,7 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
     chainCollectionData,
     candyMachine,
     setCandyMachine,
+    setRemintConfig,
   } = useContext(CollectionContext);
 
   const [loading, toggleLoading] = useState(false);
@@ -72,6 +77,7 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
           collectionDerug.address
         );
         setCollectionDerug(updatedDerug);
+        setRemintConfig(await getRemintConfig(updatedDerug.address));
       }
     } catch (error: any) {
       console.log(error);
@@ -87,6 +93,9 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
         if (!candyMachine) await initCandyMachine(collectionDerug, wallet);
         await storeCandyMachineItems(remintConfig, wallet, collectionDerug);
         setCandyMachine(await getCandyMachine(remintConfig.candyMachine));
+        setCollectionDerug(
+          await getCollectionDerugData(collectionDerug.address)
+        );
       }
       toast.success("Public minting successfully initialized");
     } catch (error) {
