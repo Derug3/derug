@@ -78,3 +78,17 @@ export interface ICreator {
   address: PublicKey;
   share: number;
 }
+
+export interface Creator {
+  address: string;
+  share: number;
+}
+
+export type DerugForm = {
+  name: string;
+  fee: number;
+  symbol: string;
+  creatorsFees: number;
+  creatorsKey: string;
+  utilities: string;
+};

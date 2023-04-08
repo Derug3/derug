@@ -139,8 +139,6 @@ export const Collections: FC = () => {
     }
   };
 
-  console.log(collectionDerug?.collection.toString());
-
   const getWinningRequest = useMemo(() => {
     return derugRequests?.sort((a, b) => a.voteCount - b.voteCount)[
       derugRequests.length - 1

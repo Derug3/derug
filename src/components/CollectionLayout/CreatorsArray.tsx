@@ -42,7 +42,6 @@ const CreatorsArray: FC<{
                 placeholder="Address"
                 value={creator.address}
                 sx={{ width: "100%", borderRadius: 0 }}
-                disabled={index === 0}
                 onChange={(e) =>
                   handleItemsAddressChange(e.target.value, index)
                 }
@@ -56,6 +55,7 @@ const CreatorsArray: FC<{
                 }
               />
             </div>
+
             <Button
               variant="danger"
               sx={{ borderRadius: 0 }}
