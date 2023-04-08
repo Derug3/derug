@@ -51,8 +51,6 @@ export const sendTransaction = async (
           }),
           {
             error: (data) => {
-              console.log("ERRR:", JSON.parse(JSON.stringify(data)));
-
               if (instructions[index].remintingNft) {
                 savedNfts.push({
                   mint: instructions[index].remintingNft?.mint!,
