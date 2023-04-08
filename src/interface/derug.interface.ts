@@ -55,6 +55,14 @@ export interface IRemintConfig {
   mintCurrency?: PublicKey;
   candyMachine: PublicKey;
   sellerFeeBps: number;
+  splTokenData?: ISplTokenData;
+}
+
+export interface ISplTokenData {
+  name: string;
+  decimals: number;
+  symbol: string;
+  image: string;
 }
 
 export interface CandyMachineDto {

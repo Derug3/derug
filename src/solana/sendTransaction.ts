@@ -2,6 +2,7 @@ import { AnchorWallet, WalletContextState } from "@solana/wallet-adapter-react";
 import {
   Connection,
   Keypair,
+  Transaction,
   TransactionMessage,
   VersionedTransaction,
 } from "@solana/web3.js";
@@ -78,10 +79,14 @@ export const sendTransaction = async (
 
 export const sendVersionedTx = async (
   connection: Connection,
-  tx: VersionedTransaction
+  tx: VersionedTransaction | Transaction
 ) => {
-  const txSig = await connection.sendRawTransaction(tx.serialize(), {
-    preflightCommitment: "confirmed",
-  });
-  await connection.confirmTransaction(txSig);
+  try {
+    const txSig = await connection.sendRawTransaction(tx.serialize(), {
+      preflightCommitment: "confirmed",
+    });
+    await connection.confirmTransaction(txSig);
+  } catch (error) {
+    throw error;
+  }
 };

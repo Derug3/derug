@@ -1,12 +1,20 @@
 import {
+  IdentityClient,
+  RpcClient,
   sol,
   toBigNumber,
   toDateTime,
   token,
   walletAdapterIdentity,
+  WalletAdapterIdentityDriver,
 } from "@metaplex-foundation/js";
 import { AnchorWallet, WalletContextState } from "@solana/wallet-adapter-react";
-import { Keypair, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import {
+  Keypair,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  Transaction,
+} from "@solana/web3.js";
 import toast from "react-hot-toast";
 import { getCandyMachine, getNonMinted } from "../../api/public-mint.api";
 import {
@@ -25,7 +33,7 @@ import utc from "dayjs/plugin/utc";
 import { chunk } from "lodash";
 import { parseKeyArray, parseTransactionError } from "../../common/helpers";
 import { RPC_CONNECTION } from "../../utilities/utilities";
-import { sendTransaction } from "../sendTransaction";
+import { sendTransaction, sendVersionedTx } from "../sendTransaction";
 
 dayjs.extend(utc);
 
@@ -139,18 +147,33 @@ export const storeCandyMachineItems = async (
       address: new PublicKey(candyMachineData.candyMachineKey),
     });
 
-    const instructions: IDerugInstruction[] = [];
+    const transactions: Transaction[] = [];
+    metaplex.use(walletAdapterIdentity(wallet));
+
+    const tx = metaplex
+      .candyMachinesV2()
+      .builders()
+      .insertItems({
+        candyMachine: candyMachineAccount,
+        items: chunkedNonMinted[0].map((cm) => {
+          return {
+            name: cm.name,
+            uri: cm.uri,
+          };
+        }),
+      });
+
+    let totalSum = 0;
 
     for (const nonMintedChunk of chunkedNonMinted) {
-      const cm = await metaplex
-        .candyMachinesV2()
-        .refresh(new PublicKey(candyMachineData.candyMachineKey));
-
-      const tx = metaplex
+      const secondTx = metaplex
         .candyMachinesV2()
         .builders()
         .insertItems({
-          candyMachine: cm,
+          candyMachine: {
+            ...candyMachineAccount,
+            itemsLoaded: toBigNumber(totalSum),
+          },
           items: nonMintedChunk.map((nm) => {
             return {
               name: nm.name,
@@ -160,17 +183,30 @@ export const storeCandyMachineItems = async (
         })
         .toTransaction(await RPC_CONNECTION.getLatestBlockhash());
 
-      instructions.push({
-        instructions: tx.instructions,
-        pendingDescription: `Inserting batch of ${nonMintedChunk.length} NFTs`,
-        successDescription: "Successfully inserted items!",
-      });
+      totalSum += nonMintedChunk.length;
+
+      transactions.push(secondTx);
     }
 
-    await sendTransaction(RPC_CONNECTION, instructions, wallet);
-  } catch (error: any) {
-    console.log(error);
+    const idClient = new IdentityClient();
+    idClient.setDriver(new WalletAdapterIdentityDriver(wallet));
+    const rpcClient = new RpcClient(metaplex);
 
+    const signed = await idClient.signAllTransactions(transactions);
+
+    for (const sig of signed) {
+      toast.promise(sendVersionedTx(RPC_CONNECTION, sig), {
+        error: () => {
+          return "Failed to insert NFTs in candy machine";
+        },
+        loading: "Inserting batch of NFTs",
+        success: "NFTs succesfully inserted",
+      });
+      await rpcClient.sendAndConfirmTransaction(sig, {
+        commitment: "confirmed",
+      });
+    }
+  } catch (error: any) {
     throw error;
   }
 };
@@ -195,26 +231,4 @@ export const mintNftFromCandyMachine = async (
       parseTransactionError(JSON.parse(JSON.stringify(error)).cause)
     );
   }
-};
-
-export const upCm = async (
-  cmKey: PublicKey,
-  wallet: AnchorWallet,
-  request: IRequest
-) => {
-  const cm = await metaplex.candyMachinesV2().findByAddress({
-    address: cmKey,
-  });
-
-  metaplex.use(walletAdapterIdentity(wallet));
-  await metaplex.candyMachinesV2().update({
-    candyMachine: cm,
-    creators: request.creators.map((c) => {
-      return {
-        address: c.address,
-        share: c.share,
-        verified: true,
-      };
-    }),
-  });
 };

@@ -1,7 +1,10 @@
 import { Heading, Text } from "@primer/react";
 import dayjs from "dayjs";
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import Countdown from "react-countdown";
+import { getCollectionDerugData } from "../../solana/methods/derug";
+import { getAllDerugRequest } from "../../solana/methods/derug-request";
+import { CollectionContext } from "../../stores/collectionContext";
 const HeadingItem: FC<{
   title: string;
   amount?: number | string;
@@ -10,6 +13,16 @@ const HeadingItem: FC<{
   isCounter?: boolean;
   date?: Date;
 }> = ({ title, amount, desc, descColor, isCounter, date }) => {
+  const { collectionDerug, setCollectionDerug, setRequests } =
+    useContext(CollectionContext);
+
+  const refetchData = async () => {
+    if (collectionDerug) {
+      setCollectionDerug(await getCollectionDerugData(collectionDerug.address));
+      setRequests(await getAllDerugRequest(collectionDerug?.address));
+    }
+  };
+
   return (
     <Heading className="flex flex-row items-center justify-between w-full">
       <Text
@@ -48,6 +61,7 @@ const HeadingItem: FC<{
           }}
         >
           <Countdown
+            onComplete={refetchData}
             className="font-mono text-sm
    text-orange-800 p-2"
             date={date}

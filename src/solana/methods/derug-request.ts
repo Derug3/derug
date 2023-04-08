@@ -209,7 +209,6 @@ export const castDerugRequestVote = async (
 
   for (const derugNft of derugNfts) {
     const remainingAccounts: AccountMeta[] = [];
-    console.log(derugNft);
 
     const [voteRecordPda] = PublicKey.findProgramAddressSync(
       [derugDataSeed, derugNft.mint.toBuffer(), voteRecordSeed],

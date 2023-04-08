@@ -8,10 +8,7 @@ import { getNftsFromDeruggedCollection } from "../../common/helpers";
 import { CollectionContext } from "../../stores/collectionContext";
 import { generateSkeletonArrays } from "../../utilities/nft-fetching";
 import { NftWithToken } from "@metaplex-foundation/js";
-import {
-  mintNftFromCandyMachine,
-  upCm,
-} from "../../solana/methods/public-mint";
+import { mintNftFromCandyMachine } from "../../solana/methods/public-mint";
 import toast from "react-hot-toast";
 import { getCandyMachine } from "../../solana/methods/remint";
 import { Oval } from "react-loader-spinner";
@@ -44,11 +41,7 @@ const PublicMint = () => {
     try {
       if (wallet && remintConfig) {
         setNfts(
-          await getNftsFromDeruggedCollection(
-            wallet.publicKey,
-            //TODO:remove ?? before mainnet launch
-            remintConfig
-          )
+          await getNftsFromDeruggedCollection(wallet.publicKey, remintConfig)
         );
       }
     } catch (error) {
@@ -71,7 +64,6 @@ const PublicMint = () => {
     try {
       if (wallet && remintConfig) {
         const minted = await mintNftFromCandyMachine(remintConfig, wallet);
-        console.log(minted);
 
         if (!minted) throw new Error();
         const nftImg = (await (await fetch(minted?.uri!)).json()).image;
@@ -186,9 +178,8 @@ const PublicMint = () => {
               <ProgressBar
                 width={"100%"}
                 progress={
-                  (candyMachine.itemsMinted.toNumber() +
-                    collectionDerug?.totalReminted! /
-                      collectionDerug?.totalSupply!) *
+                  (candyMachine.itemsMinted.toNumber() /
+                    candyMachine.itemsAvailable.toNumber()!) *
                   100
                 }
                 bg="rgb(9, 194, 246)"
@@ -212,12 +203,23 @@ const PublicMint = () => {
         <Box className="w-full flex">
           <Box className="flex gap-5 items-center">
             {candyMachine && (
-              <p className="text-main-blue font-bold text-lg">
-                MINT PRICE :{" "}
-                {candyMachine?.price.basisPoints.toNumber() /
-                  Math.pow(10, candyMachine?.price.currency.decimals)}{" "}
-                {getMintCurrencyData?.currency}
-              </p>
+              <>
+                <p className="text-main-blue font-bold text-lg">
+                  MINT PRICE :{" "}
+                  {candyMachine?.price.basisPoints.toNumber() /
+                    Math.pow(10, candyMachine?.price.currency.decimals)}{" "}
+                  {remintConfig?.splTokenData?.symbol ??
+                    getMintCurrencyData?.currency}
+                </p>
+                <img
+                  className="rounded-[50px] w-6"
+                  src={
+                    remintConfig?.splTokenData?.image ??
+                    getMintCurrencyData?.logo
+                  }
+                  alt=""
+                />
+              </>
             )}
           </Box>
         </Box>

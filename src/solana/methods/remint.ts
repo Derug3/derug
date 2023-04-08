@@ -3,7 +3,6 @@ import {
   AccountMeta,
   ComputeBudgetProgram,
   Keypair,
-  LAMPORTS_PER_SOL,
   PublicKey,
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
@@ -38,6 +37,7 @@ import {
   getMinimumBalanceForRentExemptAccount,
   getMinimumBalanceForRentExemptMint,
   MintLayout,
+  NATIVE_MINT,
   TOKEN_2022_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
@@ -45,12 +45,13 @@ import {
   IDerugCollectionNft,
   IDerugInstruction,
   IRemintConfig,
+  ISplTokenData,
 } from "../../interface/derug.interface";
 import { saveCandyMachineData, storeAllNfts } from "../../api/public-mint.api";
-import { candyMachineProgram } from "@metaplex-foundation/js";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+
 import { stringifyData } from "../../common/helpers";
 
 dayjs.extend(utc);
@@ -427,6 +428,34 @@ export async function getRemintConfig(
       remintConfigAddress
     );
 
+    let splTokenData: ISplTokenData | undefined = undefined;
+
+    if (
+      remintConfigAccount.mintCurrency &&
+      remintConfigAccount.mintCurrency.toString() !== NATIVE_MINT.toString()
+    ) {
+      try {
+        const mintData = MintLayout.decode(
+          (
+            await RPC_CONNECTION.getAccountInfo(
+              remintConfigAccount.mintCurrency
+            )
+          )?.data!
+        );
+
+        //TODO: remove this before mainnet
+        splTokenData = {
+          decimals: mintData.decimals,
+          image:
+            "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU/logo.png",
+          name: "USDC",
+          symbol: "USDC",
+        };
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     return {
       address: remintConfigAddress,
       authority: remintConfigAccount.authority,
@@ -442,6 +471,7 @@ export async function getRemintConfig(
       privateMintEnd: remintConfigAccount.privateMintEnd
         ? dayjs.unix(remintConfigAccount.privateMintEnd?.toNumber()).toDate()
         : undefined,
+      splTokenData,
     };
   } catch (error) {
     return undefined;
