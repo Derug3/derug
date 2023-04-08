@@ -15,6 +15,7 @@ import {
 } from "../../interface/collections.interface";
 import {
   CandyMachineDto,
+  IDerugInstruction,
   IRemintConfig,
 } from "../../interface/derug.interface";
 import { remintConfigSeed } from "../seeds";
@@ -22,7 +23,9 @@ import { derugProgramFactory, metaplex } from "../utilities";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { chunk } from "lodash";
-import { parseKeyArray } from "../../common/helpers";
+import { parseKeyArray, parseTransactionError } from "../../common/helpers";
+import { RPC_CONNECTION } from "../../utilities/utilities";
+import { sendTransaction } from "../sendTransaction";
 
 dayjs.extend(utc);
 
@@ -58,17 +61,20 @@ export const initCandyMachine = async (
       parseKeyArray(candyMachineData.candyMachineSecretKey)
     );
 
-    if (
-      !remintConfigAccount.publicMintPrice ||
-      !remintConfigAccount.privateMintEnd
-    ) {
+    if (!remintConfigAccount.publicMintPrice) {
       toast.error("You did not select public mint!");
       return;
     }
 
-    const privateMintEnd = dayjs
-      .unix(remintConfigAccount.privateMintEnd.toNumber() / 1000)
-      .toDate();
+    let privateMintEnd;
+
+    if (!remintConfigAccount.privateMintEnd) {
+      privateMintEnd = new Date();
+    } else {
+      privateMintEnd = dayjs
+        .unix(remintConfigAccount.privateMintEnd.toNumber() / 1000)
+        .toDate();
+    }
 
     metaplex.use(walletAdapterIdentity(wallet));
     await metaplex.candyMachinesV2().create({
@@ -80,7 +86,6 @@ export const initCandyMachine = async (
       itemsAvailable: toBigNumber(nonMintedNfts.length),
       sellerFeeBasisPoints: remintConfigAccount.sellerFeeBps,
       authority: remintConfigAccount.authority,
-      // collection: remintConfigAccount.collection,
       candyMachine,
       tokenMint: remintConfigAccount.mintCurrency,
       maxEditionSupply: toBigNumber(0),
@@ -97,6 +102,7 @@ export const initCandyMachine = async (
       symbol: remintConfigAccount.newSymbol,
       wallet: remintConfigAccount.mintFeeTreasury ?? undefined,
     });
+    return candyMachine.publicKey;
   } catch (error: any) {
     console.log(error);
 
@@ -126,31 +132,42 @@ export const storeCandyMachineItems = async (
       );
     }
 
-    metaplex.use(walletAdapterIdentity(wallet));
-
     const chunkedNonMinted = chunk(nonMinted, 10);
     const candyMachineData = await getCandyMachine(derug.address.toString());
 
     const candyMachineAccount = await metaplex.candyMachinesV2().findByAddress({
       address: new PublicKey(candyMachineData.candyMachineKey),
     });
-    for (const nonMintedChunk of chunkedNonMinted) {
-      const fileted = nonMintedChunk.filter((nm) => nm.uri !== "");
 
+    const instructions: IDerugInstruction[] = [];
+
+    for (const nonMintedChunk of chunkedNonMinted) {
       const cm = await metaplex
         .candyMachinesV2()
         .refresh(new PublicKey(candyMachineData.candyMachineKey));
 
-      await metaplex.candyMachinesV2().insertItems({
-        candyMachine: cm,
-        items: fileted.map((nm) => {
-          return {
-            uri: nm.uri,
-            name: remintConfig.newName,
-          };
-        }),
+      const tx = metaplex
+        .candyMachinesV2()
+        .builders()
+        .insertItems({
+          candyMachine: cm,
+          items: nonMintedChunk.map((nm) => {
+            return {
+              name: nm.name,
+              uri: nm.uri,
+            };
+          }),
+        })
+        .toTransaction(await RPC_CONNECTION.getLatestBlockhash());
+
+      instructions.push({
+        instructions: tx.instructions,
+        pendingDescription: `Inserting batch of ${nonMintedChunk.length} NFTs`,
+        successDescription: "Successfully inserted items!",
       });
     }
+
+    await sendTransaction(RPC_CONNECTION, instructions, wallet);
   } catch (error: any) {
     console.log(error);
 
@@ -174,7 +191,9 @@ export const mintNftFromCandyMachine = async (
 
     return minted.nft;
   } catch (error: any) {
-    throw error;
+    throw new Error(
+      parseTransactionError(JSON.parse(JSON.stringify(error)).cause)
+    );
   }
 };
 

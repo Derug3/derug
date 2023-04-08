@@ -90,5 +90,4 @@ export type DerugForm = {
   symbol: string;
   creatorsFees: number;
   creatorsKey: string;
-  utilities: string;
 };

@@ -55,8 +55,6 @@ export const AddDerugRequst: FC<{
   const [searchValue, setSearchValue] = useState<string>();
   const [selectedMint, setSelectedMint] = useState<ITreasuryTokenAccInfo>();
 
-  const { name } = useDebounce(searchValue);
-
   const {
     chainCollectionData,
     activeListings,
@@ -91,14 +89,7 @@ export const AddDerugRequst: FC<{
 
   const submitRequest = async (data: any) => {
     try {
-      if (
-        wallet &&
-        chainCollectionData &&
-        utility &&
-        collectionStats &&
-        symbol &&
-        newName
-      ) {
+      if (wallet && chainCollectionData && utility && collectionStats && data) {
         const requestAddress = await createOrUpdateDerugRequest(
           wallet,
           utility.map((ut) => {
@@ -156,20 +147,6 @@ export const AddDerugRequst: FC<{
   }, [creators]);
 
   useEffect(() => {
-    if (
-      utility.find(
-        (ut, index) => index > 0 && (ut.description === "" || ut.title === "")
-      )
-    ) {
-      setError("utilities", {
-        message: "Utility title and description are required fields",
-      });
-    } else {
-      clearErrors("utilities");
-    }
-  }, [utility]);
-
-  useEffect(() => {
     if (wallet && wallet.publicKey) {
       const newElement = {
         address: wallet.publicKey!.toString(),
@@ -178,8 +155,6 @@ export const AddDerugRequst: FC<{
       setCreator([newElement]);
     }
   }, [wallet]);
-
-  console.log(errors);
 
   return (
     <motion.div
@@ -429,9 +404,6 @@ export const AddDerugRequst: FC<{
               >
                 Add utility
               </Button>
-              {errors.utilities && (
-                <p className="text-red-500">{errors.utilities.message}</p>
-              )}
             </Box>
             <Button
               size="large"

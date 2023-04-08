@@ -84,7 +84,14 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
     try {
       toggleLoading(true);
       if (collectionDerug && wallet && remintConfig) {
-        if (!candyMachine) await initCandyMachine(collectionDerug, wallet);
+        if (!candyMachine) {
+          const candyMachineAddress = await initCandyMachine(
+            collectionDerug,
+            wallet
+          );
+          if (candyMachineAddress)
+            setCandyMachine(await getCandyMachine(candyMachineAddress));
+        }
         await storeCandyMachineItems(remintConfig, wallet, collectionDerug);
         setCandyMachine(await getCandyMachine(remintConfig.candyMachine));
       }
@@ -177,7 +184,8 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
                 </Text>
               </div>
               {remintConfig &&
-                dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) &&
+                (dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) ||
+                  (remintConfig.mintPrice && !remintConfig.privateMintEnd)) &&
                 wallet.publicKey?.toString() ===
                   request.derugger.toString() && (
                   <Button

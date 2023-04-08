@@ -4,6 +4,7 @@ import { PublicKey } from "@solana/web3.js";
 import dayjs from "dayjs";
 import toast from "react-hot-toast";
 import { ICollectionRecentActivities } from "../interface/collections.interface";
+import { IRemintConfig } from "../interface/derug.interface";
 import { derugProgramFactory, metaplex } from "../solana/utilities";
 import { generateSkeletonArrays } from "../utilities/nft-fetching";
 import { RPC_CONNECTION } from "../utilities/utilities";
@@ -41,36 +42,29 @@ export const getNftName = (totalReminted: number) => {
 
 export const getNftsFromDeruggedCollection = async (
   owner: PublicKey,
-  deruggedCollection: PublicKey
+  remintConfig: IRemintConfig
 ) => {
   try {
-    const nfts = await RPC_CONNECTION.getParsedTokenAccountsByOwner(owner, {
-      programId: TOKEN_PROGRAM_ID,
-    });
     const collectionNfts: { image: string; name: string }[] = [];
 
-    for (const nft of nfts.value) {
+    const nftss = await metaplex.nfts().findAllByOwner({
+      owner: owner,
+    });
+
+    for (const nft of nftss) {
       try {
-        const metadata = await Metadata.fromAccountAddress(
-          RPC_CONNECTION,
-          metaplex
-            .nfts()
-            .pdas()
-            .metadata({
-              mint: new PublicKey(nft.account.data.parsed.info.mint),
-            })
-        );
         if (
-          metadata.collection &&
-          metadata.collection.key.toString() === deruggedCollection.toString()
+          nft.creators[0].address.toString() ===
+          remintConfig.candyMachineCreator.toString()
         ) {
           collectionNfts.push({
-            image: (await (await fetch(metadata.data.uri)).json()).image,
-            name: metadata.data.name,
+            name: nft.name,
+            image: (await (await fetch(nft.uri)).json()).image,
           });
         }
       } catch (error) {}
     }
+
     return collectionNfts;
   } catch (error: any) {
     console.log(error);
@@ -78,52 +72,6 @@ export const getNftsFromDeruggedCollection = async (
     toast.error("Failed to load minted NFTs:", error.message);
     return [];
   }
-};
-
-export const getQuestionMarkPattern = () => {
-  let data: boolean[][] = [];
-  for (let i = 0; i < 11; i++) {
-    const helperArr: boolean[] = [];
-    for (let j = 0; j < 7; j++) {
-      if (i == 0) {
-        if (j >= 2 && j <= 4) helperArr.push(true);
-        else helperArr.push(false);
-      }
-      if (i == 1) {
-        if (j >= 1 && j <= 5) helperArr.push(true);
-        else helperArr.push(false);
-      }
-      if (i == 2) {
-        if (j !== 3) helperArr.push(true);
-        else helperArr.push(false);
-      }
-      if (i == 3) {
-        if (j < 2 || j > 4) helperArr.push(true);
-        else helperArr.push(false);
-      }
-      if (i == 4) {
-        if (j == 5 || j == 6) helperArr.push(true);
-        else helperArr.push(false);
-      }
-      if (i == 5) {
-        if (j == 4 || j == 5) helperArr.push(true);
-        else helperArr.push(false);
-      }
-      if (i == 6) {
-        if (j >= 2 && j <= 5) helperArr.push(true);
-        else helperArr.push(false);
-      }
-      if (i == 7 || i == 9 || i == 10) {
-        if (j == 2 || j == 3) helperArr.push(true);
-        else helperArr.push(false);
-      }
-      if (i == 8) helperArr.push(false);
-    }
-    console.log(i, helperArr);
-
-    data.push(helperArr);
-  }
-  return data;
 };
 
 export const stringifyData = (candyMachineSecretKey: Uint8Array) => {
@@ -148,10 +96,25 @@ export const parseKeyArray = (sc: string) => {
 
 export const parseTransactionError = (data: any) => {
   const parsedData = JSON.parse(JSON.stringify(data));
+  console.log(parsedData);
   const derugProgram = derugProgramFactory();
+
+  if (
+    parsedData.logs.find(
+      (log: any) => log.includes("lamports") || log.includes("NotEnoughSOL")
+    )
+  ) {
+    return "Insufficient balance for transaction";
+  }
+
   const log = parsedData.logs.find((log: string) => log.includes(ANCHOR_ERROR));
+
   if (log) {
     const slicedData = +log.split(ERROR_NUMBER)[1].split(".")[0].trim();
-    return derugProgram.idl.errors.find((err) => err.code === slicedData)?.msg;
+    const err = derugProgram.idl.errors.find(
+      (err) => err.code === slicedData
+    )?.msg;
+
+    return err;
   }
 };

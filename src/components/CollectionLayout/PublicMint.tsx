@@ -175,7 +175,10 @@ const PublicMint: FC<{
             aria-labelledby="switchLabel"
             size="small"
             aria-describedby="switchCaption"
-            onChange={() => setIsPublicMint(!isPublicMint)}
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+            onChange={(e) => setIsPublicMint(!isPublicMint)}
           />
         </Box>
       </Box>
@@ -192,7 +195,6 @@ const PublicMint: FC<{
                 type={"number"}
                 placeholder="price"
                 value={price}
-                min="0.000000001"
                 accept="number"
                 className="w-32"
                 sx={{ borderRadius: 0 }}

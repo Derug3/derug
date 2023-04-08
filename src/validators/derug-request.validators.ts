@@ -11,6 +11,10 @@ export const validateCreators = (
     setError("creatorsFees", {
       message: "Creators fees in total cannot be greater than 100%",
     });
+  } else if (feeSum !== 100) {
+    setError("creatorsFees", {
+      message: "Creator fees must be 100 in total sum!",
+    });
   } else {
     clearErrors("creatorsFees");
   }

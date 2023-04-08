@@ -37,50 +37,51 @@ export const sendTransaction = async (
 
     const sigendTransactions = await wallet.signAllTransactions!(transactions);
 
-    const program = derugProgramFactory();
-
     for (const [index, tx] of sigendTransactions.entries()) {
       const txSim = await connection.simulateTransaction(tx);
 
       const savedNfts = [...nfts];
 
       try {
-        await toast.promise(
-          connection.sendRawTransaction(tx.serialize(), {
-            preflightCommitment: "confirmed",
-          }),
-          {
-            error: (data) => {
-              if (instructions[index].remintingNft) {
-                savedNfts.push({
-                  mint: instructions[index].remintingNft?.mint!,
-                  status: RemintingStatus.Failed,
-                });
-                setNfts(savedNfts);
-              }
+        await toast.promise(sendVersionedTx(connection, tx), {
+          error: (data) => {
+            if (instructions[index].remintingNft) {
+              savedNfts.push({
+                mint: instructions[index].remintingNft?.mint!,
+                status: RemintingStatus.Failed,
+              });
+              setNfts(savedNfts);
+            }
 
-              return (
-                "Failed to send transaction:" + parseTransactionError(data)
-              );
-            },
-            loading: instructions[index].pendingDescription,
-            success: (data) => {
-              if (instructions[index].remintingNft) {
-                savedNfts.push({
-                  mint: instructions[index].remintingNft?.mint!,
-                  status: RemintingStatus.Succeded,
-                });
-                setNfts(savedNfts);
-              }
+            return "Failed to send transaction:" + parseTransactionError(data);
+          },
+          loading: instructions[index].pendingDescription,
+          success: (data) => {
+            if (instructions[index].remintingNft) {
+              savedNfts.push({
+                mint: instructions[index].remintingNft?.mint!,
+                status: RemintingStatus.Succeded,
+              });
+              setNfts(savedNfts);
+            }
 
-              return instructions[index].successDescription;
-            },
-          }
-        );
+            return instructions[index].successDescription;
+          },
+        });
       } catch (error) {}
     }
   } catch (error: any) {
     toast.error("Failed to send transaction:", error.message);
     console.log(error);
   }
+};
+
+export const sendVersionedTx = async (
+  connection: Connection,
+  tx: VersionedTransaction
+) => {
+  const txSig = await connection.sendRawTransaction(tx.serialize(), {
+    preflightCommitment: "confirmed",
+  });
+  await connection.confirmTransaction(txSig);
 };

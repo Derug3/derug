@@ -23,7 +23,6 @@ const PublicMint = () => {
     collectionDerug,
     candyMachine,
     setCandyMachine,
-    setCollectionDerug,
   } = useContext(CollectionContext);
   const [loading, toggleLoading] = useState(false);
   const [isMinting, toggleIsMinting] = useState(false);
@@ -37,19 +36,18 @@ const PublicMint = () => {
   const [nftImage, setNftImage] = useState<string>();
 
   useEffect(() => {
-    if (!nfts) void getNfts();
+    if (!nfts || nfts.length === 0) void getNfts();
   }, []);
 
   const getNfts = async () => {
     toggleLoading(true);
     try {
-      if (wallet) {
+      if (wallet && remintConfig) {
         setNfts(
           await getNftsFromDeruggedCollection(
             wallet.publicKey,
             //TODO:remove ?? before mainnet launch
-            remintConfig?.collection ??
-              new PublicKey("EW55NiBd4M3gEEqdA6NthxFZHoSC9w6UG8H6d7BuwS1D")
+            remintConfig
           )
         );
       }
@@ -104,63 +102,6 @@ const PublicMint = () => {
       );
     });
   }, [nfts]);
-
-  // const renderPattern = useMemo(() => {
-  //   return (
-  //     <Box
-  //       sx={{
-  //         width: "50%",
-  //       }}
-  //     >
-  //       {pattern.map((_, index) => {
-  //         return (
-  //           <div className="grid grid-cols-7 gap-1 mb-1">
-  //             {pattern[index].map((elem: boolean) => {
-  //               return (
-  //                 <>
-  //                   {elem ? (
-  //                     <img className="rounded-md" src={collection?.image} />
-  //                   ) : (
-  //                     <div
-  //                       className="rounded-md"
-  //                       style={{
-  //                         background: "rgba(9,194,246, 0.2)",
-  //                       }}
-  //                     />
-  //                   )}
-  //                 </>
-  //               );
-  //             })}
-  //           </div>
-  //         );
-  //       })}
-  //     </Box>
-  //   );
-  // }, []);
-
-  // const renderNftPlaceholders = useMemo(() => {
-  //   return (
-  //     <div className="grid grid-cols-3 gap-1" style={{ width: "40%" }}>
-  //       {activeListings
-  //         ?.reverse()
-  //         .slice(0, 9)
-  //         .map((al) => {
-  //           return (
-  //             <img
-  //               src={al.imageUrl}
-  //               alt="nftImg"
-  //               className="rounded-md opacity-50 z-10"
-  //             />
-  //           );
-  //         })}
-
-  //       <img
-  //         src={nftImage ?? collection?.image}
-  //         className="z-0 absolute top-0 left-0 rounded-md"
-  //       />
-  //     </div>
-  //   );
-  // }, [activeListings, mintedNft, hasMinted, nftImage, collection]);
 
   return (
     <Box className="w-11/12 m-auto grid grid-cols-3 gap-10 my-10">

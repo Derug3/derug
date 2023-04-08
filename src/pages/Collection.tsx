@@ -276,7 +276,8 @@ export const Collections: FC = () => {
           ) : (
             <>
               {remintConfig &&
-              dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) &&
+              (dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) ||
+                (remintConfig.mintPrice && !remintConfig.privateMintEnd)) &&
               candyMachine &&
               candyMachine.itemsLoaded.toNumber() > 0 ? (
                 <PublicMint />
