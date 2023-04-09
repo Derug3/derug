@@ -1,3 +1,4 @@
+import { NATIVE_MINT } from "@solana/spl-token";
 import { WalletContextState } from "@solana/wallet-adapter-react";
 import {
   TransactionInstruction,
@@ -8,6 +9,7 @@ import {
 } from "@solana/web3.js";
 import { BN } from "bn.js";
 import { getSingleCollection } from "../../api/collections.api";
+import { getFungibleTokenMetadata } from "../../common/helpers";
 import {
   IChainCollectionData,
   ICollectionData,
@@ -21,6 +23,7 @@ import {
   IDerugInstruction,
   IDerugCollectionNft,
   ICreator,
+  ISplTokenData,
 } from "../../interface/derug.interface";
 import { METAPLEX_PROGRAM, RPC_CONNECTION } from "../../utilities/utilities";
 import { mapUtilityAction } from "../helpers";
@@ -145,6 +148,7 @@ export const getAllDerugRequest = async (
         privateMintDuration: derug.account.privateMintDuration?.toNumber(),
         creators: derug.account.creators,
         publicMint: !!derug.account.mintPrice,
+        splToken: await getFungibleTokenMetadata(derug.account.mintCurrency),
       });
     }
 

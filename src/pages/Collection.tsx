@@ -1,7 +1,6 @@
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { LeftPane } from "../components/CollectionLayout/LeftPane";
 import { RightPane } from "../components/CollectionLayout/RightPane";
-// import { Proposals } from "./../components/CollectionLayout/Proposals";
 import {
   IChainCollectionData,
   ICollectionData,
@@ -30,8 +29,6 @@ import DerugRequest from "../components/DerugRequest/DerugRequest";
 import { DerugStatus } from "../enums/collections.enums";
 import dayjs from "dayjs";
 import { Remint } from "../components/Remit/Remint";
-
-import { toast } from "react-hot-toast";
 import { getFloorPrice, getListings, getTraits } from "../api/tensor";
 import { IGraphData, IRemintConfig } from "../interface/derug.interface";
 import NoDerugRequests from "../components/DerugRequest/NoDerugRequests";
@@ -39,7 +36,6 @@ import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { getCandyMachine, getRemintConfig } from "../solana/methods/remint";
 import PublicMint from "../components/Remit/PublicMint";
 import { CandyMachineV2 } from "@metaplex-foundation/js";
-import { storeAllNfts } from "../api/public-mint.api";
 export const Collections: FC = () => {
   dayjs.extend(utc);
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
@@ -65,7 +61,6 @@ export const Collections: FC = () => {
   const iframeRef = useRef(null);
   let slug = useSearchParams()[0].get("symbol");
   const [remintConfig, setRemintConfig] = useState<IRemintConfig | undefined>();
-  const [isOpen, setIsOpen] = useState(true);
 
   const wallet = useWallet();
 
@@ -106,7 +101,7 @@ export const Collections: FC = () => {
 
   useEffect(() => {
     if (basicCollectionData) void getChainCollectionDetails();
-  }, [basicCollectionData, listings]);
+  }, [basicCollectionData]);
 
   const getChainCollectionDetails = async () => {
     try {
@@ -114,6 +109,7 @@ export const Collections: FC = () => {
       //   basicCollectionData!,
       //   listings?.at(0)
       // );
+
       const chainDetails = await getDummyCollectionData();
 
       chainDetails.slug = slug!;

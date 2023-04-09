@@ -62,7 +62,7 @@ export interface ISplTokenData {
   name: string;
   decimals: number;
   symbol: string;
-  image: string;
+  image?: string;
 }
 
 export interface CandyMachineDto {

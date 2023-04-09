@@ -1,6 +1,6 @@
 import { Heading, Text } from "@primer/react";
 import dayjs from "dayjs";
-import React, { FC, useContext } from "react";
+import React, { FC, useCallback, useContext } from "react";
 import Countdown from "react-countdown";
 import { getCollectionDerugData } from "../../solana/methods/derug";
 import { getAllDerugRequest } from "../../solana/methods/derug-request";
@@ -16,12 +16,12 @@ const HeadingItem: FC<{
   const { collectionDerug, setCollectionDerug, setRequests } =
     useContext(CollectionContext);
 
-  const refetchData = async () => {
+  const refetchData = useCallback(async () => {
     if (collectionDerug) {
       setCollectionDerug(await getCollectionDerugData(collectionDerug.address));
       setRequests(await getAllDerugRequest(collectionDerug?.address));
     }
-  };
+  }, [collectionDerug]);
 
   return (
     <Heading className="flex flex-row items-center justify-between w-full">

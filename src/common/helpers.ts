@@ -1,15 +1,11 @@
-import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 import dayjs from "dayjs";
 import toast from "react-hot-toast";
 import { ICollectionRecentActivities } from "../interface/collections.interface";
-import { IRemintConfig } from "../interface/derug.interface";
+import { IRemintConfig, ISplTokenData } from "../interface/derug.interface";
 import { derugProgramFactory, metaplex } from "../solana/utilities";
-import { generateSkeletonArrays } from "../utilities/nft-fetching";
-import { RPC_CONNECTION } from "../utilities/utilities";
 import { ANCHOR_ERROR, ERROR_NUMBER } from "./constants";
-
+import { Strategy, TokenListProvider } from "@solana/spl-token-registry";
 export const splitTimestamps = (
   recentCollections: ICollectionRecentActivities[]
 ) => {
@@ -116,5 +112,28 @@ export const parseTransactionError = (data: any) => {
     )?.msg;
 
     return err;
+  }
+};
+
+export const getFungibleTokenMetadata = async (
+  tokenMint: PublicKey | null
+): Promise<ISplTokenData | undefined> => {
+  try {
+    if (tokenMint === null) return undefined;
+    const tokenListProvider = new TokenListProvider();
+    const resolved = await tokenListProvider.resolve(Strategy.Static);
+    const token = resolved
+      .getList()
+      .find((t) => t.address === tokenMint.toString());
+    if (!token) return undefined;
+    return {
+      decimals: token?.decimals,
+      image: token?.logoURI,
+      name: token.name,
+      symbol: token.symbol,
+    };
+  } catch (error) {
+    console.log(error);
+    return undefined;
   }
 };
