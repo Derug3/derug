@@ -15,12 +15,13 @@ import { getAllNftsFromCollection } from "../../utilities/nft-fetching";
 import { toast } from "react-hot-toast";
 import { Oval } from "react-loader-spinner";
 import { getTrimmedPublicKey } from "../../solana/helpers";
+import DerugRequestDetails from "./DerugRequestDetails";
 export const DerugRequestItem: FC<{
   derugRequest: IRequest;
   index: number;
 }> = ({ derugRequest, index }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [currentRequest, setCurrentRequest] = useState<IRequest>();
+
   const [loading, toggleLoading] = useState(false);
   const {
     collection,
@@ -87,12 +88,18 @@ export const DerugRequestItem: FC<{
   };
 
   return (
-    <div className="flex flex-col w-full items-start py-4 gap-5 border-[1px] border-main-blue px-8 ">
-      {derugRequest.userData && (
-        <div className="flex items-center justify-center border-[1px] py-1 px-3">
-          <p>Doxxed</p>
-        </div>
+    <div
+      className="flex flex-col w-full items-start py-4 gap-5 border-[1px] border-main-blue px-8 cursor-pointer"
+      onClick={() => setIsOpen(true)}
+    >
+      {isOpen && (
+        <DerugRequestDetails
+          derugRequest={derugRequest}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
       )}
+
       <div className="flex flex-row w-full">
         <div className="flex gap-3 items-center justify-start w-1/2	">
           <div className="flex flex-col items-start gap-4">
@@ -148,84 +155,89 @@ export const DerugRequestItem: FC<{
               </Tooltip>
             ))}
         </div>
-        <div className="flex items-center justify-end w-1/2">
-          {showVoteButton() && (
-            <Button
-              variant="invisible"
-              sx={{ color: "rgba(9,194,246)" }}
-              onClick={castVote}
-            >
-              {loading ? (
-                <Oval color="rgb(9, 194, 246)" height={"2em"} />
-              ) : (
-                <p>Vote</p>
+        <div className="flex flex-col items-end w-full">
+          <div className="flex items-center justify-end w-full">
+            {showClaimButton() && (
+              <Button variant="invisible" sx={{ color: "rgba(9,194,246)" }}>
+                Claim victory
+              </Button>
+            )}
+            {showRemintButton() && (
+              <Button variant="invisible" sx={{ color: "rgba(9,194,246)" }}>
+                Remint
+              </Button>
+            )}
+
+            <div className="relative">
+              {collectionDerug && (
+                <div
+                  className={`absolute w-[1px] h-[100%] bg-red-500`}
+                  style={{
+                    left: `${
+                      (collectionDerug.thresholdDenominator /
+                        collectionDerug.totalSupply) *
+                      100
+                    }%`,
+                  }}
+                />
               )}
-            </Button>
-          )}
-
-          {showClaimButton() && (
-            <Button variant="invisible" sx={{ color: "rgba(9,194,246)" }}>
-              Claim victory
-            </Button>
-          )}
-          {showRemintButton() && (
-            <Button variant="invisible" sx={{ color: "rgba(9,194,246)" }}>
-              Remint
-            </Button>
-          )}
-
-          <div className="relative">
-            {collectionDerug && (
-              <div
-                className={`absolute w-[1px] h-[100%] bg-red-500`}
-                style={{
-                  left: `${
-                    (collectionDerug.thresholdDenominator /
-                      collectionDerug.totalSupply) *
-                    100
-                  }%`,
+              <ProgressBar
+                progress={
+                  (derugRequest.voteCount /
+                    (collectionDerug?.totalSupply ?? 1)) *
+                  100
+                }
+                bg="#2DD4BF"
+                sx={{
+                  width: "380px",
+                  height: "12px",
+                  borderRadius: 0,
+                  color: "rgb(45, 212, 191)",
+                  "@media (max-width: 768px)": {
+                    width: "200px",
+                  },
                 }}
               />
-            )}
-            <ProgressBar
-              progress={
-                (derugRequest.voteCount / (collectionDerug?.totalSupply ?? 1)) *
-                100
-              }
-              bg="#2DD4BF"
-              sx={{
-                width: "380px",
-                height: "12px",
-                borderRadius: 0,
-                color: "rgb(45, 212, 191)",
-                "@media (max-width: 768px)": {
-                  width: "200px",
-                },
-              }}
-            />
-          </div>
-          <Balancer className="text-lg cursor-pointer text-white font-mono px-5">
+            </div>
+            <Balancer className="text-lg cursor-pointer text-white font-mono px-5">
+              <span
+                style={{
+                  padding: "10px",
+                  fontSize: "0.75em",
+                }}
+              >
+                {dayjs
+                  .unix(derugRequest.createdAt)
+                  .toDate()
+                  .toString()
+                  .slice(0, 10)}
+              </span>
+            </Balancer>
             <span
+              className="text-white font-mono"
               style={{
-                padding: "10px",
                 fontSize: "0.75em",
               }}
             >
-              {dayjs
-                .unix(derugRequest.createdAt)
-                .toDate()
-                .toString()
-                .slice(0, 10)}
+              {derugRequest.voteCount} / {collectionDerug?.totalSupply}
             </span>
-          </Balancer>
-          <span
-            className="text-white font-mono"
-            style={{
-              fontSize: "0.75em",
-            }}
-          >
-            {derugRequest.voteCount} / {collectionDerug?.totalSupply}
-          </span>
+          </div>
+          {showVoteButton() && (
+            <button
+              onClick={castVote}
+              className="border-[1px] border-main-blue text-lg mt-5 px-5 py-1 text-main-blue"
+            >
+              {loading ? (
+                <Oval
+                  color="rgb(9, 194, 246)"
+                  height={"1.5em"}
+                  secondaryColor={"transparent"}
+                />
+              ) : (
+                <p>Vote</p>
+              )}
+            </button>
+          )}
         </div>
       </div>
     </div>
