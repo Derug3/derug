@@ -28,7 +28,7 @@ export async function get(path: string, url?: string): Promise<any> {
 
 export async function post(
   path: string,
-  body: any,
+  body?: any,
   url?: string
 ): Promise<any> {
   const endpoint = `${

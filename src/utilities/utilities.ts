@@ -1,6 +1,8 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
-import { Metaplex } from "@metaplex-foundation/js";
 import { Connection, PublicKey } from "@solana/web3.js";
+import { TwitterApi } from "twitter-api-v2";
+import { Client, auth } from "twitter-api-sdk";
+
 export const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT as string;
 export const gqlClient = new ApolloClient({
   uri: "https://graphql.tensor.trade/graphql",

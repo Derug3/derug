@@ -6,7 +6,6 @@ import { IRequest, IUtility } from "../../interface/collections.interface";
 import {
   Creator,
   DerugForm,
-  ICreator,
   UtilityAction,
 } from "../../interface/derug.interface";
 import { getCollectionDerugData } from "../../solana/methods/derug";
@@ -19,7 +18,7 @@ import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import UtilityArray from "./UtilityArray";
-import useDebounce from "../../hooks/useDebounce";
+import { FaTwitter } from "react-icons/fa";
 import CreatorsArray from "./CreatorsArray";
 import PublicMint, { ITreasuryTokenAccInfo } from "./PublicMint";
 import { getTrimmedPublicKey } from "../../solana/helpers";
@@ -27,6 +26,9 @@ import { PublicKey } from "@solana/web3.js";
 import { useForm } from "react-hook-form";
 import { WRAPPED_SOL_MINT } from "@metaplex-foundation/js";
 import { validateCreators } from "../../validators/derug-request.validators";
+import toast from "react-hot-toast";
+import { authorizeTwitter, getUserTwitterData } from "../../api/twitter.api";
+import { userStore } from "../../stores/userStore";
 
 export const AddDerugRequst: FC<{
   isOpen: boolean;
@@ -44,6 +46,8 @@ export const AddDerugRequst: FC<{
     },
   ]);
 
+  const { userData, setUserData } = userStore();
+
   const [creators, setCreator] = useState<Creator[]>([]);
 
   const [selectedUtility, setSelectedUtility] = useState<number>(0);
@@ -52,7 +56,6 @@ export const AddDerugRequst: FC<{
   const [newName, setNewName] = useState<string>();
   const [price, setPrice] = useState<number>();
   const [duration, setDuration] = useState<number>();
-  const [searchValue, setSearchValue] = useState<string>();
   const [selectedMint, setSelectedMint] = useState<ITreasuryTokenAccInfo>();
 
   const {
@@ -60,6 +63,7 @@ export const AddDerugRequst: FC<{
     activeListings,
     setCollectionDerug,
     collectionStats,
+    collection,
     derugRequests,
   } = useContext(CollectionContext);
 
@@ -134,6 +138,18 @@ export const AddDerugRequst: FC<{
       setIsOpen(false);
     }
   };
+
+  const linkTwitter = async () => {
+    try {
+      if (collection && wallet)
+        await authorizeTwitter(collection.symbol, wallet.publicKey!.toString());
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Failed to link twitter account");
+    }
+  };
+
   const {
     register,
     handleSubmit,
@@ -148,6 +164,7 @@ export const AddDerugRequst: FC<{
 
   useEffect(() => {
     if (wallet && wallet.publicKey) {
+      if (!userData) void storeUserData();
       const newElement = {
         address: wallet.publicKey!.toString(),
         share: 100,
@@ -155,6 +172,12 @@ export const AddDerugRequst: FC<{
       setCreator([newElement]);
     }
   }, [wallet]);
+
+  const storeUserData = async () => {
+    try {
+      setUserData(await getUserTwitterData(wallet.publicKey?.toString()!));
+    } catch (error) {}
+  };
 
   return (
     <motion.div
@@ -203,12 +226,35 @@ export const AddDerugRequst: FC<{
                 </span>
                 <div className="flex justify-between w-full px-3">
                   <span className="pr-2 text-white font-mono">Wallet:</span>
-                  <span className="font-mono">
-                    {wallet.publicKey &&
-                      getTrimmedPublicKey(
-                        new PublicKey(wallet.publicKey.toString())
-                      )}
-                  </span>
+                  <div className="flex gap-5 items-center">
+                    <span className="font-mono">
+                      {wallet.publicKey &&
+                        getTrimmedPublicKey(
+                          new PublicKey(wallet.publicKey.toString())
+                        )}
+                    </span>
+                    {!userData ? (
+                      <button
+                        onClick={linkTwitter}
+                        type="button"
+                        className="flex border-[1px] border-main-blue py-1 px-2 items-center gap-4"
+                      >
+                        Link twitter
+                        <FaTwitter style={{ color: "rgb(29 161 242)" }} />
+                      </button>
+                    ) : (
+                      <div className="flex flex-row gap-5 items-center">
+                        <p className="text-main-blue text-lg font-bold">
+                          {userData.twitterHandle}
+                        </p>
+                        <img
+                          className="rounded-[50px] w-10"
+                          src={userData.image}
+                          alt=""
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="flex justify-between w-full px-3">
                   <span className="pr-2 text-white">New name:</span>

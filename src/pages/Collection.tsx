@@ -36,6 +36,7 @@ import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { getCandyMachine, getRemintConfig } from "../solana/methods/remint";
 import PublicMint from "../components/Remit/PublicMint";
 import { CandyMachineV2 } from "@metaplex-foundation/js";
+import { DERUG } from "../api/url.api";
 export const Collections: FC = () => {
   dayjs.extend(utc);
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
@@ -60,12 +61,16 @@ export const Collections: FC = () => {
   const [derugRequests, setDerugRequests] = useState<IRequest[]>();
   const iframeRef = useRef(null);
   let slug = useSearchParams()[0].get("symbol");
+  let derug = useSearchParams()[0].get(DERUG);
   const [remintConfig, setRemintConfig] = useState<IRemintConfig | undefined>();
 
   const wallet = useWallet();
 
   useEffect(() => {
     void getBasicCollectionData();
+    if (derug) {
+      setDerugRequestVisible(true);
+    }
   }, []);
 
   const getBasicCollectionData = async () => {
