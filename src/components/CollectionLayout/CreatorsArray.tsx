@@ -36,7 +36,10 @@ const CreatorsArray: FC<{
     <Box className="w-full">
       {creators &&
         creators.map((creator, index) => (
-          <div className="flex w-full justify-between creators-start gap-3">
+          <div
+            key={creator.address}
+            className="flex w-full justify-between creators-start gap-3"
+          >
             <div className="flex w-full flex-row">
               <TextInput
                 placeholder="Address"

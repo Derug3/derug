@@ -1,6 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 import { DerugStatus, ListingSource } from "../enums/collections.enums";
 import { ICreator, ISplTokenData } from "./derug.interface";
+import { IUserData } from "./user.interface";
 
 export interface ICollectionData {
   symbol: string;
@@ -30,6 +31,7 @@ export interface IRequest {
   newName: string;
   utility: IUtility[];
   splToken?: ISplTokenData;
+  userData?: IUserData;
 }
 export interface IUtility {
   title: string;

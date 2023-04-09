@@ -45,7 +45,10 @@ const UtilityArray: FC<{
         items.map(
           (u, index) =>
             index === selectedUtility && (
-              <div className="flex flex-row w-full justify-between items-start gap-3">
+              <div
+                key={index}
+                className="flex flex-row w-full justify-between items-start gap-3"
+              >
                 <div className="flex w-full flex-col">
                   <TextInput
                     placeholder={placeholder}

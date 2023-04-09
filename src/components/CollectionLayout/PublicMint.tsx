@@ -3,7 +3,9 @@ import { NATIVE_MINT } from "@solana/spl-token";
 import { TokenListProvider } from "@solana/spl-token-registry";
 import { PublicKey } from "@solana/web3.js";
 import React, { FC, useEffect, useMemo, useState } from "react";
+import { FieldErrors, useForm, useFormContext } from "react-hook-form";
 import Select from "react-select";
+import { DerugForm } from "../../interface/derug.interface";
 import { selectStyles } from "../../utilities/styles";
 
 export const mint: PublicKey = new PublicKey(
@@ -33,7 +35,7 @@ const PublicMint: FC<{
   setDuration?: (price: number) => void;
   handleMintChange: (mint: ITreasuryTokenAccInfo) => void;
 }> = ({ price, duration, setPrice, setDuration, handleMintChange }) => {
-  const [isPublicMint, setIsPublicMint] = useState<boolean>(false);
+  const [isPublicMint, setIsPublicMint] = useState<boolean>(true);
   const [searchLoading, toggleSearchLoading] = useState(false);
   const [searchValue, setSearchValue] = useState<string>();
   const [availableTokensList, setAvailableTokenList] =
@@ -42,6 +44,14 @@ const PublicMint: FC<{
   useEffect(() => {
     void getAllMintsInfo();
   }, []);
+
+  const {
+    register,
+    clearErrors,
+    formState: { errors },
+  } = useFormContext<DerugForm>();
+
+  console.log(errors);
 
   const getAllMintsInfo = async () => {
     const availableToken: ITreasuryTokenAccInfo[] = [];
@@ -122,34 +132,55 @@ const PublicMint: FC<{
   };
   const renderSelect = useMemo(() => {
     return (
-      <Select
-        className="w-64"
-        placeholder="select token"
-        isLoading={searchLoading}
-        onInputChange={handleSearch}
-        onChange={(e) => handleMintChange(e!)}
-        styles={selectStyles}
-        options={availableTokensList}
-        getOptionLabel={(option: ITreasuryTokenAccInfo) => option.name}
-        getOptionValue={(option: ITreasuryTokenAccInfo) => option.symbol}
-        formatOptionLabel={(e: any) => (
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              padding: "0.5em",
-              zIndex: 100,
-              gap: "1em",
-            }}
-          >
-            <img style={{ width: "1.5em", height: "1.5em" }} src={e.logoURI} />
-            <Text as={"h3"} className="text-white">
-              {e.name}
-            </Text>
-          </Box>
+      <div className="flex flex-col w-full gap-4">
+        <Select
+          // {...register("selectedMint", {
+          //   required: {
+          //     value: isPublicMint,
+          //     message: "Currency must be specified",
+          //   },
+          // })}
+          className="w-64"
+          placeholder="select token"
+          isLoading={searchLoading}
+          onInputChange={handleSearch}
+          onChange={(e) => {
+            console.log(e);
+
+            handleMintChange(e!);
+            clearErrors("selectedMint");
+          }}
+          styles={selectStyles}
+          options={availableTokensList}
+          getOptionLabel={(option: ITreasuryTokenAccInfo) => option.name}
+          getOptionValue={(option: ITreasuryTokenAccInfo) => option.symbol}
+          formatOptionLabel={(e: any) => (
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                padding: "0.5em",
+                zIndex: 100,
+                gap: "1em",
+              }}
+            >
+              <img
+                style={{ width: "1.5em", height: "1.5em" }}
+                src={e.logoURI}
+              />
+              <Text as={"h3"} className="text-white">
+                {e.name}
+              </Text>
+            </Box>
+          )}
+        />
+        {errors.selectedMint?.message && (
+          <p className="text-red-500">
+            {errors.selectedMint.message as string}
+          </p>
         )}
-      />
+      </div>
     );
   }, [availableTokensList, searchLoading]);
   return (
@@ -166,8 +197,7 @@ const PublicMint: FC<{
             display="block"
             sx={{ width: "70%" }}
           >
-            In case you want to sell your token on the marketplace, after
-            private mint
+            In case you want to enable minting nft by non-current holders
           </Text>
         </Box>
         <Box className="flex flex-col items-end gap-5 text-start">
@@ -175,10 +205,13 @@ const PublicMint: FC<{
             aria-labelledby="switchLabel"
             size="small"
             aria-describedby="switchCaption"
+            defaultChecked={true}
             onClick={(e) => {
               e.preventDefault();
             }}
-            onChange={(e) => setIsPublicMint(!isPublicMint)}
+            onChange={(e) => {
+              setIsPublicMint(!isPublicMint);
+            }}
           />
         </Box>
       </Box>
@@ -187,57 +220,87 @@ const PublicMint: FC<{
           <Box className="flex flex-row w-full justify-between items-center">
             <Box className="flex flex-col items-start text-start gap-5">
               <Text fontSize={2} color="white">
-                Price
+                Price & Currency
               </Text>
             </Box>
-            <Box className="flex flex-row items-start text-start">
-              <TextInput
-                type={"number"}
-                placeholder="price"
-                value={price}
-                accept="number"
-                className="w-32"
-                sx={{ borderRadius: 0 }}
-                onChange={(e) => {
-                  setPrice && setPrice(+e.target.value);
-                }}
-              />
-              {renderSelect}
-            </Box>
+            <div className="flex flex-col w-1/2">
+              <Box className="flex flex-row items-start text-start">
+                <TextInput
+                  {...register("price", {
+                    min: {
+                      value: 0,
+                      message: "Minimum price is 0",
+                    },
+                    required: {
+                      value: isPublicMint,
+                      message: "Price can't be empty in public mint",
+                    },
+                  })}
+                  type={"number"}
+                  placeholder="price"
+                  value={price}
+                  accept="number"
+                  className="w-32"
+                  sx={{ borderRadius: 0 }}
+                  onChange={(e) => {
+                    setPrice && setPrice(+e.target.value);
+                    e.target.value !== "" && clearErrors("price");
+                  }}
+                />
+                {renderSelect}
+              </Box>
+              {errors.price && (
+                <p className="text-red-500">{errors.price.message}</p>
+              )}
+            </div>
           </Box>
         </div>
       )}
       <Box className="flex flex-row w-full justify-between items-center">
-        <Box className="flex w-full flex-row items-center text-start gap-5">
-          <div className="flex flex-col">
-            <Text fontSize={2} color="white">
-              Private mint duration
-            </Text>
-            <Text
-              color="fg.subtle"
-              fontSize={1}
-              id="switchCaption"
-              display="block"
-            >
-              Private mint is a period of time when holders can burn rugged nfts
-              and get a new ones
-            </Text>
-          </div>
-          <div className="flex justify-end items-center gap-3 w-64">
-            <TextInput
-              type={"number"}
-              placeholder="duration"
-              value={duration}
-              sx={{ borderRadius: 0, width: "100%" }}
-              onChange={(e) => {
-                setDuration && setDuration(+e.target.value);
-              }}
-            />
-            <Text fontSize={1} color="white">
-              hours
-            </Text>
-          </div>
-        </Box>
+        {isPublicMint && (
+          <Box className="flex w-full flex-row items-center text-start gap-5">
+            <div className="flex flex-col">
+              <Text fontSize={2} color="white">
+                Private mint duration
+              </Text>
+              <Text
+                color="fg.subtle"
+                fontSize={1}
+                id="switchCaption"
+                display="block"
+              >
+                Private mint is a period of time when holders can burn rugged
+                nfts and get a new ones
+              </Text>
+            </div>
+            <div className="flex flex-col items-start gap-4 w-1/2">
+              <div className="flex justify-end items-center gap-3 w-64">
+                <TextInput
+                  {...register("privateMintEnd", {
+                    required: {
+                      value: isPublicMint,
+                      message: "Private mint duration can't be empty",
+                    },
+                  })}
+                  type={"number"}
+                  placeholder="duration"
+                  value={duration}
+                  sx={{ borderRadius: 0, width: "100%" }}
+                  onChange={(e) => {
+                    setDuration && setDuration(+e.target.value);
+                    e.target.value !== "" && clearErrors("privateMintEnd");
+                  }}
+                />
+                <Text fontSize={1} color="white">
+                  hours
+                </Text>
+              </div>
+              {errors.privateMintEnd && (
+                <p className="text-red-500">{errors.privateMintEnd.message}</p>
+              )}
+            </div>
+          </Box>
+        )}
       </Box>
     </div>
   );

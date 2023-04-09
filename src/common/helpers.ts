@@ -6,6 +6,8 @@ import { IRemintConfig, ISplTokenData } from "../interface/derug.interface";
 import { derugProgramFactory, metaplex } from "../solana/utilities";
 import { ANCHOR_ERROR, ERROR_NUMBER } from "./constants";
 import { Strategy, TokenListProvider } from "@solana/spl-token-registry";
+import { IUserData } from "../interface/user.interface";
+import { getUserTwitterData } from "../api/twitter.api";
 export const splitTimestamps = (
   recentCollections: ICollectionRecentActivities[]
 ) => {
@@ -134,6 +136,16 @@ export const getFungibleTokenMetadata = async (
     };
   } catch (error) {
     console.log(error);
+    return undefined;
+  }
+};
+
+export const getUserDataForDerug = async (
+  pubkey: string
+): Promise<IUserData | undefined> => {
+  try {
+    return await getUserTwitterData(pubkey);
+  } catch (error) {
     return undefined;
   }
 };

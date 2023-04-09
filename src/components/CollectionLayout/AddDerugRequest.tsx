@@ -23,7 +23,7 @@ import CreatorsArray from "./CreatorsArray";
 import PublicMint, { ITreasuryTokenAccInfo } from "./PublicMint";
 import { getTrimmedPublicKey } from "../../solana/helpers";
 import { PublicKey } from "@solana/web3.js";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { WRAPPED_SOL_MINT } from "@metaplex-foundation/js";
 import { validateCreators } from "../../validators/derug-request.validators";
 import toast from "react-hot-toast";
@@ -91,6 +91,8 @@ export const AddDerugRequst: FC<{
     setSellerFee(points);
   };
 
+  const methods = useForm<DerugForm>();
+
   const submitRequest = async (data: any) => {
     try {
       if (wallet && chainCollectionData && utility && collectionStats && data) {
@@ -105,7 +107,7 @@ export const AddDerugRequst: FC<{
           }),
           chainCollectionData,
           collectionStats,
-          data.fee * 10,
+          +data.fee * 10,
           data.symbol,
           data.name,
           creators.map((c) => {
@@ -114,8 +116,10 @@ export const AddDerugRequst: FC<{
               share: c.share,
             };
           }),
-          price ? +price * Math.pow(10, selectedMint!.decimals) : undefined,
-          duration ? Number(duration) * 3600 : undefined,
+          data.price
+            ? +data.price * Math.pow(10, selectedMint!.decimals)
+            : undefined,
+          data.privateMintEnd ? Number(data.privateMintEnd) * 3600 : undefined,
           selectedMint?.address &&
             selectedMint.address.toString() !== WRAPPED_SOL_MINT.toString()
             ? selectedMint.address
@@ -150,16 +154,8 @@ export const AddDerugRequst: FC<{
     }
   };
 
-  const {
-    register,
-    handleSubmit,
-    setError,
-    clearErrors,
-    formState: { errors },
-  } = useForm<DerugForm>();
-
   useEffect(() => {
-    validateCreators(creators, setError, clearErrors);
+    validateCreators(creators, methods.setError, methods.clearErrors);
   }, [creators]);
 
   useEffect(() => {
@@ -184,37 +180,175 @@ export const AddDerugRequst: FC<{
       className="flex w-full flex-col"
       variants={FADE_DOWN_ANIMATION_VARIANTS}
     >
-      <form onSubmit={handleSubmit(submitRequest)}>
-        <Dialog
-          returnFocusRef={returnFocusRef}
-          isOpen={isOpen}
-          onDismiss={() => setIsOpen(false)}
-          sx={{
-            width: "80%",
-            maxHeight: "100%",
-
-            borderRadius: 0,
-          }}
-          aria-labelledby="header-id"
-        >
-          <Dialog.Header
-            id="header-id"
-            className="flex justify-between items-center bg-gray-800"
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(submitRequest)}>
+          <Dialog
+            returnFocusRef={returnFocusRef}
+            isOpen={isOpen}
+            onDismiss={() => setIsOpen(false)}
             sx={{
+              width: "80%",
+              maxHeight: "100%",
+
               borderRadius: 0,
             }}
+            aria-labelledby="header-id"
           >
-            <span className="text-white font-mono">Derug Request</span>
-          </Dialog.Header>
-
-          <Box className="grid grid-cols-2 gap-4 m-5">
-            <Box
-              className="flex justify-between flex-row text-gray-400 font-mono"
-              style={{
-                border: "1px solid rgb(9, 194, 246)",
+            <Dialog.Header
+              id="header-id"
+              className="flex justify-between items-center bg-gray-800"
+              sx={{
+                borderRadius: 0,
               }}
             >
-              <div className="flex flex-col justify-start items-start w-full gap-5">
+              <span className="text-white font-mono">Derug Request</span>
+            </Dialog.Header>
+
+            <Box className="grid grid-cols-2 gap-4 m-5">
+              <Box
+                className="flex justify-between flex-row text-gray-400 font-mono"
+                style={{
+                  border: "1px solid rgb(9, 194, 246)",
+                }}
+              >
+                <div className="flex flex-col justify-start items-start w-full gap-5">
+                  <span
+                    className="flex text-white font-mono w-full text-lg px-3"
+                    style={{
+                      borderBottom: "1px solid #6e7681",
+                      backgroundColor: "rgba(9, 194, 246, 0.2)",
+                    }}
+                  >
+                    Derug request details
+                  </span>
+                  <div className="flex justify-between w-full px-3">
+                    <span className="pr-2 text-white font-mono">Wallet:</span>
+                    <div className="flex gap-5 items-center">
+                      <span className="font-mono">
+                        {wallet.publicKey &&
+                          getTrimmedPublicKey(
+                            new PublicKey(wallet.publicKey.toString())
+                          )}
+                      </span>
+                      {!userData ? (
+                        <button
+                          onClick={linkTwitter}
+                          type="button"
+                          className="flex border-[1px] border-main-blue py-1 px-2 items-center gap-4"
+                        >
+                          Link twitter
+                          <FaTwitter style={{ color: "rgb(29 161 242)" }} />
+                        </button>
+                      ) : (
+                        <div className="flex flex-row gap-5 items-center">
+                          <p className="text-main-blue text-lg font-bold">
+                            {userData.twitterHandle}
+                          </p>
+                          <img
+                            className="rounded-[50px] w-10"
+                            src={userData.image}
+                            alt=""
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex justify-between w-full px-3">
+                    <span className="pr-2 text-white">New name:</span>
+                    <div className="flex flex-col w-1/2 items-start">
+                      <TextInput
+                        {...methods.register("name", {
+                          required: "Name cannot be empty",
+                          maxLength: {
+                            message: "Max name length is 32 characters",
+                            value: 32,
+                          },
+                        })}
+                        onChange={(e) => {
+                          e.target.value.length > 0 &&
+                            e.target.value.length < 32 &&
+                            methods.clearErrors("name");
+                        }}
+                        placeholder="new collection name"
+                        className="text-gray-400"
+                        value={newName}
+                        sx={{
+                          borderRadius: 0,
+                          width: "100%",
+                        }}
+                      />
+                      {methods.formState.errors.name && (
+                        <p className="text-red-500">
+                          {methods.formState.errors.name.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex justify-between w-full px-3">
+                    <span className="pr-2 text-white">New symbol:</span>
+                    <div className="flex flex-col w-1/2 items-start">
+                      <TextInput
+                        {...methods.register("symbol", {
+                          required: "Symbol cannot be empty",
+                          maxLength: {
+                            value: 10,
+                            message: "Max symbol length is 10 characters",
+                          },
+                        })}
+                        placeholder="new collection symbol"
+                        onChange={(e) =>
+                          e.target.value.length > 0 &&
+                          e.target.value.length < 10 &&
+                          methods.clearErrors("symbol")
+                        }
+                        value={symbol}
+                        sx={{
+                          borderRadius: 0,
+                          width: "100%",
+                        }}
+                      />
+                      {methods.formState.errors.symbol && (
+                        <p className="text-red-500 ">
+                          {methods.formState.errors.symbol.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex justify-between w-full gap-3 items-center px-3 pb-3">
+                    <span className="pr-2 text-white"> Seller basic fee</span>
+
+                    <div className="flex w-1/2 items-center gap-5">
+                      <TextInput
+                        {...methods.register("fee")}
+                        placeholder="Fee"
+                        value={sellerFee}
+                        sx={{ borderRadius: 0, width: "30%" }}
+                        onChange={(e) =>
+                          handleSellerFeeChange(Number(e.target.value))
+                        }
+                      />
+                      <div className="flex flex-col w-full items-start">
+                        <Slider
+                          value={Number(sellerFee)}
+                          onChange={(e) => {
+                            typeof e === "number" && handleSellerFeeChange(e);
+                            +e > 0 && +e <= 100 && methods.clearErrors("fee");
+                          }}
+                        />
+                        {methods.formState.errors.fee && (
+                          <p className="text-red-500">
+                            {methods.formState.errors.fee.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Box>
+              <Box
+                className="flex justify-start flex-col text-white font-mono"
+                style={{ border: "1px solid rgb(9, 194, 246)" }}
+              >
                 <span
                   className="flex text-white font-mono w-full text-lg px-3"
                   style={{
@@ -222,261 +356,136 @@ export const AddDerugRequst: FC<{
                     backgroundColor: "rgba(9, 194, 246, 0.2)",
                   }}
                 >
-                  Derug request details
+                  Creators
                 </span>
-                <div className="flex justify-between w-full px-3">
-                  <span className="pr-2 text-white font-mono">Wallet:</span>
-                  <div className="flex gap-5 items-center">
-                    <span className="font-mono">
-                      {wallet.publicKey &&
-                        getTrimmedPublicKey(
-                          new PublicKey(wallet.publicKey.toString())
-                        )}
-                    </span>
-                    {!userData ? (
-                      <button
-                        onClick={linkTwitter}
-                        type="button"
-                        className="flex border-[1px] border-main-blue py-1 px-2 items-center gap-4"
-                      >
-                        Link twitter
-                        <FaTwitter style={{ color: "rgb(29 161 242)" }} />
-                      </button>
-                    ) : (
-                      <div className="flex flex-row gap-5 items-center">
-                        <p className="text-main-blue text-lg font-bold">
-                          {userData.twitterHandle}
-                        </p>
-                        <img
-                          className="rounded-[50px] w-10"
-                          src={userData.image}
-                          alt=""
-                        />
-                      </div>
+                <div className="flex justify-between flex-col h-full p-3">
+                  <CreatorsArray creators={creators} setCreators={setCreator} />
+                  <Button
+                    size="large"
+                    variant="outline"
+                    sx={{ borderRadius: 0, backgroundColor: "transparent" }}
+                    ref={returnFocusRef}
+                    disabled={creators.length >= 4}
+                    onClick={() => addCreator()}
+                  >
+                    Add creator
+                  </Button>
+                  <>
+                    {" "}
+                    {(methods.formState.errors.creatorsFees ||
+                      methods.formState.errors.creatorsKey) && (
+                      <p className="text-red-500 text-xs">
+                        {
+                          (
+                            methods.formState.errors.creatorsFees ??
+                            methods.formState.errors.creatorsKey
+                          )?.message
+                        }
+                      </p>
                     )}
-                  </div>
+                  </>
                 </div>
-                <div className="flex justify-between w-full px-3">
-                  <span className="pr-2 text-white">New name:</span>
-                  <div className="flex flex-col w-1/2 items-start">
-                    <TextInput
-                      {...register("name", {
-                        required: "Name cannot be empty",
-                        maxLength: {
-                          message: "Max name length is 32 characters",
-                          value: 32,
-                        },
-                      })}
-                      onChange={(e) => {
-                        e.target.value.length > 0 &&
-                          e.target.value.length < 32 &&
-                          clearErrors("name");
-                      }}
-                      placeholder="new collection name"
-                      className="text-gray-400"
-                      value={newName}
-                      sx={{
-                        borderRadius: 0,
-                        width: "100%",
-                      }}
-                    />
-                    {errors.name && (
-                      <p className="text-red-500">{errors.name.message}</p>
-                    )}
-                  </div>
-                </div>
-                <div className="flex justify-between w-full px-3">
-                  <span className="pr-2 text-white">New symbol:</span>
-                  <div className="flex flex-col w-1/2 items-start">
-                    <TextInput
-                      {...register("symbol", {
-                        required: "Symbol cannot be empty",
-                        maxLength: {
-                          value: 10,
-                          message: "Max symbol length is 10 characters",
-                        },
-                      })}
-                      placeholder="new collection symbol"
-                      onChange={(e) =>
-                        e.target.value.length > 0 &&
-                        e.target.value.length < 10 &&
-                        clearErrors("symbol")
-                      }
-                      value={symbol}
-                      sx={{
-                        borderRadius: 0,
-                        width: "100%",
-                      }}
-                    />
-                    {errors.symbol && (
-                      <p className="text-red-500 ">{errors.symbol.message}</p>
-                    )}
-                  </div>
-                </div>
-                <div className="flex justify-between w-full gap-3 items-center px-3 pb-3">
-                  <span className="pr-2 text-white"> Seller basic fee</span>
-
-                  <div className="flex w-1/2 items-center gap-5">
-                    <TextInput
-                      {...register("fee")}
-                      placeholder="Fee"
-                      value={sellerFee}
-                      sx={{ borderRadius: 0, width: "30%" }}
-                      onChange={(e) =>
-                        handleSellerFeeChange(Number(e.target.value))
-                      }
-                    />
-                    <div className="flex flex-col w-full items-start">
-                      <Slider
-                        value={Number(sellerFee)}
-                        onChange={(e) => {
-                          typeof e === "number" && handleSellerFeeChange(e);
-                          +e > 0 && +e <= 100 && clearErrors("fee");
-                        }}
-                      />
-                      {errors.fee && (
-                        <p className="text-red-500">{errors.fee.message}</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              </Box>
             </Box>
-            <Box
-              className="flex justify-start flex-col text-white font-mono"
-              style={{ border: "1px solid rgb(9, 194, 246)" }}
-            >
-              <span
-                className="flex text-white font-mono w-full text-lg px-3"
+            <Box className="grid grid-cols-2 gap-4 mx-5">
+              <Box
+                className="flex justify-start flex-col font-mono"
                 style={{
-                  borderBottom: "1px solid #6e7681",
-                  backgroundColor: "rgba(9, 194, 246, 0.2)",
+                  border: "1px solid rgb(9, 194, 246)",
                 }}
               >
-                Creators
-              </span>
-              <div className="flex justify-between flex-col h-full p-3">
-                <CreatorsArray creators={creators} setCreators={setCreator} />
+                <span
+                  className="flex text-white font-mono w-full text-lg px-3"
+                  style={{
+                    borderBottom: "1px solid #6e7681",
+                    backgroundColor: "rgba(9, 194, 246, 0.2)",
+                  }}
+                >
+                  Mint details
+                </span>
+                <PublicMint
+                  price={price}
+                  setPrice={setPrice}
+                  handleMintChange={(e) => setSelectedMint(e)}
+                  duration={duration}
+                  setDuration={setDuration}
+                />
+              </Box>
+              <Box
+                className="flex justify-between flex-col text-white gap-5 font-mono w-full"
+                style={{ border: "1px solid rgb(9, 194, 246)" }}
+              >
+                <span
+                  className="flex text-white font-mono w-full text-lg px-3"
+                  style={{
+                    borderBottom: "1px solid #6e7681",
+                    backgroundColor: "rgba(9, 194, 246, 0.2)",
+                  }}
+                >
+                  Utilities
+                </span>
+                <Box className="flex flex-wrap px-3">
+                  {utility.map(
+                    (item, index) =>
+                      item.title && (
+                        <Label
+                          onClick={() => {
+                            setSelectedUtility(index);
+                          }}
+                          variant="accent"
+                          className="cursor-pointer"
+                        >
+                          {item.title}
+                        </Label>
+                      )
+                  )}
+                </Box>
+                <Box className="flex flex-col w-full justify-start items-start">
+                  {utility && (
+                    <UtilityArray
+                      selectedUtility={selectedUtility}
+                      placeholder="Utility"
+                      items={utility}
+                      setItems={setUtility}
+                    ></UtilityArray>
+                  )}
+                </Box>
                 <Button
                   size="large"
                   variant="outline"
                   sx={{ borderRadius: 0, backgroundColor: "transparent" }}
                   ref={returnFocusRef}
-                  disabled={creators.length >= 4}
-                  onClick={() => addCreator()}
+                  onClick={() => addUtility()}
                 >
-                  Add creator
+                  Add utility
                 </Button>
-                <>
-                  {" "}
-                  {(errors.creatorsFees || errors.creatorsKey) && (
-                    <p className="text-red-500 text-xs">
-                      {(errors.creatorsFees ?? errors.creatorsKey)?.message}
-                    </p>
-                  )}
-                </>
-              </div>
-            </Box>
-          </Box>
-          <Box className="grid grid-cols-2 gap-4 mx-5">
-            <Box
-              className="flex justify-start flex-col font-mono"
-              style={{
-                border: "1px solid rgb(9, 194, 246)",
-              }}
-            >
-              <span
-                className="flex text-white font-mono w-full text-lg px-3"
-                style={{
-                  borderBottom: "1px solid #6e7681",
-                  backgroundColor: "rgba(9, 194, 246, 0.2)",
-                }}
-              >
-                Mint details
-              </span>
-              <PublicMint
-                price={price}
-                setPrice={setPrice}
-                handleMintChange={(e) => setSelectedMint(e)}
-                duration={duration}
-                setDuration={setDuration}
-              />
-            </Box>
-            <Box
-              className="flex justify-between flex-col text-white gap-5 font-mono w-full"
-              style={{ border: "1px solid rgb(9, 194, 246)" }}
-            >
-              <span
-                className="flex text-white font-mono w-full text-lg px-3"
-                style={{
-                  borderBottom: "1px solid #6e7681",
-                  backgroundColor: "rgba(9, 194, 246, 0.2)",
-                }}
-              >
-                Utilities
-              </span>
-              <Box className="flex flex-wrap px-3">
-                {utility.map(
-                  (item, index) =>
-                    item.title && (
-                      <Label
-                        onClick={() => {
-                          setSelectedUtility(index);
-                        }}
-                        variant="accent"
-                        className="cursor-pointer"
-                      >
-                        {item.title}
-                      </Label>
-                    )
-                )}
-              </Box>
-              <Box className="flex flex-col w-full justify-start items-start">
-                {utility && (
-                  <UtilityArray
-                    selectedUtility={selectedUtility}
-                    placeholder="Utility"
-                    items={utility}
-                    setItems={setUtility}
-                  ></UtilityArray>
-                )}
               </Box>
               <Button
                 size="large"
-                variant="outline"
-                sx={{ borderRadius: 0, backgroundColor: "transparent" }}
-                ref={returnFocusRef}
-                onClick={() => addUtility()}
+                sx={{
+                  borderRadius: 0,
+                }}
+                disabled={false}
+                type="submit"
               >
-                Add utility
+                Submit request
+              </Button>
+              <Button
+                size="large"
+                type="button"
+                variant="danger"
+                sx={{
+                  borderRadius: 0,
+                }}
+                disabled={false}
+                onClick={() => setIsOpen(false)}
+              >
+                Cancel request
               </Button>
             </Box>
-            <Button
-              size="large"
-              sx={{
-                borderRadius: 0,
-              }}
-              disabled={false}
-              type="submit"
-              // onClick={() => submitRequest()}
-            >
-              Submit request
-            </Button>
-            <Button
-              size="large"
-              variant="danger"
-              sx={{
-                borderRadius: 0,
-              }}
-              disabled={false}
-
-              // onClick={() => submitRequest()}
-            >
-              Cancel request
-            </Button>
-          </Box>
-        </Dialog>
-      </form>
+          </Dialog>
+        </form>
+      </FormProvider>
     </motion.div>
   );
 };

@@ -2,6 +2,7 @@ import { DateTime } from "@metaplex-foundation/js";
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import { Keypair, TransactionInstruction } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
+import { ITreasuryTokenAccInfo } from "../components/CollectionLayout/PublicMint";
 import { ListingSource, RemintingStatus } from "../enums/collections.enums";
 export interface IUtilityData {
   title: string;
@@ -98,4 +99,8 @@ export type DerugForm = {
   symbol: string;
   creatorsFees: number;
   creatorsKey: string;
+  privateMintEnd: number;
+  price: number;
+  selectedMint: ITreasuryTokenAccInfo;
+  duration: number;
 };

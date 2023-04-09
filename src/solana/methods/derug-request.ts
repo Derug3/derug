@@ -9,7 +9,11 @@ import {
 } from "@solana/web3.js";
 import { BN } from "bn.js";
 import { getSingleCollection } from "../../api/collections.api";
-import { getFungibleTokenMetadata } from "../../common/helpers";
+import { getUserTwitterData } from "../../api/twitter.api";
+import {
+  getFungibleTokenMetadata,
+  getUserDataForDerug,
+} from "../../common/helpers";
 import {
   IChainCollectionData,
   ICollectionData,
@@ -149,6 +153,7 @@ export const getAllDerugRequest = async (
         creators: derug.account.creators,
         publicMint: !!derug.account.mintPrice,
         splToken: await getFungibleTokenMetadata(derug.account.mintCurrency),
+        userData: await getUserDataForDerug(derug.account.derugger.toString()),
       });
     }
 
