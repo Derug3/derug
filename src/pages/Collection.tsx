@@ -159,7 +159,9 @@ export const Collections: FC = () => {
       return (
         dayjs(collectionDerug.periodEnd).isBefore(dayjs()) &&
         derugRequests?.find(
-          (dr) => dr.voteCount >= collectionDerug.thresholdDenominator
+          (dr) =>
+            dr.voteCount >=
+            collectionDerug.totalSupply / collectionDerug.thresholdDenominator
         )
       );
     else return false;
