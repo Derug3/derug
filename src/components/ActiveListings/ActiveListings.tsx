@@ -28,7 +28,7 @@ export const ActiveListings: FC<{
           </Text>
         </Box>
         <Box
-          className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 box-content cursor-pointer overflow-hidden w-full"
+          className="flex flex-wrap flex-row box-content cursor-pointer overflow-hidden w-full"
           style={{ border: "1px solid rgb(9, 194, 246)" }}
         >
           {activeListings.map((cd) => {

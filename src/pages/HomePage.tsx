@@ -13,7 +13,7 @@ import Balancer from "react-wrap-balancer";
 import { motion } from "framer-motion";
 import { collectionsStore } from "../stores/collectionsStore";
 import { useNavigate } from "react-router";
-import { selectStyles } from "../utilities/styles";
+import { selectStyles, selectStylesSearch } from "../utilities/styles";
 import { ActiveListings } from "../components/ActiveListings/ActiveListings";
 import { getAllActiveCollections } from "../solana/methods/derug-request";
 import { generateSkeletonArrays } from "../utilities/nft-fetching";
@@ -92,7 +92,7 @@ const HomePage = () => {
         placeholder="Search rugged collections"
         isLoading={searchLoading}
         onInputChange={handleSearch}
-        styles={selectStyles}
+        styles={selectStylesSearch}
         options={filteredCollections}
         onChange={(e) => navigate(`collection?symbol=${e.symbol}`)}
         getOptionLabel={(option) => option.name}
@@ -171,6 +171,7 @@ const HomePage = () => {
             style={{
               border: "1px solid rgb(9, 194, 246)",
               borderTop: "none",
+              paddingTop: "5px",
             }}
           >
             how it works?
