@@ -126,7 +126,7 @@ export const AddDerugRequst: FC<{
             selectedMint.address.toString() !== WRAPPED_SOL_MINT.toString()
             ? selectedMint.address
             : //TODO:Remove before mainnet
-              new PublicKey("4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU"),
+              undefined,
           activeListings ? activeListings[0] : undefined
         );
         const addedRequests = [...(derugRequests ?? [])];
