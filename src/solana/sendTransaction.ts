@@ -41,6 +41,8 @@ export const sendTransaction = async (
     for (const [index, tx] of sigendTransactions.entries()) {
       const txSim = await connection.simulateTransaction(tx);
 
+      console.log(txSim);
+
       const savedNfts = [...nfts];
 
       try {
