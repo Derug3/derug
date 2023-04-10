@@ -1,6 +1,8 @@
+import { DateTime } from "@metaplex-foundation/js";
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import { Keypair, TransactionInstruction } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
+import { ITreasuryTokenAccInfo } from "../components/CollectionLayout/PublicMint";
 import { ListingSource, RemintingStatus } from "../enums/collections.enums";
 export interface IUtilityData {
   title: string;
@@ -40,3 +42,65 @@ export interface IGraphData {
   months: string[];
   prices: number[];
 }
+
+export interface IRemintConfig {
+  address: PublicKey;
+  newName: string;
+  newSymbol: string;
+  derugRequest: PublicKey;
+  mintPrice?: number;
+  collection: PublicKey;
+  candyMachineCreator: PublicKey;
+  authority: PublicKey;
+  privateMintEnd?: Date;
+  mintCurrency?: PublicKey;
+  candyMachine: PublicKey;
+  sellerFeeBps: number;
+  splTokenData?: ISplTokenData;
+}
+
+export interface ISplTokenData {
+  name: string;
+  decimals: number;
+  symbol: string;
+  image?: string;
+}
+
+export interface CandyMachineDto {
+  derugData: string;
+  candyMachineKey: string;
+  candyMachineSecretKey: string;
+}
+
+export interface INonMinted {
+  nftMetadata: string;
+  derugData: string;
+  hasReminted: boolean;
+  dateReminted: Date;
+  remintAuthority: string;
+  name: string;
+  uri: string;
+  creator: string;
+}
+
+export interface ICreator {
+  address: PublicKey;
+  share: number;
+}
+
+export interface Creator {
+  address: string;
+  share: number;
+}
+
+export type DerugForm = {
+  name: string;
+  fee: number;
+  symbol: string;
+  creatorsFees: number;
+  creatorsKey: string;
+  privateMintEnd: number;
+  price: number;
+  selectedMint: ITreasuryTokenAccInfo;
+  duration: number;
+};

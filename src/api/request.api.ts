@@ -12,7 +12,7 @@ export function makeRequest(
       "Content-type": "application/json",
       Authorization: `Bearer ${authorizationToken}`,
     },
-    body,
+    body: JSON.stringify(body),
   });
 }
 
@@ -28,10 +28,12 @@ export async function get(path: string, url?: string): Promise<any> {
 
 export async function post(
   path: string,
-  body: any,
+  body?: any,
   url?: string
 ): Promise<any> {
-  const endpoint = `${url ?? (process.env.REACT_APP_SERVER as string)}${path}`;
+  const endpoint = `${
+    url ?? (process.env.REACT_APP_API_ENDPOINT as string)
+  }${path}`;
   const response = await makeRequest(endpoint, "POST", body);
 
   return response.json();

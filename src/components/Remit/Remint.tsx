@@ -17,6 +17,7 @@ import { remintNft } from "../../solana/methods/remint";
 import { chunk } from "lodash";
 import nftStore from "../../stores/nftStore";
 import { Oval } from "react-loader-spinner";
+import dayjs from "dayjs";
 export const Remint: FC<{
   getWinningRequest: IRequest | undefined;
 }> = ({ getWinningRequest }) => {
@@ -26,7 +27,7 @@ export const Remint: FC<{
 
   const [isReminting, toggleIsReminting] = useState(false);
 
-  const { collectionDerug, chainCollectionData } =
+  const { collectionDerug, chainCollectionData, remintConfig } =
     useContext(CollectionContext);
 
   const { nfts, setNfts } = nftStore();
@@ -155,50 +156,52 @@ export const Remint: FC<{
   return (
     <Box className="w-full flex-col gap-10">
       <WinningRequest request={getWinningRequest!} />
-      {collectionDerug && collectionDerug.status === DerugStatus.Reminting && (
-        <Box className="flex flex-col items-center gap-10 w-full mt-10">
-          {!loading &&
-            collectionNfts &&
-            collectionNfts?.length > 0 &&
-            showRemintButton && (
-              <Button
-                onClick={remintNfts}
-                sx={{
-                  background: "rgb(9, 194, 246)",
-                  borderRadius: "4px",
-                  color: "black",
-                  fontWeight: "bold",
-                  border: "1px solid none",
-                  fontSize: "1.5em",
-                  padding: "1em 2em",
-                  fontFamily: "monospace",
-                  "&:hover": {
-                    border: "1px solid rgb(9, 194, 246)",
-                    background: "transparent",
-                    color: "rgb(9, 194, 246)",
-                  },
-                }}
-              >
-                {!isReminting ? (
-                  <p>Remint</p>
-                ) : (
-                  <Oval color="black" width={"1.5em"} secondaryColor="blue" />
-                )}
-              </Button>
-            )}
-          <Box className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 px-10 ">
-            {loading ? (
-              <>
-                {generateSkeletonArrays(5).map(() => {
-                  return <Skeleton baseColor="red" />;
-                })}
-              </>
-            ) : (
-              <>{renderCollectionNfts}</>
-            )}
+      {collectionDerug &&
+        collectionDerug.status === DerugStatus.Reminting &&
+        dayjs(remintConfig?.privateMintEnd).isAfter(dayjs()) && (
+          <Box className="flex flex-col items-center gap-10 w-full mt-10">
+            {!loading &&
+              collectionNfts &&
+              collectionNfts?.length > 0 &&
+              showRemintButton && (
+                <Button
+                  onClick={remintNfts}
+                  sx={{
+                    background: "rgb(9, 194, 246)",
+                    borderRadius: "4px",
+                    color: "black",
+                    fontWeight: "bold",
+                    border: "1px solid none",
+                    fontSize: "1.5em",
+                    padding: "1em 2em",
+                    fontFamily: "monospace",
+                    "&:hover": {
+                      border: "1px solid rgb(9, 194, 246)",
+                      background: "transparent",
+                      color: "rgb(9, 194, 246)",
+                    },
+                  }}
+                >
+                  {!isReminting ? (
+                    <p>Remint</p>
+                  ) : (
+                    <Oval color="black" width={"1.5em"} secondaryColor="blue" />
+                  )}
+                </Button>
+              )}
+            <Box className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 px-10 ">
+              {loading ? (
+                <>
+                  {generateSkeletonArrays(5).map(() => {
+                    return <Skeleton baseColor="red" />;
+                  })}
+                </>
+              ) : (
+                <>{renderCollectionNfts}</>
+              )}
+            </Box>
           </Box>
-        </Box>
-      )}
+        )}
     </Box>
   );
 };

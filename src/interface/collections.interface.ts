@@ -1,5 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 import { DerugStatus, ListingSource } from "../enums/collections.enums";
+import { ICreator, ISplTokenData } from "./derug.interface";
+import { IUserData } from "./user.interface";
 
 export interface ICollectionData {
   symbol: string;
@@ -14,25 +16,22 @@ export interface ICollectionData {
   numMints?: number;
 }
 
-export interface IReservedRights {
-  address: string;
-  amount: number;
-}
-
 export interface IRequest {
   address: PublicKey;
   derugger: PublicKey;
   createdAt: number;
   voteCount: number;
-  sellerFeeBasicPoints?: number;
-  publicMint?: boolean;
-  publicMintPrice?: number;
-  reservedRights?: IReservedRights[];
+  sellerFeeBps: number;
+  mintPrice?: number;
+  publicMint: boolean;
+  creators: ICreator[];
   privateMintDuration?: number;
-  denominatedTokenMint?: PublicKey;
-  newSymbol?: string;
-  newName?: string;
+  mintCurrency: PublicKey | null;
+  newSymbol: string;
+  newName: string;
   utility: IUtility[];
+  splToken?: ISplTokenData;
+  userData?: IUserData;
 }
 export interface IUtility {
   title: string;

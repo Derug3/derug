@@ -1,15 +1,35 @@
 import derugPfp from "../../assets/derugPfp.png";
 import { Button, Header } from "@primer/react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FADE_IN_ANIMATION_SETTINGS, HOME } from "../../utilities/constants";
 import { useNavigate } from "react-router";
+import { userStore } from "../../stores/userStore";
+import toast from "react-hot-toast";
+import { getUserTwitterData } from "../../api/twitter.api";
+import { useAnchorWallet } from "@solana/wallet-adapter-react";
 
 const settings = ["Twitter", "Discord"];
 
 const HeaderNav: FC = () => {
   const navigate = useNavigate();
+
+  const { setUserData, userData } = userStore();
+
+  const wallet = useAnchorWallet();
+
+  useEffect(() => {
+    if (wallet) void storeUserData();
+  }, [wallet]);
+
+  const storeUserData = async () => {
+    try {
+      setUserData(await getUserTwitterData(wallet?.publicKey.toString()!));
+    } catch (error) {
+      setUserData(undefined);
+    }
+  };
 
   return (
     <Header

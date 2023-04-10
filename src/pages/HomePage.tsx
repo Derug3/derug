@@ -40,7 +40,7 @@ const HomePage = () => {
 
   useEffect(() => {
     void searchByName();
-  }, [name, "activeCollections"]);
+  }, [name, activeCollections]);
 
   const handleSearch = (e: any) => {
     if (e && e !== "") {
@@ -108,10 +108,7 @@ const HomePage = () => {
               gap: "0.5em",
             }}
           >
-            <img
-              style={{ borderRadius: "50%", width: "2.5em", height: "2.5em" }}
-              src={e.image}
-            />
+            <img style={{ width: "2.5em", height: "2.5em" }} src={e.image} />
             <Text as={"h3"}>{e.name}</Text>
           </Box>
         )}
@@ -163,6 +160,22 @@ const HomePage = () => {
         }}
       >
         {renderSelect}
+        <Text
+          onClick={() =>
+            window.open(`https://derug-us.gitbook.io/derug_us/`, "_blank")
+          }
+          className="text-xl font-mono text-yellow-500 cursor-pointer flex justify-center w-full"
+        >
+          <span
+            className="px-4"
+            style={{
+              border: "1px solid rgb(9, 194, 246)",
+              borderTop: "none",
+            }}
+          >
+            how it works?
+          </span>
+        </Text>
       </Box>
       {activeCollections && activeCollections.length ? (
         <ActiveListings activeListings={activeCollections} />

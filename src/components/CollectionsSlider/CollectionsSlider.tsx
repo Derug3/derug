@@ -19,8 +19,9 @@ const CollectionsSlider: FC = () => {
     return collections.map((c, index) => {
       return (
         <Box
-          className="box-content cursor-pointer h-36 w-36 overflow-hidden border-r-4 border-t-4 p-4 border-slate-700"
+          className="box-content cursor-pointer h-36 w-36 overflow-hidden"
           key={index}
+          style={{ border: "1px solid rgb(9, 194, 246)" }}
           onMouseEnter={() => setHoveredCollection(index)}
           onMouseLeave={() => setHoveredCollection(undefined)}
           onClick={() => navigate(`${COLLECTION}?symbol=${c.symbol}`)}
@@ -54,8 +55,12 @@ const CollectionsSlider: FC = () => {
         style={{ transform: "translateY(-100%)" }}
       >
         <span
-          className="border-r-4 border-t-4 border-l-4 border-slate-700 px-4"
-          style={{ backgroundColor: "#0d1117" }}
+          className="px-4"
+          style={{
+            backgroundColor: "#0d1117",
+            border: "1px solid rgb(9, 194, 246)",
+            borderBottom: "none",
+          }}
         >
           browse derugs
         </span>

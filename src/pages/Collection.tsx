@@ -1,7 +1,6 @@
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { LeftPane } from "../components/CollectionLayout/LeftPane";
 import { RightPane } from "../components/CollectionLayout/RightPane";
-// import { Proposals } from "./../components/CollectionLayout/Proposals";
 import {
   IChainCollectionData,
   ICollectionData,
@@ -11,8 +10,6 @@ import {
   INftListing,
   ITrait,
 } from "../interface/collections.interface";
-
-import Marqee from "react-fast-marquee";
 
 import { CollectionStats } from "../components/CollectionLayout/CollectionStats";
 import { IRequest } from "../interface/collections.interface";
@@ -32,12 +29,14 @@ import DerugRequest from "../components/DerugRequest/DerugRequest";
 import { DerugStatus } from "../enums/collections.enums";
 import dayjs from "dayjs";
 import { Remint } from "../components/Remit/Remint";
-
-import { toast } from "react-hot-toast";
 import { getFloorPrice, getListings, getTraits } from "../api/tensor";
-import { IGraphData } from "../interface/derug.interface";
+import { IGraphData, IRemintConfig } from "../interface/derug.interface";
 import NoDerugRequests from "../components/DerugRequest/NoDerugRequests";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { getCandyMachine, getRemintConfig } from "../solana/methods/remint";
+import PublicMint from "../components/Remit/PublicMint";
+import { CandyMachineV2 } from "@metaplex-foundation/js";
+import { DERUG } from "../api/url.api";
 export const Collections: FC = () => {
   dayjs.extend(utc);
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
@@ -57,16 +56,21 @@ export const Collections: FC = () => {
   const [collectionDerug, setCollectionDerug] =
     useState<ICollectionDerugData>();
   const [graphData, setGraphData] = useState<IGraphData>();
+  const [candyMachine, setCandyMachine] = useState<CandyMachineV2>();
 
   const [derugRequests, setDerugRequests] = useState<IRequest[]>();
   const iframeRef = useRef(null);
   let slug = useSearchParams()[0].get("symbol");
-  const [isOpen, setIsOpen] = useState(true);
+  let derug = useSearchParams()[0].get(DERUG);
+  const [remintConfig, setRemintConfig] = useState<IRemintConfig | undefined>();
 
   const wallet = useWallet();
 
   useEffect(() => {
     void getBasicCollectionData();
+    if (derug) {
+      setDerugRequestVisible(true);
+    }
   }, []);
 
   const getBasicCollectionData = async () => {
@@ -102,7 +106,7 @@ export const Collections: FC = () => {
 
   useEffect(() => {
     if (basicCollectionData) void getChainCollectionDetails();
-  }, [basicCollectionData, listings]);
+  }, [basicCollectionData]);
 
   const getChainCollectionDetails = async () => {
     try {
@@ -110,12 +114,19 @@ export const Collections: FC = () => {
       //   basicCollectionData!,
       //   listings?.at(0)
       // );
+
       const chainDetails = await getDummyCollectionData();
 
       chainDetails.slug = slug!;
       setChainCollectionData(chainDetails);
       if (chainDetails.hasActiveDerugData) {
-        console.log(chainDetails.derugDataAddress.toString());
+        const remintConfigData = await getRemintConfig(
+          chainDetails.derugDataAddress
+        );
+        setRemintConfig(remintConfigData);
+        if (remintConfigData) {
+          setCandyMachine(await getCandyMachine(remintConfigData.candyMachine));
+        }
 
         setCollectionDerug(
           await getCollectionDerugData(chainDetails.derugDataAddress)
@@ -135,27 +146,24 @@ export const Collections: FC = () => {
     ];
   }, [derugRequests]);
 
-  const shouldShowWinningModal = (status?: DerugStatus) => {
-    if (
-      derugRequests &&
-      derugRequests.some(
-        (el) => el.derugger.toString() === wallet.publicKey?.toString()
-      ) &&
-      getWinningRequest &&
-      status === DerugStatus.Voting
-    ) {
-      setIsOpen(true);
-      return true;
-    }
-  };
-
   const showDerugRequests = useMemo(() => {
     if (collectionDerug) {
       return !!!collectionDerug.winningRequest;
     } else {
       return false;
     }
-  }, [collectionDerug]);
+  }, [collectionDerug, derugRequests]);
+
+  const hasWinning = useMemo(() => {
+    if (collectionDerug)
+      return (
+        dayjs(collectionDerug.periodEnd).isBefore(dayjs()) &&
+        derugRequests?.find(
+          (dr) => dr.voteCount >= collectionDerug.thresholdDenominator
+        )
+      );
+    else return false;
+  }, [collectionDerug, derugRequests]);
 
   return (
     <CollectionContext.Provider
@@ -180,9 +188,18 @@ export const Collections: FC = () => {
         setRequests: setDerugRequests,
         graphData,
         setGraphData,
+        remintConfig,
+        setRemintConfig,
+        candyMachine,
+        setCandyMachine,
       }}
     >
-      <Box className="overflow-y-auto pt-5" style={{ zoom: "85%" }}>
+      <Box
+        className="overflow-y-auto pt-5"
+        style={{
+          zoom: "85%",
+        }}
+      >
         <Box
           className="overflow-y-clip flex flex-col"
           sx={{
@@ -192,12 +209,14 @@ export const Collections: FC = () => {
             },
           }}
         >
-          <AddDerugRequst
-            isOpen={derugRequestVisible}
-            setIsOpen={(val) => setDerugRequestVisible(val)}
-            derugRequests={derugRequests}
-            setDerugRequest={setDerugRequests}
-          />
+          {wallet && (
+            <AddDerugRequst
+              isOpen={derugRequestVisible}
+              setIsOpen={(val) => setDerugRequestVisible(val)}
+              derugRequests={derugRequests}
+              setDerugRequest={setDerugRequests}
+            />
+          )}
           <Box className="sticky top-0 grid">
             <HeaderTabs
               setSelectedInfo={setSelectedInfo}
@@ -252,15 +271,25 @@ export const Collections: FC = () => {
         <>
           {(collectionDerug.status === DerugStatus.Initialized ||
             collectionDerug.status === DerugStatus.Voting) &&
-          showDerugRequests ? (
+          showDerugRequests &&
+          !hasWinning ? (
             <DerugRequest />
           ) : (
             <>
-              {collectionDerug &&
-                collectionDerug.addedRequests.find((ar) => ar.winning) &&
+              {remintConfig &&
+              (dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) ||
+                (remintConfig.mintPrice && !remintConfig.privateMintEnd)) &&
+              candyMachine &&
+              candyMachine.itemsLoaded.toNumber() > 0 ? (
+                <PublicMint />
+              ) : (
+                collectionDerug &&
+                (hasWinning ||
+                  collectionDerug.addedRequests.find((ar) => ar.winning)) &&
                 derugRequests && (
                   <Remint getWinningRequest={getWinningRequest} />
-                )}
+                )
+              )}
             </>
           )}
         </>

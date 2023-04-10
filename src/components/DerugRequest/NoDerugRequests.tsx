@@ -34,7 +34,7 @@ export const NoDerugRequests: FC<{
     <motion.div
       className="flex w-full flex-col mt-5"
       variants={FADE_DOWN_ANIMATION_VARIANTS}
-      style={{ boxShadow: "0 0 10px 0 rgba(0,0,0,0.5)" }}
+      style={{ boxShadow: "0 -10px 10px -10px rgba(9, 194, 246, 0.2)" }}
     >
       <Dialog
         returnFocusRef={returnFocusRef}
