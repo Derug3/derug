@@ -23,13 +23,10 @@ export const DerugRequestItem: FC<{
   const [isOpen, setIsOpen] = useState(false);
 
   const [loading, toggleLoading] = useState(false);
-  const {
-    collection,
-    collectionDerug,
-    chainCollectionData,
-    setRequests,
-    derugRequests,
-  } = useContext(CollectionContext);
+  const { collectionDerug, chainCollectionData, setRequests, derugRequests } =
+    useContext(CollectionContext);
+
+  const [isHovered, toggleIsHovered] = useState(false);
 
   const wallet = useWallet();
 
@@ -49,9 +46,10 @@ export const DerugRequestItem: FC<{
     return collectionDerug?.status === DerugStatus.Reminting;
   }
 
-  const castVote = async () => {
+  const castVote = async (e: any) => {
     if (wallet && collectionDerug && chainCollectionData) {
       try {
+        e.stopPropagation();
         toggleLoading(true);
         const derugNfts = await getAllNftsFromCollection(
           wallet,
@@ -79,6 +77,7 @@ export const DerugRequestItem: FC<{
         );
         addedRequests[derugIndex] = { ...updatedRequest };
         setRequests(addedRequests);
+        setIsOpen(false);
       } catch (error: any) {
         toast.error("Failed to vote:", error);
       } finally {
@@ -89,11 +88,13 @@ export const DerugRequestItem: FC<{
 
   return (
     <div
-      className="flex flex-col w-full items-start py-4 gap-5 border-[1px] border-main-blue px-8 cursor-pointer"
+      className="flex flex-col w-full 
+      items-start py-4 gap-5 border-[1px] border-main-blue px-8 cursor-pointer"
       onClick={() => setIsOpen(true)}
     >
       {isOpen && (
         <DerugRequestDetails
+          castVote={castVote}
           derugRequest={derugRequest}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
@@ -101,7 +102,7 @@ export const DerugRequestItem: FC<{
       )}
 
       <div className="flex flex-row w-full">
-        <div className="flex gap-3 items-center justify-start w-1/2	">
+        <div className="flex gap-3 items-center justify-start w-1/2">
           <div className="flex flex-col items-start gap-4">
             <div className="text-md text-white font-mono truncate flex items-center gap-4">
               <span style={{ fontSize: "1em", opacity: 0.7 }}>
@@ -113,47 +114,58 @@ export const DerugRequestItem: FC<{
                 className="rounded-[50px] w-5 cursor-pointer "
               />
             </div>
-            {derugRequest.userData && (
-              <div className="flex gap-5 items-center cursor-pointer hover:text-red-200">
-                <p className="text-lg">
-                  Derugger: {derugRequest.userData.twitterHandle}
-                </p>
-                <img
-                  src={derugRequest.userData.image}
-                  alt=""
-                  className="rounded-[50px] w-6"
-                />
-              </div>
-            )}
-          </div>
-          {derugRequest.utility &&
-            derugRequest.utility.map((u, i) => (
-              <Tooltip
-                sx={{
-                  "::after": {
-                    fontSize: "1em",
-                    backgroundColor: "#282C34",
-                  },
-                }}
-                direction="n"
-                aria-label={u.description}
-                noDelay={true}
-              >
-                <div
-                  className="text-sm font-mono cursor-hderugRequestp"
-                  style={{
-                    borderRightWidth:
-                      i !== derugRequest.utility.length - 1 ? "1px" : "0px",
-                    paddingRight:
-                      i !== derugRequest.utility.length - 1 ? "1em" : "0px",
-                    color: "rgb(9, 194, 246)",
-                  }}
-                >
-                  {" "}
-                  {u.title}
+            <div>
+              {derugRequest.userData && (
+                <div className="flex gap-5 items-center cursor-pointer hover:text-red-200">
+                  <p className="text-lg">
+                    Derugger : {derugRequest.userData.twitterHandle}
+                  </p>
+                  <img
+                    src={derugRequest.userData.image}
+                    alt=""
+                    className="rounded-[50px] w-6"
+                  />
                 </div>
-              </Tooltip>
-            ))}
+              )}
+            </div>
+            <div className="flex gap-4 items-center">
+              <p className="text-lg">Utilities : </p>
+              {derugRequest.utility &&
+                derugRequest.utility
+                  .filter((u) => u.title !== "")
+                  .map((u, i) => (
+                    <Tooltip
+                      sx={{
+                        "::after": {
+                          fontSize: "1em",
+                          backgroundColor: "#282C34",
+                        },
+                      }}
+                      direction="n"
+                      aria-label={u.description}
+                      noDelay={true}
+                    >
+                      <div
+                        className="text-sm font-mono cursor-hderugRequestp"
+                        style={{
+                          borderRightWidth:
+                            i !== derugRequest.utility.length - 1
+                              ? "1px"
+                              : "0px",
+                          paddingRight:
+                            i !== derugRequest.utility.length - 1
+                              ? "1em"
+                              : "0px",
+                          color: "rgb(9, 194, 246)",
+                        }}
+                      >
+                        {" "}
+                        {u.title}
+                      </div>
+                    </Tooltip>
+                  ))}
+            </div>
+          </div>
         </div>
         <div className="flex flex-col items-end w-full">
           <div className="flex items-center justify-end w-full">

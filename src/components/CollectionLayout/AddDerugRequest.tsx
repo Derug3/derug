@@ -98,13 +98,15 @@ export const AddDerugRequst: FC<{
       if (wallet && chainCollectionData && utility && collectionStats && data) {
         const requestAddress = await createOrUpdateDerugRequest(
           wallet,
-          utility.map((ut) => {
-            return {
-              action: UtilityAction.Add,
-              description: ut.description,
-              title: ut.title,
-            };
-          }),
+          utility
+            .filter((u) => u.title !== "")
+            .map((ut) => {
+              return {
+                action: UtilityAction.Add,
+                description: ut.description,
+                title: ut.title,
+              };
+            }),
           chainCollectionData,
           collectionStats,
           +data.fee * 10,

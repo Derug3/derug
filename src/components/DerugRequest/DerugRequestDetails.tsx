@@ -13,10 +13,15 @@ import solanaFm from "../../assets/solanaFm.jpeg";
 const DerugRequestDetails: FC<{
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  castVote: (e: any) => Promise<void>;
   derugRequest: IRequest;
-}> = ({ isOpen, setIsOpen, derugRequest }) => {
+}> = ({ isOpen, setIsOpen, derugRequest, castVote }) => {
   const returnFocusRef = useRef(null);
   const [creatorsData, setCreatorsData] = useState<IUserData[]>();
+
+  const [selecterUtility, setSelectedUtility] = useState(
+    derugRequest.utility[0]
+  );
 
   useEffect(() => {
     void getCreatorsData();
@@ -68,6 +73,23 @@ const DerugRequestDetails: FC<{
     });
   }, [creatorsData]);
 
+  const renderUtilityTitles = useMemo(() => {
+    return derugRequest.utility.map((u) => {
+      return (
+        <div
+          onClick={() => setSelectedUtility(u)}
+          className={`border-[1px] rounded-md bg-${
+            selecterUtility.title === u.title
+              ? "main-blue/[0.7]"
+              : "transparent"
+          } border-main-blue px-3 py-1`}
+        >
+          <p className="font-bold text-white">{u.title}</p>
+        </div>
+      );
+    });
+  }, [derugRequest.utility, selecterUtility]);
+
   return (
     <Dialog
       returnFocusRef={returnFocusRef}
@@ -75,6 +97,8 @@ const DerugRequestDetails: FC<{
       onDismiss={() => setIsOpen(false)}
       sx={{
         width: "900px",
+        height: "100%",
+        overflow: "scroll",
       }}
       aria-labelledby="header-id"
     >
@@ -189,6 +213,35 @@ const DerugRequestDetails: FC<{
           <div className="flex flex-col gap-5 items-start w-full">
             <p className="text-xl font-bold ">New Creators</p>
             <div className="flex flex-col gap-1 w-full">{renderCreators}</div>
+          </div>
+
+          {derugRequest.utility.length > 0 && (
+            <div className="flex flex-col items-start gap-5">
+              <p className="text-xl">Utilities</p>
+              <div className="flex w-full gap-5">{renderUtilityTitles}</div>
+              <div className="bg-black w-full">
+                <p className="text-white text-md text-start px-3 h-[15em] overflow-scroll">
+                  {selecterUtility.description}
+                </p>
+              </div>
+            </div>
+          )}
+          <div className="mt-5 w-full flex justify-between items-center">
+            <button
+              className="text-white border-[1px] font-bold p-2 rounded-md"
+              onClick={() => setIsOpen(false)}
+            >
+              Cancel
+            </button>
+
+            <button
+              onClick={castVote}
+              className="rounded-md border-[1px]
+            hover:bg-main-blue hover:text-black
+             border-main-blue bg-transparent py-2 px-4 text-main-blue"
+            >
+              Vote
+            </button>
           </div>
         </div>
       </motion.div>
