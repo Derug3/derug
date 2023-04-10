@@ -237,10 +237,13 @@ export const DerugRequestItem: FC<{
           {showVoteButton() && (
             <button
               onClick={castVote}
-              className="border-[1px] border-main-blue text-lg mt-5 px-5 py-1 text-main-blue"
+              className="justify-center rounded-md border-[1px]
+              hover:bg-main-blue hover:text-black
+               border-main-blue bg-transparent py-2 px-10 text-main-blue mt-8"
             >
               {loading ? (
                 <Oval
+                  wrapperClass=" w-[1.5em] "
                   color="rgb(9, 194, 246)"
                   height={"1.5em"}
                   secondaryColor={"transparent"}
