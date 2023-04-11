@@ -95,7 +95,7 @@ export const parseKeyArray = (sc: string) => {
 
 export const parseTransactionError = (data: any) => {
   const parsedData = JSON.parse(JSON.stringify(data));
-  console.log(parsedData);
+
   const derugProgram = derugProgramFactory();
 
   if (

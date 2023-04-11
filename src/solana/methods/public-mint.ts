@@ -180,7 +180,7 @@ export const storeCandyMachineItems = async (
           },
           items: nonMintedChunk.map((nm, index) => {
             return {
-              name: remintConfig.newName,
+              name: getNftName(totalSum + derug.totalReminted + index + 1),
               uri: nm.uri,
             };
           }),
@@ -231,8 +231,10 @@ export const mintNftFromCandyMachine = async (
 
     return minted.nft;
   } catch (error: any) {
-    throw new Error(
-      parseTransactionError(JSON.parse(JSON.stringify(error)).cause)
-    );
+    const parsedError = JSON.parse(JSON.stringify(error)).cause;
+    if (parsedError.logs.find((l: any) => l.includes("NotEnoughToken"))) {
+      throw new Error(" Not enough tokens to pay for this minting.");
+    }
+    throw new Error(parseTransactionError(parsedError));
   }
 };
