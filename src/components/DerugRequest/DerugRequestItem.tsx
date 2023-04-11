@@ -185,11 +185,7 @@ export const DerugRequestItem: FC<{
                 <div
                   className={`absolute w-[1px] h-[100%] bg-red-500`}
                   style={{
-                    left: `${
-                      (collectionDerug.thresholdDenominator /
-                        collectionDerug.totalSupply) *
-                      100
-                    }%`,
+                    left: `${10}%`,
                   }}
                 />
               )}

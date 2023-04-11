@@ -8,6 +8,7 @@ import { ANCHOR_ERROR, ERROR_NUMBER } from "./constants";
 import { Strategy, TokenListProvider } from "@solana/spl-token-registry";
 import { IUserData } from "../interface/user.interface";
 import { getUserTwitterData } from "../api/twitter.api";
+import { NATIVE_MINT } from "@solana/spl-token";
 export const splitTimestamps = (
   recentCollections: ICollectionRecentActivities[]
 ) => {
@@ -121,9 +122,19 @@ export const getFungibleTokenMetadata = async (
   tokenMint: PublicKey | null
 ): Promise<ISplTokenData | undefined> => {
   try {
-    if (tokenMint === null) return undefined;
     const tokenListProvider = new TokenListProvider();
     const resolved = await tokenListProvider.resolve(Strategy.Static);
+    if (tokenMint === null) {
+      const solToken = resolved
+        .getList()
+        .find((t) => t.address === NATIVE_MINT.toString())!;
+      return {
+        decimals: 9,
+        name: solToken?.name,
+        symbol: solToken.symbol,
+        image: solToken.logoURI,
+      };
+    }
     const token = resolved
       .getList()
       .find((t) => t.address === tokenMint.toString());

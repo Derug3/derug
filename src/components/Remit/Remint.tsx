@@ -106,24 +106,25 @@ export const Remint: FC<{
           })
         );
 
-        if (collectionNfts.length > 10) {
-          const chunkedNfts = chunk(collectionNfts, 10);
-          for (const collectionChunk of chunkedNfts) {
-            await remintNft(
-              wallet!,
-              collectionDerug,
-              winningRequest,
-              collectionChunk?.filter((nft) => !nft.remintingStatus)
-            );
-          }
-        } else {
-          await remintNft(
-            wallet!,
-            collectionDerug,
-            winningRequest,
-            collectionNfts?.filter((nft) => !nft.remintingStatus)
-          );
-        }
+        // if (collectionNfts.length > 10) {
+        //   const chunkedNfts = chunk(collectionNfts, 10);
+        //   for (const collectionChunk of chunkedNfts) {
+        //     await remintNft(
+        //       wallet!,
+        //       collectionDerug,
+        //       winningRequest,
+        //       collectionChunk?.filter((nft) => !nft.remintingStatus)
+        //     );
+        //   }
+        // } else {
+
+        await remintNft(
+          wallet!,
+          collectionDerug,
+          winningRequest,
+          collectionNfts?.filter((nft) => !nft.remintingStatus)
+        );
+        // }
       }
     } catch (error) {
       console.log(error);

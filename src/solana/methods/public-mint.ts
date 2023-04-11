@@ -31,7 +31,11 @@ import { derugProgramFactory, metaplex } from "../utilities";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { chunk } from "lodash";
-import { parseKeyArray, parseTransactionError } from "../../common/helpers";
+import {
+  getNftName,
+  parseKeyArray,
+  parseTransactionError,
+} from "../../common/helpers";
 import { RPC_CONNECTION } from "../../utilities/utilities";
 import { sendTransaction, sendVersionedTx } from "../sendTransaction";
 
@@ -165,7 +169,7 @@ export const storeCandyMachineItems = async (
 
     let totalSum = 0;
 
-    for (const nonMintedChunk of chunkedNonMinted) {
+    for (const [chunkIndex, nonMintedChunk] of chunkedNonMinted.entries()) {
       const secondTx = metaplex
         .candyMachinesV2()
         .builders()
@@ -174,9 +178,9 @@ export const storeCandyMachineItems = async (
             ...candyMachineAccount,
             itemsLoaded: toBigNumber(totalSum),
           },
-          items: nonMintedChunk.map((nm) => {
+          items: nonMintedChunk.map((nm, index) => {
             return {
-              name: nm.name,
+              name: remintConfig.newName,
               uri: nm.uri,
             };
           }),

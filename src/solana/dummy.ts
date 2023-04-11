@@ -25,6 +25,7 @@ export const getDummyCollectionData =
 
     try {
       const derugDataAccount = await RPC_CONNECTION.getAccountInfo(derugData);
+
       if (derugDataAccount && derugDataAccount.data.length > 0) {
         hasActiveDerugData = true;
       }
@@ -37,7 +38,7 @@ export const getDummyCollectionData =
       hasActiveDerugData,
       slug: "boogle_gen",
       totalSupply: 99,
-      rugUpdateAuthority: "6x1bmYkoPFs2oWjoRg7v4NAW4pzjxid2DVooyJmC4emH",
+      rugUpdateAuthority: "G6wLaE6jYvVB1QpjtBqUvfYGymnRmkof52WDKXJdAqKA",
       derugDataAddress: derugData,
     };
   };

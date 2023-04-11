@@ -76,9 +76,9 @@ export const claimVictory = async (
         candyMachineSecretKey: stringifyData(candyMachine.secretKey),
         derugData: derug.address.toString(),
       });
+      //TODO: remove this before mainnet
       storeAllNfts(
-        "6x1bmYkoPFs2oWjoRg7v4NAW4pzjxid2DVooyJmC4emH",
-        // chainCollectionData.rugUpdateAuthority.toString(),
+        chainCollectionData.rugUpdateAuthority.toString(),
         derug.address.toString()
       );
       remainingAccounts.push({
@@ -245,6 +245,7 @@ export const remintNft = async (
   request: IRequest,
   nfts: IDerugCollectionNft[]
 ) => {
+  debugger;
   const instructions: IDerugInstruction[] = [];
   const derugProgram = derugProgramFactory();
 
@@ -399,16 +400,16 @@ export const remintNft = async (
       .instruction();
 
     instructions.push({
-      instructions: [
-        createTokenAcc,
-        createMint,
-        remintNftIx,
-        updateVerifyCollection,
-      ],
-      pendingDescription: `Reminting ${nft.metadata.data.name}`,
+      instructions: [createTokenAcc, createMint, remintNftIx],
+      pendingDescription: `Reminting ${nft.metadata.data.name}}`,
       successDescription: `Successfully reminted ${nft.metadata.data.name}`,
       partialSigner: [tokenAccount, mint],
       remintingNft: nft,
+    });
+    instructions.push({
+      instructions: [updateVerifyCollection],
+      pendingDescription: "Verifying NFT collection",
+      successDescription: `Successfully verified collection for NFT:${nft.metadata.data.name}`,
     });
   }
   await sendTransaction(RPC_CONNECTION, instructions, wallet);

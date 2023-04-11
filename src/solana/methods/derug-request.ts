@@ -147,6 +147,8 @@ export const getAllDerugRequest = async (
     const requests: IRequest[] = [];
 
     for (const derug of allRequestsForCollection) {
+      console.log(derug);
+
       requests.push({
         createdAt: derug.account.createdAt.toNumber(),
         derugger: derug.account.derugger,
