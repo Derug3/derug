@@ -5,6 +5,7 @@ import { PublicKey } from "@solana/web3.js";
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { FieldErrors, useForm, useFormContext } from "react-hook-form";
 import Select from "react-select";
+import useDebounce from "../../hooks/useDebounce";
 import { DerugForm } from "../../interface/derug.interface";
 import { selectStyles } from "../../utilities/styles";
 
@@ -21,7 +22,7 @@ export interface ITreasuryTokenAccInfo {
   address: PublicKey | undefined;
   chainId?: number;
   decimals: number;
-  extensions: any;
+  extensions?: any;
   logoURI?: string;
   name: string;
   symbol: string;
@@ -45,13 +46,13 @@ const PublicMint: FC<{
     void getAllMintsInfo();
   }, []);
 
+  const { name } = useDebounce(searchValue);
+
   const {
     register,
     clearErrors,
     formState: { errors },
   } = useFormContext<DerugForm>();
-
-  console.log(errors);
 
   const getAllMintsInfo = async () => {
     const availableToken: ITreasuryTokenAccInfo[] = [];
@@ -122,28 +123,42 @@ const PublicMint: FC<{
     setAvailableTokenList(availableToken);
   };
 
-  const handleSearch = (e: any) => {
-    if (e && e !== "") {
-      toggleSearchLoading(true);
-      setSearchValue(e);
+  useEffect(() => {
+    void handleFilerCurrency();
+  }, [name]);
+
+  const handleFilerCurrency = async () => {
+    toggleSearchLoading(true);
+    if (name && name.length > 0) {
+      const tokens = await new TokenListProvider().resolve();
+
+      const filteredTokens = tokens
+        .getList()
+        .filter(
+          (t) =>
+            t.name.toLocaleLowerCase().startsWith(name.toLocaleLowerCase()) ||
+            t.symbol.toLocaleLowerCase().startsWith(name.toLocaleLowerCase())
+        );
+
+      setAvailableTokenList(
+        filteredTokens.map((t) => {
+          return { ...t, address: new PublicKey(t.address) };
+        })
+      );
     } else {
-      toggleSearchLoading(false);
+      await getAllMintsInfo();
     }
+    toggleSearchLoading(false);
   };
+
   const renderSelect = useMemo(() => {
     return (
       <div className="flex flex-col w-full gap-4">
         <Select
-          // {...register("selectedMint", {
-          //   required: {
-          //     value: isPublicMint,
-          //     message: "Currency must be specified",
-          //   },
-          // })}
           className="w-64"
           placeholder="select token"
           isLoading={searchLoading}
-          onInputChange={handleSearch}
+          onInputChange={(e) => setSearchValue(e)}
           onChange={(e) => {
             console.log(e);
 
