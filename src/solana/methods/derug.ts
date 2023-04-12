@@ -61,7 +61,7 @@ export const createDerugDataIx = async (
   //TODO:PUT REAL VALUE BEFORE MAINNET
 
   const ix = await derugProgram.methods
-    .initializeDerug(181, collection.slug)
+    .initializeDerug(89, collection.slug)
     .accounts({
       collectionKey,
       derugData: collection.derugDataAddress,
