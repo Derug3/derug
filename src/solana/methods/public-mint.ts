@@ -97,13 +97,14 @@ export const initCandyMachine = async (
           ),
       itemsAvailable: toBigNumber(nonMintedNfts.length),
       sellerFeeBasisPoints: remintConfigAccount.sellerFeeBps,
-      authority: remintConfigAccount.authority,
+      authority: candyMachine,
       candyMachine,
       tokenMint: remintConfigAccount.mintCurrency,
       maxEditionSupply: toBigNumber(0),
       goLiveDate: toDateTime(privateMintEnd),
       retainAuthority: true,
       isMutable: true,
+      collection: collectionDerug.newCollection,
       creators: remintConfigAccount.creators.map((c) => {
         return {
           address: c.address,
@@ -146,6 +147,10 @@ export const storeCandyMachineItems = async (
 
     const chunkedNonMinted = chunk(nonMinted, 10);
     const candyMachineData = await getCandyMachine(derug.address.toString());
+
+    const candyMachine = Keypair.fromSecretKey(
+      parseKeyArray(candyMachineData.candyMachineSecretKey)
+    );
 
     const candyMachineAccount = await metaplex.candyMachinesV2().findByAddress({
       address: new PublicKey(candyMachineData.candyMachineKey),
@@ -197,6 +202,10 @@ export const storeCandyMachineItems = async (
     const rpcClient = new RpcClient(metaplex);
 
     const signed = await idClient.signAllTransactions(transactions);
+
+    signed.forEach((s) => {
+      s.sign(candyMachine);
+    });
 
     for (const sig of signed) {
       toast.promise(sendVersionedTx(RPC_CONNECTION, sig), {

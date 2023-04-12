@@ -245,7 +245,6 @@ export const remintNft = async (
   request: IRequest,
   nfts: IDerugCollectionNft[]
 ) => {
-  debugger;
   const instructions: IDerugInstruction[] = [];
   const derugProgram = derugProgramFactory();
 
