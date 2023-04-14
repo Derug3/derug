@@ -34,15 +34,18 @@ const PublicMint = () => {
 
   useEffect(() => {
     if (!nfts || nfts.length === 0) void getNfts();
-  }, []);
+  }, [wallet?.publicKey]);
 
   const getNfts = async () => {
     toggleLoading(true);
     try {
       if (wallet && remintConfig) {
-        setNfts(
-          await getNftsFromDeruggedCollection(wallet.publicKey, remintConfig)
+        const nfts = await getNftsFromDeruggedCollection(
+          wallet.publicKey,
+          remintConfig
         );
+
+        setNfts(nfts);
       }
     } catch (error) {
     } finally {

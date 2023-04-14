@@ -36,7 +36,7 @@ export const Remint: FC<{
 
   useEffect(() => {
     void getCollectionNfts();
-  }, [wallet.publicKey]);
+  }, [wallet.publicKey, collectionDerug]);
 
   const getCollectionNfts = async () => {
     try {
@@ -84,7 +84,7 @@ export const Remint: FC<{
     return collectionNfts?.map((cnft) => {
       return <RemintNft nft={cnft} key={cnft.mint.toString()} />;
     });
-  }, [collectionNfts]);
+  }, [collectionNfts, collectionDerug]);
 
   const remintNfts = async () => {
     try {
@@ -106,25 +106,12 @@ export const Remint: FC<{
           })
         );
 
-        // if (collectionNfts.length > 10) {
-        //   const chunkedNfts = chunk(collectionNfts, 10);
-        //   for (const collectionChunk of chunkedNfts) {
-        //     await remintNft(
-        //       wallet!,
-        //       collectionDerug,
-        //       winningRequest,
-        //       collectionChunk?.filter((nft) => !nft.remintingStatus)
-        //     );
-        //   }
-        // } else {
-
         await remintNft(
           wallet!,
           collectionDerug,
           winningRequest,
           collectionNfts?.filter((nft) => !nft.remintingStatus)
         );
-        // }
       }
     } catch (error) {
       console.log(error);
@@ -152,7 +139,7 @@ export const Remint: FC<{
           cnft.remintingStatus !== RemintingStatus.Failed
       ).length ?? 0 > 0
     );
-  }, [collectionNfts]);
+  }, [collectionNfts, collectionDerug]);
 
   return (
     <Box className="w-full flex-col gap-10">

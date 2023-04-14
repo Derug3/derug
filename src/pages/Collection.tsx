@@ -123,6 +123,7 @@ export const Collections: FC = () => {
         const remintConfigData = await getRemintConfig(
           chainDetails.derugDataAddress
         );
+
         setRemintConfig(remintConfigData);
         if (remintConfigData) {
           setCandyMachine(await getCandyMachine(remintConfigData.candyMachine));

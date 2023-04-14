@@ -62,6 +62,7 @@ export const AddDerugRequst: FC<{
     chainCollectionData,
     activeListings,
     setCollectionDerug,
+    setRequests,
     collectionStats,
     collection,
     derugRequests,
@@ -131,6 +132,7 @@ export const AddDerugRequst: FC<{
         );
         const addedRequests = [...(derugRequests ?? [])];
         addedRequests.push(await getSingleDerugRequest(requestAddress));
+        setRequests(addedRequests);
       }
       if (chainCollectionData) {
         const derugData = await getCollectionDerugData(

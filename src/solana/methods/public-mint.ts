@@ -97,14 +97,13 @@ export const initCandyMachine = async (
           ),
       itemsAvailable: toBigNumber(nonMintedNfts.length),
       sellerFeeBasisPoints: remintConfigAccount.sellerFeeBps,
-      authority: candyMachine,
+      authority: wallet.publicKey!,
       candyMachine,
       tokenMint: remintConfigAccount.mintCurrency,
       maxEditionSupply: toBigNumber(0),
       goLiveDate: toDateTime(privateMintEnd),
       retainAuthority: true,
       isMutable: true,
-      collection: collectionDerug.newCollection,
       creators: remintConfigAccount.creators.map((c) => {
         return {
           address: c.address,
@@ -136,21 +135,10 @@ export const storeCandyMachineItems = async (
     }
 
     const nonMintedNfts = await getNonMinted(derug.address.toString());
-    const nonMinted = nonMintedNfts
-      .filter((nm) => !nm.hasReminted)
-      .slice(0, derug.totalSupply);
-    if (nonMinted.length > 10) {
-      toast.success(
-        "You will have to sign multiple transactions as there are more than 50 NFTs"
-      );
-    }
+    const nonMinted = nonMintedNfts.filter((nm) => !nm.hasReminted);
 
     const chunkedNonMinted = chunk(nonMinted, 10);
     const candyMachineData = await getCandyMachine(derug.address.toString());
-
-    const candyMachine = Keypair.fromSecretKey(
-      parseKeyArray(candyMachineData.candyMachineSecretKey)
-    );
 
     const candyMachineAccount = await metaplex.candyMachinesV2().findByAddress({
       address: new PublicKey(candyMachineData.candyMachineKey),
@@ -159,22 +147,25 @@ export const storeCandyMachineItems = async (
     const transactions: Transaction[] = [];
     metaplex.use(walletAdapterIdentity(wallet));
 
-    const tx = metaplex
-      .candyMachinesV2()
-      .builders()
-      .insertItems({
-        candyMachine: candyMachineAccount,
-        items: chunkedNonMinted[0].map((cm) => {
-          return {
-            name: cm.name,
-            uri: cm.uri,
-          };
-        }),
-      });
-
     let totalSum = 0;
 
     for (const [chunkIndex, nonMintedChunk] of chunkedNonMinted.entries()) {
+      const names: string[] = [];
+      for (const [index, nmChunk] of nonMintedChunk.entries()) {
+        const metadata = await (await fetch(nmChunk.uri)).json();
+        const uploaded = await metaplex.nfts().uploadMetadata({
+          ...metadata,
+          symbol: remintConfig.newSymbol,
+          name: remintConfig.newName,
+        });
+        names.push(
+          remintConfig.newName + getNftName(totalSum + derug.totalReminted + 1)
+        );
+        console.log(uploaded, "UPLOADED");
+
+        nonMintedChunk[index].uri = uploaded.uri;
+      }
+
       const secondTx = metaplex
         .candyMachinesV2()
         .builders()
@@ -185,7 +176,7 @@ export const storeCandyMachineItems = async (
           },
           items: nonMintedChunk.map((nm, index) => {
             return {
-              name: getNftName(totalSum + derug.totalReminted + index + 1),
+              name: names[index],
               uri: nm.uri,
             };
           }),
@@ -199,24 +190,16 @@ export const storeCandyMachineItems = async (
 
     const idClient = new IdentityClient();
     idClient.setDriver(new WalletAdapterIdentityDriver(wallet));
-    const rpcClient = new RpcClient(metaplex);
 
     const signed = await idClient.signAllTransactions(transactions);
 
-    signed.forEach((s) => {
-      s.sign(candyMachine);
-    });
-
     for (const sig of signed) {
-      toast.promise(sendVersionedTx(RPC_CONNECTION, sig), {
+      await toast.promise(sendVersionedTx(RPC_CONNECTION, sig), {
         error: () => {
           return "Failed to insert NFTs in candy machine";
         },
         loading: "Inserting batch of NFTs",
         success: "NFTs succesfully inserted",
-      });
-      await rpcClient.sendAndConfirmTransaction(sig, {
-        commitment: "confirmed",
       });
     }
   } catch (error: any) {
