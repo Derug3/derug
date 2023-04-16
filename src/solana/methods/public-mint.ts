@@ -93,7 +93,7 @@ export const initCandyMachine = async (
     }
 
     metaplex.use(walletAdapterIdentity(wallet));
-    const tx = await metaplex.candyMachinesV2().create({
+    await metaplex.candyMachinesV2().create({
       price: remintConfigAccount.mintCurrency
         ? token(remintConfigAccount.publicMintPrice?.toNumber())
         : sol(
@@ -154,9 +154,7 @@ export const storeCandyMachineItems = async (
 
     let totalSum = 0;
 
-    for (const [chunkIndex, nonMintedChunk] of chunkedNonMinted.entries()) {
-      const names: string[] = [];
-
+    for (const nonMintedChunk of chunkedNonMinted) {
       metaplex.use(walletAdapterIdentity(wallet));
 
       const secondTx = metaplex
@@ -169,8 +167,8 @@ export const storeCandyMachineItems = async (
           },
           items: nonMintedChunk.map((nm, index) => {
             return {
-              name: names[index],
-              uri: nm.uri,
+              name: nm.newName,
+              uri: nm.newUri,
             };
           }),
         })
