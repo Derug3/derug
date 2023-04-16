@@ -15,7 +15,7 @@ export const NON_MINTED = "/non-minted";
 export const O_AUTH = "/oauth";
 export const REQUEST_TOKEN = "/request_token";
 export const DERUG = "derug";
-
+export const METADATA = "/metadata";
 export const TWITTER_AUTH = "/twitter-auth";
 export const PUBKEY = "/pubkey";
 

@@ -49,7 +49,11 @@ import {
   IRemintConfig,
   ISplTokenData,
 } from "../../interface/derug.interface";
-import { saveCandyMachineData, storeAllNfts } from "../../api/public-mint.api";
+import {
+  getPrivateMintNft,
+  saveCandyMachineData,
+  storeAllNfts,
+} from "../../api/public-mint.api";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -339,8 +343,14 @@ export const remintNft = async (
       });
     }
 
+    const nftData = await getPrivateMintNft(oldMetadata.toString());
+
+    if (!nftData.newName || !nftData.newUri) {
+      throw new Error("Failed to fetch rugged nft data.");
+    }
+
     const remintNftIx = await derugProgram.methods
-      .remintNft()
+      .remintNft(nftData.newName, nftData.newUri)
       .accounts({
         derugData: derugData.address,
         derugRequest: request.address,

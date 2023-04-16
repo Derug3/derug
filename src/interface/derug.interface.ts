@@ -80,6 +80,9 @@ export interface INonMinted {
   name: string;
   uri: string;
   creator: string;
+  newName: string;
+  newSymbol: string;
+  newUri: string;
 }
 
 export interface ICreator {
