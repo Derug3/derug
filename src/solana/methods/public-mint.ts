@@ -1,5 +1,6 @@
 import {
   IdentityClient,
+  keypairIdentity,
   RpcClient,
   sol,
   toBigNumber,
@@ -13,7 +14,10 @@ import {
   Keypair,
   LAMPORTS_PER_SOL,
   PublicKey,
+  SystemProgram,
   Transaction,
+  TransactionMessage,
+  VersionedTransaction,
 } from "@solana/web3.js";
 import toast from "react-hot-toast";
 import { getCandyMachine, getNonMinted } from "../../api/public-mint.api";
@@ -89,7 +93,7 @@ export const initCandyMachine = async (
     }
 
     metaplex.use(walletAdapterIdentity(wallet));
-    await metaplex.candyMachinesV2().create({
+    const tx = await metaplex.candyMachinesV2().create({
       price: remintConfigAccount.mintCurrency
         ? token(remintConfigAccount.publicMintPrice?.toNumber())
         : sol(
@@ -123,6 +127,7 @@ export const initCandyMachine = async (
 };
 
 export const storeCandyMachineItems = async (
+  request: IRequest,
   remintConfig: IRemintConfig,
   wallet: WalletContextState,
   derug: ICollectionDerugData
@@ -151,20 +156,8 @@ export const storeCandyMachineItems = async (
 
     for (const [chunkIndex, nonMintedChunk] of chunkedNonMinted.entries()) {
       const names: string[] = [];
-      for (const [index, nmChunk] of nonMintedChunk.entries()) {
-        const metadata = await (await fetch(nmChunk.uri)).json();
-        const uploaded = await metaplex.nfts().uploadMetadata({
-          ...metadata,
-          symbol: remintConfig.newSymbol,
-          name: remintConfig.newName,
-        });
-        names.push(
-          remintConfig.newName + getNftName(totalSum + derug.totalReminted + 1)
-        );
-        console.log(uploaded, "UPLOADED");
 
-        nonMintedChunk[index].uri = uploaded.uri;
-      }
+      metaplex.use(walletAdapterIdentity(wallet));
 
       const secondTx = metaplex
         .candyMachinesV2()
@@ -229,4 +222,26 @@ export const mintNftFromCandyMachine = async (
     }
     throw new Error(parseTransactionError(parsedError));
   }
+};
+
+export const parseJsonMetadata = (
+  request: IRequest,
+  remintConfig: IRemintConfig,
+  jsonData: any,
+  name: string
+) => {
+  const data = {
+    ...jsonData,
+    symbol: remintConfig.newSymbol,
+    seller_fee_basis_points: remintConfig.sellerFeeBps,
+    name,
+    external_url: "",
+    creators: request.creators.map((c) => {
+      return {
+        address: c.address.toString(),
+        share: c.share,
+      };
+    }),
+  };
+  return data;
 };

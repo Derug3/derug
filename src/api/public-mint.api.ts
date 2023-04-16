@@ -1,5 +1,9 @@
 import { Keypair } from "@solana/web3.js";
-import { CandyMachineDto, INonMinted } from "../interface/derug.interface";
+import {
+  CandyMachineDto,
+  INonMinted,
+  StoreCandyMachineData,
+} from "../interface/derug.interface";
 import { get, post } from "./request.api";
 import { COLLECTION, NON_MINTED, PUBLIC_REMINT } from "./url.api";
 
@@ -20,8 +24,7 @@ export const getNonMinted = async (
 };
 
 export const storeAllNfts = async (
-  updateAuthority: string,
-  derugData: string
+  storeCandyMachine: StoreCandyMachineData
 ) => {
-  return get(`${PUBLIC_REMINT}${COLLECTION}/${updateAuthority}/${derugData}`);
+  return post(`${PUBLIC_REMINT}${COLLECTION}`, storeCandyMachine);
 };

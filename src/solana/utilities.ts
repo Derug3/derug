@@ -18,6 +18,10 @@ export const feeWallet = new PublicKey(
   "DRG3YRmurqpWQ1jEjK8DiWMuqPX9yL32LXLbuRdoiQwt"
 );
 
+export const metadataUploaderWallet = new PublicKey(
+  "KQ1jcFYvnH9DNUzBfVbquRohP9uZ6C7DVJJDyqiGB4P"
+);
+
 //TODO mainnet: load this from env file
 export const metaplex = new Metaplex(RPC_CONNECTION).use(
   bundlrStorage({

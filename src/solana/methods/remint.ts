@@ -3,6 +3,7 @@ import {
   AccountMeta,
   ComputeBudgetProgram,
   Keypair,
+  LAMPORTS_PER_SOL,
   PublicKey,
   SystemProgram,
   SYSVAR_RENT_PUBKEY,
@@ -27,6 +28,7 @@ import {
   candyMachineProgramId,
   derugProgramFactory,
   feeWallet,
+  metadataUploaderWallet,
   metaplex,
 } from "../utilities";
 import {
@@ -53,6 +55,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 
 import { getFungibleTokenMetadata, stringifyData } from "../../common/helpers";
+import { UPLOAD_METADATA_FEE } from "../../common/constants";
 
 dayjs.extend(utc);
 
@@ -67,6 +70,10 @@ export const claimVictory = async (
 
   const remainingAccounts: AccountMeta[] = [];
 
+  if (wallet.publicKey?.toString() !== request.derugger.toString()) {
+    throw new Error("Invalid derug authority");
+  }
+
   if (request.publicMint) {
     try {
       const candyMachine = Keypair.generate();
@@ -76,14 +83,10 @@ export const claimVictory = async (
         candyMachineSecretKey: stringifyData(candyMachine.secretKey),
         derugData: derug.address.toString(),
       });
-      //TODO: remove this before mainnet
-      storeAllNfts(
-        chainCollectionData.rugUpdateAuthority.toString(),
-        derug.address.toString()
-      );
+
       remainingAccounts.push({
         isSigner: false,
-        isWritable: false,
+        isWritable: true,
         pubkey: candyMachine.publicKey,
       });
       const [candyMachineCreator] = PublicKey.findProgramAddressSync(
@@ -236,7 +239,27 @@ export const claimVictory = async (
     partialSigner: [tokenAccount, collection],
   });
 
+  const transferIx = SystemProgram.transfer({
+    fromPubkey: wallet.publicKey!,
+    lamports: UPLOAD_METADATA_FEE * LAMPORTS_PER_SOL * derug.totalSupply,
+    programId: SystemProgram.programId,
+    toPubkey: metadataUploaderWallet,
+  });
+
+  instructions.push({
+    instructions: [transferIx],
+    pendingDescription: "Transfering funds for metadata uploads",
+    successDescription:
+      "Funds successfully transfered.All metadata files for new collection will be uploaded shortly",
+  });
+
   await sendTransaction(RPC_CONNECTION, instructions, wallet);
+
+  storeAllNfts({
+    derugData: derug.address.toString(),
+    derugRequest: request.address.toString(),
+    updateAuthority: wallet.publicKey!.toString(),
+  });
 };
 
 export const remintNft = async (

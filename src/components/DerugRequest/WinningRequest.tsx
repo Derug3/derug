@@ -92,7 +92,12 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
           if (candyMachineAddress)
             setCandyMachine(await getCandyMachine(candyMachineAddress));
         }
-        await storeCandyMachineItems(remintConfig, wallet, collectionDerug);
+        await storeCandyMachineItems(
+          request,
+          remintConfig,
+          wallet,
+          collectionDerug
+        );
         setCandyMachine(await getCandyMachine(remintConfig.candyMachine));
       }
       toast.success("Public minting successfully initialized");

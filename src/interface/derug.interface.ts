@@ -103,3 +103,9 @@ export type DerugForm = {
   selectedMint: ITreasuryTokenAccInfo;
   duration: number;
 };
+
+export interface StoreCandyMachineData {
+  derugRequest: string;
+  updateAuthority: string;
+  derugData: string;
+}
