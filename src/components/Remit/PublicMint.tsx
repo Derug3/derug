@@ -76,8 +76,8 @@ const PublicMint = () => {
         setCandyMachine(await getCandyMachine(remintConfig.candyMachine));
         toast.success(`Successfully minted ${minted.name}`);
         setNfts((prevValue) => [
-          ...prevValue,
           { name: minted.name, image: nftImg },
+          ...prevValue,
         ]);
       }
     } catch (error: any) {
@@ -104,7 +104,12 @@ const PublicMint = () => {
         <p className="text-main-blue text-bold text-xl">
           Your {remintConfig?.newName ?? collection?.name} NFTs
         </p>
-        <Box className="max-h-20 overlow-scroll grid grid-cols-5 gap-5">
+        <Box
+          className="overflow-y-scroll grid grid-cols-5 gap-5"
+          sx={{
+            maxHeight: "50%",
+          }}
+        >
           {loading
             ? generateSkeletonArrays(15).map(() => (
                 <Skeleton
@@ -143,7 +148,11 @@ const PublicMint = () => {
           onClick={mintNfts}
         >
           {isMinting ? (
-            <Oval color="rgb(9, 194, 246)" height={"2em"} />
+            <Oval
+              color="rgb(9, 194, 246)"
+              height={"2em"}
+              secondaryColor="transparent"
+            />
           ) : (
             <span>Mint</span>
           )}

@@ -145,6 +145,7 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
           <Box className="flex font-mono flex-row items-center justify-between w-full gap-4 ">
             {collectionDerug &&
               collectionDerug.status !== DerugStatus.Reminting &&
+              collectionDerug.status !== DerugStatus.UploadingMetadata &&
               wallet.publicKey?.toString() === request.derugger.toString() && (
                 <Button
                   className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 "
@@ -191,8 +192,8 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
               {remintConfig &&
                 (dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) ||
                   (remintConfig.mintPrice && !remintConfig.privateMintEnd)) &&
-                wallet.publicKey?.toString() ===
-                  request.derugger.toString() && (
+                wallet.publicKey?.toString() === request.derugger.toString() &&
+                collectionDerug?.status !== DerugStatus.UploadingMetadata && (
                   <Button
                     className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 p-1 "
                     sx={{

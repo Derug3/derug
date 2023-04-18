@@ -9,6 +9,7 @@ export enum DerugStatus {
   Initialized = "initialized",
   Voting = "voting",
   Succeded = "succeded",
+  UploadingMetadata = "uploadingMetadata",
   Reminting = "reminting",
   Completed = "completed",
 }
@@ -17,6 +18,7 @@ export enum DerugRequestStatus {
   Initialized = "initialized",
   Voting = "voting",
   Succeded = "succeded",
+  UploadingMetadata = "uploadingMetadata",
   Reminting = "reminting",
   Completed = "completed",
 }

@@ -582,6 +582,32 @@ export type DerugProgram = {
         }
       ];
       args: [];
+    },
+    {
+      name: "initPrivateMint";
+      accounts: [
+        {
+          name: "derugData";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "derugRequest";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "remintConfig";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "payer";
+          isMut: false;
+          isSigner: true;
+        }
+      ];
+      args: [];
     }
   ];
   accounts: [
@@ -928,6 +954,9 @@ export type DerugProgram = {
             name: "Succeeded";
           },
           {
+            name: "UploadingMetadata";
+          },
+          {
             name: "Reminting";
           },
           {
@@ -952,6 +981,9 @@ export type DerugProgram = {
           },
           {
             name: "Succeeded";
+          },
+          {
+            name: "UploadingMetadata";
           },
           {
             name: "Reminting";
@@ -1006,6 +1038,21 @@ export type DerugProgram = {
         },
         {
           name: "oldNftMetadata";
+          type: "publicKey";
+          index: false;
+        }
+      ];
+    },
+    {
+      name: "PrivateMintStarted";
+      fields: [
+        {
+          name: "derugData";
+          type: "publicKey";
+          index: false;
+        },
+        {
+          name: "remintConfig";
           type: "publicKey";
           index: false;
         }
@@ -1696,6 +1743,32 @@ export const IDL: DerugProgram = {
       ],
       args: [],
     },
+    {
+      name: "initPrivateMint",
+      accounts: [
+        {
+          name: "derugData",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "derugRequest",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "remintConfig",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "payer",
+          isMut: false,
+          isSigner: true,
+        },
+      ],
+      args: [],
+    },
   ],
   accounts: [
     {
@@ -2041,6 +2114,9 @@ export const IDL: DerugProgram = {
             name: "Succeeded",
           },
           {
+            name: "UploadingMetadata",
+          },
+          {
             name: "Reminting",
           },
           {
@@ -2065,6 +2141,9 @@ export const IDL: DerugProgram = {
           },
           {
             name: "Succeeded",
+          },
+          {
+            name: "UploadingMetadata",
           },
           {
             name: "Reminting",
@@ -2119,6 +2198,21 @@ export const IDL: DerugProgram = {
         },
         {
           name: "oldNftMetadata",
+          type: "publicKey",
+          index: false,
+        },
+      ],
+    },
+    {
+      name: "PrivateMintStarted",
+      fields: [
+        {
+          name: "derugData",
+          type: "publicKey",
+          index: false,
+        },
+        {
+          name: "remintConfig",
           type: "publicKey",
           index: false,
         },
