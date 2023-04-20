@@ -18,5 +18,8 @@ export const DERUG = "derug";
 export const METADATA = "/metadata";
 export const TWITTER_AUTH = "/twitter-auth";
 export const PUBKEY = "/pubkey";
-
+export const COLLECTION_VOLUME = "/collection-volume";
+export const TOP_VOLUME = "/top-volume";
+export const ORDER_BY = "?orderBy=";
+export const FILTER = "/filter";
 export const TWITTER_API = "https://api.twitter.com";

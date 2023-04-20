@@ -90,7 +90,7 @@ export const DerugRequestItem: FC<{
     <div
       className="flex flex-col w-full 
       items-start py-4 gap-5 border-[1px] border-main-blue 
-      px-8 cursor-pointer hover:shadow-lg hover:shadow-main-blue "
+      px-8 cursor-pointer hover:shadow-lg hover:shadow-main-blue"
       onClick={() => setIsOpen(true)}
     >
       {isOpen && (

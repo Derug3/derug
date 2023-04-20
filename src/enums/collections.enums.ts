@@ -28,3 +28,9 @@ export enum RemintingStatus {
   Succeded,
   Failed,
 }
+
+export enum CollectionVolumeFilter {
+  MarketCap = "marketCap",
+  NumMints = "numMints",
+  FloorPrice = "floorPrice",
+}

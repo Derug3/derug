@@ -130,3 +130,17 @@ export interface IActiveRequest {
   voteCount: number;
   winning: boolean;
 }
+
+export interface ICollectionVolume {
+  collection: ICollectionData;
+  marketCap: number;
+  symbol: string;
+  numMints: number;
+  floorPrice: number;
+  volume1h: number | null;
+  volume24h: number | null;
+  volume7d: number | null;
+  floor1h: number | null;
+  floor24h: number | null;
+  floor7d: number | null;
+}

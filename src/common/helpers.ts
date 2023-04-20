@@ -9,6 +9,7 @@ import { Strategy, TokenListProvider } from "@solana/spl-token-registry";
 import { IUserData } from "../interface/user.interface";
 import { getUserTwitterData } from "../api/twitter.api";
 import { NATIVE_MINT } from "@solana/spl-token";
+import { CollectionVolumeFilter } from "../enums/collections.enums";
 export const splitTimestamps = (
   recentCollections: ICollectionRecentActivities[]
 ) => {
@@ -158,5 +159,16 @@ export const getUserDataForDerug = async (
     return await getUserTwitterData(pubkey);
   } catch (error) {
     return undefined;
+  }
+};
+
+export const mapFilterTypeToValue = (filterType: CollectionVolumeFilter) => {
+  switch (filterType) {
+    case CollectionVolumeFilter.MarketCap:
+      return "All time market cap";
+    case CollectionVolumeFilter.FloorPrice:
+      return "Floor price";
+    case CollectionVolumeFilter.NumMints:
+      return "Total supply";
   }
 };

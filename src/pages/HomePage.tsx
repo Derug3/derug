@@ -1,23 +1,31 @@
 import CollectionsSlider from "../components/CollectionsSlider/CollectionsSlider";
 import { Box, Text } from "@primer/react";
 import { useEffect, useMemo, useState } from "react";
-import { getByNameOrSlug, getRandomCollections } from "../api/collections.api";
+import {
+  getByNameOrSlug,
+  getCollectionsWithTopVolume,
+  getOrderedCollectionsByVolume,
+  getRandomCollections,
+} from "../api/collections.api";
 import useDebounce from "../hooks/useDebounce";
 import {
   ICollectionData,
   ICollectionStats,
+  ICollectionVolume,
 } from "../interface/collections.interface";
 import Select from "react-select";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../utilities/constants";
-import Balancer from "react-wrap-balancer";
 import { motion } from "framer-motion";
 import { collectionsStore } from "../stores/collectionsStore";
 import { useNavigate } from "react-router";
 import { selectStyles } from "../utilities/styles";
 import { ActiveListings } from "../components/ActiveListings/ActiveListings";
 import { getAllActiveCollections } from "../solana/methods/derug-request";
-import { generateSkeletonArrays } from "../utilities/nft-fetching";
 import Skeleton from "react-loading-skeleton";
+import toast from "react-hot-toast";
+import CollectionItem from "../components/MainPage/CollectionItem";
+import { CollectionVolumeFilter } from "../enums/collections.enums";
+import { mapFilterTypeToValue } from "../common/helpers";
 
 const HomePage = () => {
   const { setCollections, collections } = collectionsStore.getState();
@@ -28,6 +36,9 @@ const HomePage = () => {
   const [filteredCollections, setFilteredCollections] = useState<
     ICollectionData[] | undefined
   >(collections);
+  const [topVolumeCollections, setTopVolumeCollections] =
+    useState<ICollectionVolume[]>();
+  const [filter, setFilter] = useState(CollectionVolumeFilter.MarketCap);
   const [loading, setLoading] = useState(true);
   const { name } = useDebounce(searchValue);
 
@@ -36,7 +47,12 @@ const HomePage = () => {
   useEffect(() => {
     void getCollectionsData();
     void getActiveCollections();
+    void getTopVolumeCollections();
   }, []);
+
+  useEffect(() => {
+    void getTopCollectionsWithFilter();
+  }, [filter]);
 
   useEffect(() => {
     void searchByName();
@@ -85,6 +101,22 @@ const HomePage = () => {
     }
   };
 
+  const getTopVolumeCollections = async () => {
+    try {
+      setTopVolumeCollections(await getCollectionsWithTopVolume());
+    } catch (error) {
+      toast.error("Failed to load collections with colume");
+    }
+  };
+
+  const getTopCollectionsWithFilter = async () => {
+    try {
+      setTopVolumeCollections(await getOrderedCollectionsByVolume(filter));
+    } catch (error) {
+      toast.error("Failed to load collections with colume");
+    }
+  };
+
   const renderSelect = useMemo(() => {
     return (
       <Select
@@ -115,6 +147,21 @@ const HomePage = () => {
       />
     );
   }, [filteredCollections, searchLoading]);
+
+  const renderTopCollections = useMemo(() => {
+    return topVolumeCollections?.map((c) => {
+      return <CollectionItem collection={c} key={c.symbol} />;
+    });
+  }, [topVolumeCollections]);
+
+  const getFilterOptions = useMemo(() => {
+    return Object.values(CollectionVolumeFilter).map((c: any) => {
+      return {
+        label: mapFilterTypeToValue(c as CollectionVolumeFilter),
+        value: c,
+      };
+    });
+  }, []);
 
   return (
     <Box
@@ -151,6 +198,7 @@ const HomePage = () => {
           </Text>
         </motion.h1>
       </Box>
+
       <Box
         sx={{
           width: "50%",
@@ -177,6 +225,30 @@ const HomePage = () => {
           </span>
         </Text>
       </Box>
+      {topVolumeCollections && topVolumeCollections.length > 0 && (
+        <Box className="w-11/12 m-auto flex flex-col items-start gap-10">
+          <Box className="flex gap-5 items-center w-full">
+            {" "}
+            <p className="font-bold text-3xl">High voulume collections</p>
+            <Select
+              styles={{ ...selectStyles }}
+              options={getFilterOptions}
+              onChange={(e) => setFilter(e?.value as CollectionVolumeFilter)}
+              defaultValue={getFilterOptions[0]}
+              formatOptionLabel={(val) => {
+                return (
+                  <div className="w-full font-bold text-white font-md p-2">
+                    {val.label}
+                  </div>
+                );
+              }}
+            />
+          </Box>
+          <Box className="grid grid-cols-4 gap-5 w-full">
+            {renderTopCollections}
+          </Box>
+        </Box>
+      )}
       {activeCollections && activeCollections.length ? (
         <ActiveListings activeListings={activeCollections} />
       ) : loading ? (
@@ -189,6 +261,7 @@ const HomePage = () => {
           highlightColor="rgb(29,35,44)"
         />
       )}
+
       {!loading && <CollectionsSlider />}
     </Box>
   );
