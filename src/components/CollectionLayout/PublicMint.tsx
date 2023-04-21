@@ -155,7 +155,6 @@ const PublicMint: FC<{
     return (
       <div className="flex flex-col w-full gap-4">
         <Select
-          className="w-64"
           placeholder="select token"
           isLoading={searchLoading}
           onInputChange={(e) => setSearchValue(e)}
@@ -200,7 +199,7 @@ const PublicMint: FC<{
   }, [availableTokensList, searchLoading]);
   return (
     <div className="flex justify-evenly flex-col text-gray-400 gap-5 p-3 font-mono">
-      <Box className="flex flex-row w-full justify-start items-center">
+      <Box className="flex flex-row w-full justify-between items-center">
         <Box className="flex flex-col items-start text-start">
           <Text fontSize={2} color="white">
             Public mint
@@ -215,7 +214,7 @@ const PublicMint: FC<{
             In case you want to enable minting nft by non-current holders
           </Text>
         </Box>
-        <Box className="flex flex-col items-end gap-5 text-start">
+        <Box className="flex flex-col items-end">
           <ToggleSwitch
             aria-labelledby="switchLabel"
             size="small"
@@ -255,7 +254,6 @@ const PublicMint: FC<{
                   placeholder="price"
                   value={price}
                   accept="number"
-                  className="w-32"
                   sx={{ borderRadius: 0 }}
                   onChange={(e) => {
                     setPrice && setPrice(+e.target.value);
@@ -289,7 +287,7 @@ const PublicMint: FC<{
               </Text>
             </div>
             <div className="flex flex-col items-start gap-4 w-1/2">
-              <div className="flex justify-end items-center gap-3 w-64">
+              <div className="flex justify-end items-center gap-3 w-full">
                 <TextInput
                   {...register("privateMintEnd", {
                     required: {

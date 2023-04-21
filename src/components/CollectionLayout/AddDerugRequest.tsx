@@ -127,7 +127,7 @@ export const AddDerugRequst: FC<{
             selectedMint.address.toString() !== WRAPPED_SOL_MINT.toString()
             ? selectedMint.address
             : //TODO:Remove before mainnet
-              undefined,
+            undefined,
           activeListings ? activeListings[0] : undefined
         );
         const addedRequests = [...(derugRequests ?? [])];
@@ -176,7 +176,7 @@ export const AddDerugRequst: FC<{
   const storeUserData = async () => {
     try {
       setUserData(await getUserTwitterData(wallet.publicKey?.toString()!));
-    } catch (error) {}
+    } catch (error) { }
   };
 
   return (
@@ -226,9 +226,9 @@ export const AddDerugRequst: FC<{
                     Derug request details
                   </span>
                   <div className="flex justify-between w-full px-3">
-                    <span className="pr-2 text-white font-mono">Wallet:</span>
-                    <div className="flex gap-5 items-center">
-                      <span className="font-mono">
+                    <span className="pr-2 text-white font-mono text-start">Wallet:</span>
+                    <div className="flex gap-5 items-center  justify-beween">
+                      <span className="font-mono w-64">
                         {wallet.publicKey &&
                           getTrimmedPublicKey(
                             new PublicKey(wallet.publicKey.toString())
@@ -259,7 +259,7 @@ export const AddDerugRequst: FC<{
                   </div>
                   <div className="flex justify-between w-full px-3">
                     <span className="pr-2 text-white">New name:</span>
-                    <div className="flex flex-col w-1/2 items-start">
+                    <div className="flex flex-col w-1/2 items-end">
                       <TextInput
                         {...methods.register("name", {
                           required: "Name cannot be empty",
@@ -378,15 +378,15 @@ export const AddDerugRequst: FC<{
                     {" "}
                     {(methods.formState.errors.creatorsFees ||
                       methods.formState.errors.creatorsKey) && (
-                      <p className="text-red-500 text-xs">
-                        {
-                          (
-                            methods.formState.errors.creatorsFees ??
-                            methods.formState.errors.creatorsKey
-                          )?.message
-                        }
-                      </p>
-                    )}
+                        <p className="text-red-500 text-xs">
+                          {
+                            (
+                              methods.formState.errors.creatorsFees ??
+                              methods.formState.errors.creatorsKey
+                            )?.message
+                          }
+                        </p>
+                      )}
                   </>
                 </div>
               </Box>
