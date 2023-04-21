@@ -18,7 +18,7 @@ import { FADE_DOWN_ANIMATION_VARIANTS } from "../utilities/constants";
 import { motion } from "framer-motion";
 import { collectionsStore } from "../stores/collectionsStore";
 import { useNavigate } from "react-router";
-import { selectStyles } from "../utilities/styles";
+import { selectStylesPrimary, selectStylesSecondary } from "../utilities/styles";
 import { ActiveListings } from "../components/ActiveListings/ActiveListings";
 import { getAllActiveCollections } from "../solana/methods/derug-request";
 import Skeleton from "react-loading-skeleton";
@@ -124,7 +124,7 @@ const HomePage = () => {
         placeholder="Search rugged collections"
         isLoading={searchLoading}
         onInputChange={handleSearch}
-        styles={selectStyles}
+        styles={selectStylesPrimary}
         options={filteredCollections}
         onChange={(e) => navigate(`collection?symbol=${e.symbol}`)}
         getOptionLabel={(option) => option.name}
@@ -182,6 +182,17 @@ const HomePage = () => {
           flexDirection: "column",
         }}
       >
+
+      </Box>
+
+      <Box
+        sx={{
+          width: "50%",
+          margin: "auto",
+          position: "relative",
+          marginBottom: "80px",
+        }}
+      >
         <motion.h1
           className="py-5 align-center"
           variants={FADE_DOWN_ANIMATION_VARIANTS}
@@ -197,16 +208,6 @@ const HomePage = () => {
             Getting rugged collections back to life
           </Text>
         </motion.h1>
-      </Box>
-
-      <Box
-        sx={{
-          width: "50%",
-          margin: "auto",
-          position: "relative",
-          marginBottom: "80px",
-        }}
-      >
         {renderSelect}
         <Text
           onClick={() =>
@@ -225,32 +226,49 @@ const HomePage = () => {
           </span>
         </Text>
       </Box>
-      {topVolumeCollections && topVolumeCollections.length > 0 && (
-        <Box className="w-11/12 m-auto flex flex-col items-start gap-10">
-          <Box className="flex gap-5 items-center w-full">
-            {" "}
-            <p className="font-bold text-3xl">High voulume collections</p>
-            <Select
-              styles={{ ...selectStyles }}
-              options={getFilterOptions}
-              onChange={(e) => setFilter(e?.value as CollectionVolumeFilter)}
-              defaultValue={getFilterOptions[0]}
-              formatOptionLabel={(val) => {
-                return (
-                  <div className="w-full font-bold text-white font-md p-2">
-                    {val.label}
-                  </div>
-                );
-              }}
-            />
-          </Box>
-          <Box className="grid grid-cols-4 gap-5 w-full">
-            {renderTopCollections}
-          </Box>
-        </Box>
-      )}
       {activeCollections && activeCollections.length ? (
-        <ActiveListings activeListings={activeCollections} />
+        <div className="flex w-full">
+
+          <ActiveListings activeListings={activeCollections} />
+          {/* here as well */}
+          {topVolumeCollections && topVolumeCollections.length > 0 && (
+            <Box
+              className="flex flex-wrap box-content cursor-pointer overflow-hidden w-1/2"
+            >
+              <Box className="flex flex-row w-full justify-between items-center">
+                <Text className="text-xl font-mono text-main-blue flex justify-center">
+                  <span
+                    className="px-4"
+                    style={{
+                      border: "1px solid rgb(9, 194, 246)",
+                      borderBottom: "none",
+                    }}
+                  >
+                    HOT🔥
+                  </span>
+                </Text>
+                <Select
+                  styles={{ ...selectStylesPrimary }}
+                  options={getFilterOptions}
+                  onChange={(e) => setFilter(e?.value as CollectionVolumeFilter)}
+                  defaultValue={getFilterOptions[0]}
+                  formatOptionLabel={(val) => {
+                    return (
+                      <div className="w-full font-bold text-white font-md px-5">
+                        {val.label}
+                      </div>
+                    );
+                  }}
+                />
+              </Box>
+
+              <Box className="grid grid-cols-4 w-full" style={{ overflowY: "hidden", border: "1px solid rgb(9, 194, 246)", borderBottom: 'none' }} >
+                {renderTopCollections}
+              </Box>
+            </Box>
+          )}
+        </div>
+
       ) : loading ? (
         <></>
       ) : (
@@ -262,7 +280,44 @@ const HomePage = () => {
         />
       )}
 
-      {!loading && <CollectionsSlider />}
+      {/* todo refactor this into component */}
+      {topVolumeCollections && topVolumeCollections.length > 0 && (
+        <Box
+          className="flex flex-wrap
+           cursor-pointer overflow-hidden w-full pt-10"
+        >
+          <Box className="flex flex-row w-full justify-center items-center">
+            <Text className="text-xl font-mono text-main-blue flex justify-center">
+              <span
+                className="px-4"
+                style={{
+                  border: "1px solid rgb(9, 194, 246)",
+                  borderBottom: "none",
+                }}
+              >
+                high voulume collections
+              </span>
+            </Text>
+            <Select
+              styles={{ ...selectStylesSecondary }}
+              options={getFilterOptions}
+              onChange={(e) => setFilter(e?.value as CollectionVolumeFilter)}
+              defaultValue={getFilterOptions[0]}
+              formatOptionLabel={(val) => {
+                return (
+                  <div className="w-full font-bold text-white font-md px-5">
+                    {val.label}
+                  </div>
+                );
+              }}
+            />
+          </Box>
+
+          <Box className="grid grid-cols-4 w-full" style={{ overflowY: "hidden", border: "1px solid rgb(9, 194, 246)", borderBottom: 'none' }} >
+            {renderTopCollections}
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 };

@@ -101,69 +101,95 @@ const HeaderNav: FC = () => {
             />
           </motion.button>
           {wallet && wallet.publicKey && (
-            <ActionMenu>
-              <ActionMenu.Button
-                sx={{
-                  background: "transparent",
-                  border: "none",
-                  "&:hover": {
-                    background: "transparen",
-                  },
-                }}
+            <div className="flex flex-row gap-3 cursor-pointer" onClick={userData ? unlinkTwitter : linkTwitter}>
+              <div
+                onClick={userData ? unlinkTwitter : linkTwitter}
+                className="w-full"
               >
-                <FaUserCircle
-                  style={{
-                    fontSize: "2em",
-                    cursor: "pointer",
-                    color: "rgb(9, 194, 246) ",
-                  }}
-                />
-              </ActionMenu.Button>
-              <ActionMenu.Overlay
-                className="z-20"
-                onClick={(e) => e.preventDefault()}
-                sx={{
-                  background: "black",
-                  padding: 0,
-                  borderRadius: 0,
-                }}
-              >
-                <ActionList className="z-10">
-                  <ActionList.Item className="bg-red-200">
-                    <div
-                      onClick={userData ? unlinkTwitter : linkTwitter}
-                      className="w-full border-b-[1px] border-main-blue p-0 
-                      flex justify-between items-center pb-2 z-20"
-                    >
-                      {userData && (
-                        <img
-                          src={userData.image}
-                          className="rounded-[50px] w-10"
-                        />
-                      )}
-                      <p className="text-main-blue font-bold text-md">
-                        {userData ? userData.twitterHandle : "Link twitter"}
-                      </p>
-                      {userData ? (
-                        <BsLink45Deg
-                          style={{
-                            fontSize: "1.25em",
-                            color: "red",
-                          }}
-                        />
-                      ) : (
-                        <FaTwitter
-                          style={{
-                            fontSize: "1.25em",
-                            color: "rgb(9, 194, 246) ",
-                          }}
-                        />
-                      )}
-                    </div>
-                  </ActionList.Item>
-                </ActionList>
-              </ActionMenu.Overlay>
-            </ActionMenu>
+                {userData && (
+                  <img
+                    src={userData.image}
+                    className="w-10"
+                  />
+                )}
+                <p className="flex gap-3 text-md">
+                  {userData ? userData.twitterHandle : <><span>link twitter </span><FaTwitter
+                    style={{
+                      fontSize: "1.25em",
+                      color: "rgb(9, 194, 246) ",
+                    }} /></>}
+                </p>
+
+              </div>
+            </div>
+
+
+
+
+            // <ActionMenu>
+            //   <ActionMenu.Button
+            //     sx={{
+            //       background: "transparent",
+            //       border: "none",
+            //       "&:hover": {
+            //         background: "transparen",
+            //       },
+            //     }}
+            //   >
+            //     {/* <FaUserCircle
+            //       style={{
+            //         fontSize: "2em",
+            //         cursor: "pointer",
+            //         color: "rgb(9, 194, 246) ",
+            //       }}
+            //     /> */}
+
+            //   </ActionMenu.Button>
+            //   <ActionMenu.Overlay
+            //     className="z-20"
+            //     onClick={(e) => e.preventDefault()}
+            //     sx={{
+            //       background: "black",
+            //       padding: 0,
+            //       borderRadius: 0,
+            //     }}
+            //   >
+            //     <ActionList className="z-10">
+            //       <ActionList.Item className="bg-red-200">
+            //         <div
+            //           onClick={userData ? unlinkTwitter : linkTwitter}
+            //           className="w-full border-b-[1px] border-main-blue p-0 
+            //           flex justify-between items-center pb-2 z-20"
+            //         >
+            //           {userData && (
+            //             <img
+            //               src={userData.image}
+            //               className="rounded-[50px] w-10"
+            //             />
+            //           )}
+            //           <p className="text-main-blue font-bold text-md">
+            //             {userData ? userData.twitterHandle : "Link twitter"}
+            //           </p>
+            //           {userData ? (
+            //             <BsLink45Deg
+            //               style={{
+            //                 fontSize: "1.25em",
+            //                 color: "red",
+            //               }}
+            //             />
+            //           ) : (
+            //             <FaTwitter
+            //               style={{
+            //                 fontSize: "1.25em",
+            //                 color: "rgb(9, 194, 246) ",
+            //               }}
+            //             />
+            //           )}
+            //         </div>
+            //       </ActionList.Item>
+            //     </ActionList>
+            //   </ActionMenu.Overlay>
+            // </ActionMenu>
           )}
         </Header.Item>
       </div>

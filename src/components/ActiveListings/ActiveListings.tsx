@@ -8,14 +8,105 @@ import {
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
 import { ActiveListingItem } from "./ActiveListingItem";
 
+const dummy: ICollectionData[] = [{
+  id: '1',
+  symbol: "bonkbank",
+  image: "https://creator-hub-prod.s3.us-east-2.amazonaws.com/bonkbank_pfp_1672702226532.png",
+  name: "The Bonk Bank",
+  description: "The Bonk Bank is Multi-Sig Governed Dao for Bonk. Our goal is to bring mass adoption to the memecoin of Solana. Features will include Staking for Bonk, Raid 4 Bonk, Bonk Bank and much more!Staking: https://staking.etakit.in/thebonkbox 100+ Game Bonksino: https://bonkbank.crashout.io/",
+  twitter: "https://www.twitter.com/TheBonkBank",
+  discord: "https://www.discord.gg/6UHaNVE99b",
+  website: "https://bonkbank.crashout.io/",
+  categories: [
+    "pfps",
+    "art"
+  ],
+  isFlagged: true,
+},
+{
+  id: '1',
+  symbol: "bonkbank",
+  image: "https://creator-hub-prod.s3.us-east-2.amazonaws.com/bonkbank_pfp_1672702226532.png",
+  name: "The Bonk Bank",
+  description: "The Bonk Bank is Multi-Sig Governed Dao for Bonk. Our goal is to bring mass adoption to the memecoin of Solana. Features will include Staking for Bonk, Raid 4 Bonk, Bonk Bank and much more!Staking: https://staking.etakit.in/thebonkbox 100+ Game Bonksino: https://bonkbank.crashout.io/",
+  twitter: "https://www.twitter.com/TheBonkBank",
+  discord: "https://www.discord.gg/6UHaNVE99b",
+  website: "https://bonkbank.crashout.io/",
+  categories: [
+    "pfps",
+    "art"
+  ],
+  isFlagged: true,
+},
+{
+  id: '1',
+  symbol: "bonkbank",
+  image: "https://creator-hub-prod.s3.us-east-2.amazonaws.com/bonkbank_pfp_1672702226532.png",
+  name: "The Bonk Bank",
+  description: "The Bonk Bank is Multi-Sig Governed Dao for Bonk. Our goal is to bring mass adoption to the memecoin of Solana. Features will include Staking for Bonk, Raid 4 Bonk, Bonk Bank and much more!Staking: https://staking.etakit.in/thebonkbox 100+ Game Bonksino: https://bonkbank.crashout.io/",
+  twitter: "https://www.twitter.com/TheBonkBank",
+  discord: "https://www.discord.gg/6UHaNVE99b",
+  website: "https://bonkbank.crashout.io/",
+  categories: [
+    "pfps",
+    "art"
+  ],
+  isFlagged: true,
+},
+{
+  id: '1',
+  symbol: "bonkbank",
+  image: "https://creator-hub-prod.s3.us-east-2.amazonaws.com/bonkbank_pfp_1672702226532.png",
+  name: "The Bonk Bank",
+  description: "The Bonk Bank is Multi-Sig Governed Dao for Bonk. Our goal is to bring mass adoption to the memecoin of Solana. Features will include Staking for Bonk, Raid 4 Bonk, Bonk Bank and much more!Staking: https://staking.etakit.in/thebonkbox 100+ Game Bonksino: https://bonkbank.crashout.io/",
+  twitter: "https://www.twitter.com/TheBonkBank",
+  discord: "https://www.discord.gg/6UHaNVE99b",
+  website: "https://bonkbank.crashout.io/",
+  categories: [
+    "pfps",
+    "art"
+  ],
+  isFlagged: true,
+},
+{
+  id: '1',
+  symbol: "bonkbank",
+  image: "https://creator-hub-prod.s3.us-east-2.amazonaws.com/bonkbank_pfp_1672702226532.png",
+  name: "The Bonk Bank",
+  description: "The Bonk Bank is Multi-Sig Governed Dao for Bonk. Our goal is to bring mass adoption to the memecoin of Solana. Features will include Staking for Bonk, Raid 4 Bonk, Bonk Bank and much more!Staking: https://staking.etakit.in/thebonkbox 100+ Game Bonksino: https://bonkbank.crashout.io/",
+  twitter: "https://www.twitter.com/TheBonkBank",
+  discord: "https://www.discord.gg/6UHaNVE99b",
+  website: "https://bonkbank.crashout.io/",
+  categories: [
+    "pfps",
+    "art"
+  ],
+  isFlagged: true,
+},
+{
+  id: '1',
+  symbol: "bonkbank",
+  image: "https://creator-hub-prod.s3.us-east-2.amazonaws.com/bonkbank_pfp_1672702226532.png",
+  name: "The Bonk Bank",
+  description: "The Bonk Bank is Multi-Sig Governed Dao for Bonk. Our goal is to bring mass adoption to the memecoin of Solana. Features will include Staking for Bonk, Raid 4 Bonk, Bonk Bank and much more!Staking: https://staking.etakit.in/thebonkbox 100+ Game Bonksino: https://bonkbank.crashout.io/",
+  twitter: "https://www.twitter.com/TheBonkBank",
+  discord: "https://www.discord.gg/6UHaNVE99b",
+  website: "https://bonkbank.crashout.io/",
+  categories: [
+    "pfps",
+    "art"
+  ],
+  isFlagged: true,
+},
+]
 export const ActiveListings: FC<{
   activeListings?: ICollectionData[];
 }> = ({ activeListings }) => (
-  <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS}>
+  <>
     {activeListings && (
-      <Box className="flex flex-col w-full">
-        <Box className="flex flex-row justify-between items-center">
-          <Text className="text-xl font-mono text-main-blue flex justify-center w-full">
+      <Box className="flex flex-col w-1/2 mt-1">
+        <Box className="flex flex-col justify-between items-center">
+          <Text className="text-xl font-mono text-main-blue flex justify-start w-full">
             <span
               className="px-4"
               style={{
@@ -28,14 +119,16 @@ export const ActiveListings: FC<{
           </Text>
         </Box>
         <Box
-          className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 box-content cursor-pointer overflow-hidden w-full"
-          style={{ border: "1px solid rgb(9, 194, 246)" }}
+          className="flex flex-wrap box-content cursor-pointer overflow-hidden w-full"
+          style={{ border: "1px solid rgb(9, 194, 246)", borderRight: 'none', borderBottom: 'none', height: '400px', overflowY: "scroll" }}
         >
-          {activeListings.map((cd) => {
+          {dummy.map((cd) => {
+            console.log(cd, 'cd');
+
             return <ActiveListingItem collectionData={cd} />;
           })}
         </Box>
       </Box>
     )}
-  </motion.div>
+  </>
 );

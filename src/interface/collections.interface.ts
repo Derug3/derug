@@ -10,10 +10,12 @@ export interface ICollectionData {
   image: string;
   twitter?: string;
   discord?: string;
+  website?: string;
   description: string;
   isFlagged: boolean;
   type?: string[];
   numMints?: number;
+  categories?: any[]
 }
 
 export interface IRequest {

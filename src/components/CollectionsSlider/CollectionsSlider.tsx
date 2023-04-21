@@ -21,7 +21,7 @@ const CollectionsSlider: FC = () => {
         <Box
           className="box-content cursor-pointer h-36 w-36 overflow-hidden"
           key={index}
-          style={{ border: "1px solid rgb(9, 194, 246)" }}
+          style={{ border: "1px solid rgb(9, 194, 246)", opacity: 0.7 }}
           onMouseEnter={() => setHoveredCollection(index)}
           onMouseLeave={() => setHoveredCollection(undefined)}
           onClick={() => navigate(`${COLLECTION}?symbol=${c.symbol}`)}

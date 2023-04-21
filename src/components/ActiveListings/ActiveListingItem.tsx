@@ -8,6 +8,7 @@ import {
   COLLECTION,
   FADE_DOWN_ANIMATION_VARIANTS,
 } from "../../utilities/constants";
+import { FaDiscord, FaTwitter } from "react-icons/fa";
 
 export const ActiveListingItem: FC<{
   collectionData: ICollectionData;
@@ -16,8 +17,8 @@ export const ActiveListingItem: FC<{
 
   const navigate = useNavigate();
   return (
-    <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS} className="flex w-full">
-      <Box className="flex flex-row items-start gap-5 p-2 bg-transparent">
+    <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS} className="flex w-1/2">
+      <Box className="flex w-full flex-row items-start gap-5 p-2 bg-transparent">
         <img
           src={collectionData.image}
           onClick={() =>
@@ -33,6 +34,35 @@ export const ActiveListingItem: FC<{
           }}
           className="w-full h-40 object-cover"
         />
+        <div className="flex flex-row justify-between text-white w-full">
+          <div className="flex flex-col">
+            <div className="flex w-full justify-between">
+
+              <h3 className="flex" style={{ color: 'rgb(9, 194, 246)' }}>{collectionData.name}</h3>
+              <div className="flex gap-3">
+                <a href={collectionData.discord} target={"_blank"} rel="noreferrer">
+                  <FaDiscord
+                    style={{
+                      cursor: "pointer",
+                      fontSize: "1.75em",
+                      color: "rgb(88 101 242)",
+                    }}
+                  />
+                </a>
+                <a href={collectionData.twitter} target={"_blank"} rel="noreferrer">
+                  <FaTwitter
+                    style={{
+                      cursor: "pointer",
+                      fontSize: "1.75em",
+                      color: "rgb(29 161 242)",
+                    }}
+                  />
+                </a>
+              </div>
+            </div>
+            <p>{collectionData.description}</p>
+          </div>
+        </div>
       </Box>
     </motion.div>
   );
