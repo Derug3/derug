@@ -38,6 +38,8 @@ const HomePage = () => {
   >(collections);
   const [topVolumeCollections, setTopVolumeCollections] =
     useState<ICollectionVolume[]>();
+  const [hotCollections, setHotCollections] =
+    useState<ICollectionVolume[]>();
   const [filter, setFilter] = useState(CollectionVolumeFilter.MarketCap);
   const [loading, setLoading] = useState(true);
   const { name } = useDebounce(searchValue);
@@ -104,6 +106,7 @@ const HomePage = () => {
   const getTopVolumeCollections = async () => {
     try {
       setTopVolumeCollections(await getCollectionsWithTopVolume());
+      setHotCollections(await getCollectionsWithTopVolume());
     } catch (error) {
       toast.error("Failed to load collections with colume");
     }
@@ -153,6 +156,12 @@ const HomePage = () => {
       return <CollectionItem collection={c} key={c.symbol} />;
     });
   }, [topVolumeCollections]);
+
+  const renderHotCollections = useMemo(() => {
+    return hotCollections?.map((c) => {
+      return <CollectionItem collection={c} key={c.symbol} />;
+    });
+  }, [hotCollections]);
 
   const getFilterOptions = useMemo(() => {
     return Object.values(CollectionVolumeFilter).map((c: any) => {
@@ -244,26 +253,13 @@ const HomePage = () => {
                       borderBottom: "none",
                     }}
                   >
-                    HOT🔥
+                    HOT 🔥
                   </span>
                 </Text>
-                {/* <Select
-                  styles={{ ...selectStylesPrimary }}
-                  options={getFilterOptions}
-                  onChange={(e) => setFilter(e?.value as CollectionVolumeFilter)}
-                  defaultValue={getFilterOptions[0]}
-                  formatOptionLabel={(val) => {
-                    return (
-                      <div className="w-full font-bold text-white font-md px-5">
-                        {val.label}
-                      </div>
-                    );
-                  }}
-                /> */}
               </Box>
 
               <Box className="grid grid-cols-4 w-full" style={{ overflowY: "hidden", border: "1px solid rgb(9, 194, 246)", borderBottom: 'none' }} >
-                {renderTopCollections}
+                {renderHotCollections}
               </Box>
             </Box>
           )}
@@ -295,7 +291,7 @@ const HomePage = () => {
                   borderBottom: "none",
                 }}
               >
-                high voulume collections
+                sort collections by
               </span>
             </Text>
             <Select

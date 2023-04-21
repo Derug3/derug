@@ -1,4 +1,3 @@
-import { Box } from "@primer/react";
 import { motion } from "framer-motion";
 import { FC, useState } from "react";
 import { useNavigate } from "react-router";
@@ -9,6 +8,8 @@ import {
   FADE_DOWN_ANIMATION_VARIANTS,
 } from "../../utilities/constants";
 import { FaDiscord, FaTwitter } from "react-icons/fa";
+import Skeleton from "react-loading-skeleton";
+import { Box, Text } from "@primer/react";
 
 export const ActiveListingItem: FC<{
   collectionData: ICollectionData;
@@ -17,7 +18,7 @@ export const ActiveListingItem: FC<{
 
   const navigate = useNavigate();
   return (
-    <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS} className="flex w-1/2">
+    <motion.div variants={FADE_DOWN_ANIMATION_VARIANTS} className="flex w-1/2 py-3">
       <Box className="flex w-full flex-row items-start gap-5 p-2 bg-transparent">
         <img
           src={collectionData.image}
@@ -28,13 +29,15 @@ export const ActiveListingItem: FC<{
           onMouseLeave={() => setHover(false)}
           alt="colectionImg"
           style={{
-            opacity: hover ? 0.6 : 1,
+            opacity: hover ? 0.8 : 1,
             transform: hover ? "scale(1.1)" : "scale(1)",
             transition: "all .2s ease-out",
+            height: "100px",
+            width: "100px",
           }}
           className="w-full h-40 object-cover"
         />
-        <div className="flex flex-row justify-between text-white w-full">
+        <div className="flex flex-row justify-between text-white w-fit">
           <div className="flex flex-col">
             <div className="flex w-full justify-between">
 
@@ -44,8 +47,7 @@ export const ActiveListingItem: FC<{
                   <FaDiscord
                     style={{
                       cursor: "pointer",
-                      fontSize: "1.75em",
-                      color: "rgb(88 101 242)",
+                      fontSize: "1em",
                     }}
                   />
                 </a>
@@ -53,14 +55,24 @@ export const ActiveListingItem: FC<{
                   <FaTwitter
                     style={{
                       cursor: "pointer",
-                      fontSize: "1.75em",
-                      color: "rgb(29 161 242)",
+                      fontSize: "1em",
                     }}
                   />
                 </a>
               </div>
             </div>
-            <p>{collectionData.description}</p>
+            {/* <p>{collectionData.description}</p> */}
+            <Text
+              className="text-left text-md text-white opacity-80 font-mono max-h-24 overflow-auto "
+            >
+              {collectionData.description ?? (
+                <Skeleton
+                  baseColor="rgb(22,27,34)"
+                  highlightColor="rgb(29,35,44m)"
+                  height={32}
+                ></Skeleton>
+              )}
+            </Text>
           </div>
         </div>
       </Box>

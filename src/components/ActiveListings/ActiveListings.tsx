@@ -104,7 +104,7 @@ export const ActiveListings: FC<{
 }> = ({ activeListings }) => (
   <>
     {activeListings && (
-      <Box className="flex flex-col w-1/2 mt-1">
+      <Box className="flex flex-col w-1/2">
         <Box className="flex flex-col justify-between items-center">
           <Text className="text-xl font-mono text-main-blue flex justify-start w-full">
             <span
@@ -114,7 +114,7 @@ export const ActiveListings: FC<{
                 borderBottom: "none",
               }}
             >
-              active derugs
+              active derugs 🛠
             </span>
           </Text>
         </Box>
@@ -122,7 +122,7 @@ export const ActiveListings: FC<{
           className="flex flex-wrap box-content cursor-pointer overflow-hidden w-full"
           style={{ border: "1px solid rgb(9, 194, 246)", borderRight: 'none', borderBottom: 'none', height: '400px', overflowY: "scroll" }}
         >
-          {dummy.map((cd) => {
+          {activeListings.map((cd) => {
             console.log(cd, 'cd');
 
             return <ActiveListingItem collectionData={cd} />;

@@ -54,7 +54,7 @@ export const Remint: FC<{
         setNonMintedNfts(
           await getNonMinted(collectionDerug?.address.toString())
         );
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const getCollectionNfts = async () => {
@@ -165,10 +165,10 @@ export const Remint: FC<{
       <WinningRequest request={getWinningRequest!} />
       <>
         {collectionDerug?.status === DerugStatus.UploadingMetadata ? (
-          <div className="text-center border-[1px] border-main-blue p-2 mt-2 w-11/12 m-auto">
-            <p className="text-main-blue font-bold">
-              Uploading metadata and preparing private mint.Minting will be
-              enabled soon!
+          <div className="text-center text-lg m-10">
+            <p className="text-white">
+              ⚠️ Uploading metadata and preparing private mint.Minting will be
+              enabled soon! ⚠️
             </p>
           </div>
         ) : (

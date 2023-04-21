@@ -92,16 +92,16 @@ const PublicMint = () => {
       return (
         <Box className="flex flex-col items-center">
           <img src={n.image} alt="" />
-          <p className="font-bold text-main-blue text-sm w-full">{n.name}</p>
+          <p className="text-white text-sm w-full">{n.name}</p>
         </Box>
       );
     });
   }, [nfts]);
 
   return (
-    <Box className="w-11/12 m-auto grid grid-cols-3 gap-10 my-10">
+    <Box className="m-auto grid grid-cols-3 gap-10 m-10">
       <Box className="flex flex-col items-start gap-5">
-        <p className="text-main-blue text-bold text-xl">
+        <p className="text-main-blue text-xl">
           Your {remintConfig?.newName ?? collection?.name} NFTs
         </p>
         <Box
@@ -112,13 +112,13 @@ const PublicMint = () => {
         >
           {loading
             ? generateSkeletonArrays(15).map(() => (
-                <Skeleton
-                  height={100}
-                  width={110}
-                  baseColor="rgb(22,27,34)"
-                  highlightColor="rgb(29,35,44)"
-                />
-              ))
+              <Skeleton
+                height={100}
+                width={110}
+                baseColor="rgb(22,27,34)"
+                highlightColor="rgb(29,35,44)"
+              />
+            ))
             : renderNfts}
         </Box>
       </Box>
@@ -142,15 +142,15 @@ const PublicMint = () => {
           <p className="text-main-blue font-bold">{mintedNft.name}</p>
         )}
         <button
-          className="w-40  border-[1px] border-main-blue text-main-blue py-1 
-          flex flex-row items-center justify-center
-          hover:bg-main-blue hover:text-black font-bold hover:border-black hover:border-[1px]"
+          style={{ border: "1px solid rgb(9, 194, 246)", }}
+          className="w-40 text-white py-1 
+          flex flex-row items-center justify-center"
           onClick={mintNfts}
         >
           {isMinting ? (
             <Oval
               color="rgb(9, 194, 246)"
-              height={"2em"}
+              height={"1.1em"}
               secondaryColor="transparent"
             />
           ) : (
@@ -159,7 +159,9 @@ const PublicMint = () => {
         </button>
       </Box>
       <Box className="flex flex-col items-start gap-3 ">
-        <p className="text-main-blue text-bold text-xl">Mint details</p>
+        <p className="text-white text-lg">
+          MINT DETAILS
+        </p>
         <Box className="flex flex-col gap-3 items-start">
           <p className="text-bold text-green-color text-md">Private Mint</p>
           <Box className="flex gap-5 items-center">
@@ -168,7 +170,7 @@ const PublicMint = () => {
               progress={100}
               bg="#2DD4BF"
               sx={{
-                width: "380px",
+                width: "280px",
                 height: "8px",
                 borderRadius: 0,
                 color: "rgb(45, 212, 191)",
@@ -196,7 +198,7 @@ const PublicMint = () => {
                 }
                 bg="rgb(9, 194, 246)"
                 sx={{
-                  width: "380px",
+                  width: "280px",
                   height: "8px",
                   borderRadius: 0,
                   color: "rgb(45, 212, 191)",
@@ -216,7 +218,7 @@ const PublicMint = () => {
           <Box className="flex gap-5 items-center">
             {candyMachine && (
               <>
-                <p className="text-main-blue font-bold text-lg">
+                <p className="text-white text-lg">
                   MINT PRICE :{" "}
                   {candyMachine?.price.basisPoints.toNumber() /
                     Math.pow(10, candyMachine?.price.currency.decimals)}{" "}

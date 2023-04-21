@@ -113,11 +113,14 @@ const HeaderNav: FC = () => {
                   />
                 )}
                 <p className="flex gap-3 text-md">
-                  {userData ? userData.twitterHandle : <><span>link twitter </span><FaTwitter
-                    style={{
-                      fontSize: "1.25em",
-                      color: "rgb(9, 194, 246) ",
-                    }} /></>}
+                  {userData ? userData.twitterHandle : <>
+                    <FaTwitter
+                      style={{
+                        fontSize: "1.25em",
+                        color: "rgb(9, 194, 246) ",
+                      }} />
+                    <span>link twitter </span>
+                  </>}
                 </p>
 
               </div>

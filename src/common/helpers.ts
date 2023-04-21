@@ -62,7 +62,7 @@ export const getNftsFromDeruggedCollection = async (
             image: (await (await fetch(nft.uri)).json()).image,
           });
         }
-      } catch (error) {}
+      } catch (error) { }
     }
 
     return collectionNfts;
@@ -165,10 +165,10 @@ export const getUserDataForDerug = async (
 export const mapFilterTypeToValue = (filterType: CollectionVolumeFilter) => {
   switch (filterType) {
     case CollectionVolumeFilter.MarketCap:
-      return "All time market cap";
+      return "high volume";
     case CollectionVolumeFilter.FloorPrice:
-      return "Floor price";
+      return "floor price";
     case CollectionVolumeFilter.NumMints:
-      return "Total supply";
+      return "total supply";
   }
 };

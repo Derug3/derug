@@ -31,6 +31,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -53,7 +54,6 @@
 
 .wallet-adapter-button {
   color: white !important;
-  filter: drop-shadow(rgb(9, 194, 246) 0px 0px 15px) !important;
   font-family: monospace !important;
   font-weight: bold !important;
   border-bottom: 1px solid rgb(9, 194, 246) !important;
@@ -69,7 +69,14 @@
   cursor: pointer !important;
 }
 
-.wallet-adapter-modal-button-close > svg {
+.wallet-adapter-dropdown-list {
+  width: "100%" !important;
+  border-radius: 0 !important;
+  font-family: monospace !important;
+  background-color: #0d1117 !important;
+}
+
+.wallet-adapter-modal-button-close>svg {
   /* color: gray !important; */
 }
 
@@ -82,7 +89,8 @@
   font-family: monospace !important;
   color: gray !important;
 }
-.wallet-adapter-modal-list-more > svg > path {
+
+.wallet-adapter-modal-list-more>svg>path {
   color: gray !important;
 }
 
