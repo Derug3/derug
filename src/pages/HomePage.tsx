@@ -247,7 +247,7 @@ const HomePage = () => {
                     HOT🔥
                   </span>
                 </Text>
-                <Select
+                {/* <Select
                   styles={{ ...selectStylesPrimary }}
                   options={getFilterOptions}
                   onChange={(e) => setFilter(e?.value as CollectionVolumeFilter)}
@@ -259,7 +259,7 @@ const HomePage = () => {
                       </div>
                     );
                   }}
-                />
+                /> */}
               </Box>
 
               <Box className="grid grid-cols-4 w-full" style={{ overflowY: "hidden", border: "1px solid rgb(9, 194, 246)", borderBottom: 'none' }} >
