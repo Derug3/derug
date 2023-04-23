@@ -96,6 +96,7 @@ export const AddDerugRequst: FC<{
 
   const submitRequest = async (data: any) => {
     try {
+      debugger;
       if (wallet && chainCollectionData && utility && collectionStats && data) {
         const requestAddress = await createOrUpdateDerugRequest(
           wallet,
@@ -110,7 +111,7 @@ export const AddDerugRequst: FC<{
             }),
           chainCollectionData,
           collectionStats,
-          +data.fee * 10,
+          +sellerFee * 10,
           data.symbol,
           data.name,
           creators.map((c) => {
@@ -127,7 +128,7 @@ export const AddDerugRequst: FC<{
             selectedMint.address.toString() !== WRAPPED_SOL_MINT.toString()
             ? selectedMint.address
             : //TODO:Remove before mainnet
-            undefined,
+              undefined,
           activeListings ? activeListings[0] : undefined
         );
         const addedRequests = [...(derugRequests ?? [])];
@@ -176,7 +177,7 @@ export const AddDerugRequst: FC<{
   const storeUserData = async () => {
     try {
       setUserData(await getUserTwitterData(wallet.publicKey?.toString()!));
-    } catch (error) { }
+    } catch (error) {}
   };
 
   return (
@@ -226,9 +227,11 @@ export const AddDerugRequst: FC<{
                     Derug request details
                   </span>
                   <div className="flex justify-between w-full px-3">
-                    <span className="pr-2 text-white font-mono text-start">Wallet:</span>
+                    <span className="pr-2 text-white font-mono text-start">
+                      Wallet:
+                    </span>
                     <div className="flex gap-5 items-center  justify-beween">
-                      <span className="font-mono w-64">
+                      <span className="font-mono ">
                         {wallet.publicKey &&
                           getTrimmedPublicKey(
                             new PublicKey(wallet.publicKey.toString())
@@ -238,7 +241,7 @@ export const AddDerugRequst: FC<{
                         <button
                           onClick={linkTwitter}
                           type="button"
-                          className="flex border-[1px] border-main-blue py-1 px-2 items-center gap-4"
+                          className="flex border-[1px] border-main-blue py-1  items-center gap-4"
                         >
                           Link twitter
                           <FaTwitter style={{ color: "rgb(29 161 242)" }} />
@@ -378,15 +381,15 @@ export const AddDerugRequst: FC<{
                     {" "}
                     {(methods.formState.errors.creatorsFees ||
                       methods.formState.errors.creatorsKey) && (
-                        <p className="text-red-500 text-xs">
-                          {
-                            (
-                              methods.formState.errors.creatorsFees ??
-                              methods.formState.errors.creatorsKey
-                            )?.message
-                          }
-                        </p>
-                      )}
+                      <p className="text-red-500 text-xs">
+                        {
+                          (
+                            methods.formState.errors.creatorsFees ??
+                            methods.formState.errors.creatorsKey
+                          )?.message
+                        }
+                      </p>
+                    )}
                   </>
                 </div>
               </Box>
