@@ -91,8 +91,8 @@ const PublicMint = () => {
     return nfts.map((n) => {
       return (
         <Box className="flex flex-col items-center">
-          <img src={n.image} alt="" />
-          <p className="text-white text-sm w-full">{n.name}</p>
+          <img src={n.image} alt="" className="w-36 h-28" />
+          <p className="text-white text-sm w-full break-all">{n.name}</p>
         </Box>
       );
     });
@@ -100,25 +100,20 @@ const PublicMint = () => {
 
   return (
     <Box className="m-auto grid grid-cols-3 gap-10 m-10">
-      <Box className="flex flex-col items-start gap-5">
-        <p className="text-main-blue text-xl">
+      <Box className="flex flex-col items-start ml-10">
+        <p className="text-main-blue text-xl mb-2 flex">
           Your {remintConfig?.newName ?? collection?.name} NFTs
         </p>
-        <Box
-          className="overflow-y-scroll grid grid-cols-5 gap-5"
-          sx={{
-            maxHeight: "50%",
-          }}
-        >
+        <Box className="overflow-y-scroll grid grid-cols-3 gap-5">
           {loading
             ? generateSkeletonArrays(15).map(() => (
-              <Skeleton
-                height={100}
-                width={110}
-                baseColor="rgb(22,27,34)"
-                highlightColor="rgb(29,35,44)"
-              />
-            ))
+                <Skeleton
+                  height={100}
+                  width={110}
+                  baseColor="rgb(22,27,34)"
+                  highlightColor="rgb(29,35,44)"
+                />
+              ))
             : renderNfts}
         </Box>
       </Box>
@@ -142,7 +137,7 @@ const PublicMint = () => {
           <p className="text-main-blue font-bold">{mintedNft.name}</p>
         )}
         <button
-          style={{ border: "1px solid rgb(9, 194, 246)", }}
+          style={{ border: "1px solid rgb(9, 194, 246)" }}
           className="w-40 text-white py-1 
           flex flex-row items-center justify-center"
           onClick={mintNfts}
@@ -159,9 +154,7 @@ const PublicMint = () => {
         </button>
       </Box>
       <Box className="flex flex-col items-start gap-3 ">
-        <p className="text-white text-lg">
-          MINT DETAILS
-        </p>
+        <p className="text-white text-lg">MINT DETAILS</p>
         <Box className="flex flex-col gap-3 items-start">
           <p className="text-bold text-green-color text-md">Private Mint</p>
           <Box className="flex gap-5 items-center">
