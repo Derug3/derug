@@ -3,8 +3,9 @@ import React, { FC } from "react";
 import { useNavigate } from "react-router";
 import { ICollectionVolume } from "../../interface/collections.interface";
 
-const CollectionItem: FC<{ collection: ICollectionVolume }> = ({
+const CollectionItem: FC<{ collection: ICollectionVolume, bigImage: boolean }> = ({
   collection,
+  bigImage,
 }) => {
   const navigate = useNavigate();
   return (
@@ -12,13 +13,13 @@ const CollectionItem: FC<{ collection: ICollectionVolume }> = ({
       onClick={() =>
         navigate(`/collection?symbol=${collection.collection.symbol}`)
       }
-      className="flex flex-col p-5 gap-5 cursor-pointer overflow-hidden w-full hover:shadow-lg 
+      className="flex flex-col p-5  cursor-pointer overflow-hidden w-full hover:shadow-lg 
     hover:shadow-main-blue items-center" style={{ border: "1px solid rgba(9, 194, 246, 0.5)", borderTop: 'none' }}
     >
       <img
         src={collection.collection.image}
         alt="collectionImage"
-        className="w-20 rounded-none"
+        className={`${bigImage ? ' w-32' : "w-16"}`}
       />
       <p className="text-xl font-bold font-white">
         {collection.collection.name}

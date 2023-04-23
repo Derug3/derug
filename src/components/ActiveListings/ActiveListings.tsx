@@ -120,7 +120,7 @@ export const ActiveListings: FC<{
         </Box>
         <Box
           className="flex flex-wrap box-content cursor-pointer overflow-hidden w-full"
-          style={{ border: "1px solid rgb(9, 194, 246)", borderRight: 'none', borderBottom: 'none', height: '400px', overflowY: "scroll" }}
+          style={{ border: "1px solid rgb(9, 194, 246)", borderRight: 'none', borderBottom: 'none', height: '500px', overflowY: "scroll" }}
         >
           {activeListings.map((cd) => {
             console.log(cd, 'cd');

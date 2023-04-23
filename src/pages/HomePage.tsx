@@ -153,13 +153,13 @@ const HomePage = () => {
 
   const renderTopCollections = useMemo(() => {
     return topVolumeCollections?.map((c) => {
-      return <CollectionItem collection={c} key={c.symbol} />;
+      return <CollectionItem collection={c} key={c.symbol} bigImage={true} />;
     });
   }, [topVolumeCollections]);
 
   const renderHotCollections = useMemo(() => {
     return hotCollections?.map((c) => {
-      return <CollectionItem collection={c} key={c.symbol} />;
+      return <CollectionItem collection={c} key={c.symbol} bigImage={false} />;
     });
   }, [hotCollections]);
 
@@ -179,8 +179,8 @@ const HomePage = () => {
         margin: "auto",
         display: "flex",
         flexDirection: "column",
-        zoom: "85%",
-        paddingTop: 5,
+        zoom: "80%",
+        padding: "3em",
         overflowX: "hidden",
       }}
     >
@@ -258,7 +258,7 @@ const HomePage = () => {
                 </Text>
               </Box>
 
-              <Box className="grid grid-cols-4 w-full" style={{ overflowY: "hidden", border: "1px solid rgb(9, 194, 246)", borderBottom: 'none' }} >
+              <Box className="grid grid-cols-4 w-full" style={{ overflowY: "auto", border: "1px solid rgb(9, 194, 246)", borderBottom: 'none', maxHeight: "500px" }} >
                 {renderHotCollections}
               </Box>
             </Box>

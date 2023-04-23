@@ -16,7 +16,7 @@ function App() {
           style: {
             border: '1px solid rgb(9, 194, 246',
             padding: '16px',
-            background: 'transparent',
+            background: '#0d1117',
             color: 'white'
           },
         }} />
