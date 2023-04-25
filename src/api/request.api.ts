@@ -38,3 +38,10 @@ export async function post(
 
   return response.json();
 }
+
+export async function deleteRequest(path: string): Promise<any> {
+  const endpoint = `${process.env.REACT_APP_API_ENDPOINT as string}${path}`;
+
+  const response = await makeRequest(endpoint, "DELETE");
+  return response.json();
+}

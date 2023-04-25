@@ -11,7 +11,15 @@ function App() {
   return (
     <div className="App flex h-full flex-col justify-between">
       <ApolloProvider client={gqlClient}>
-        <Toaster position="bottom-right" />
+        <Toaster position="bottom-right" toastOptions={{
+          className: '',
+          style: {
+            border: '1px solid rgb(9, 194, 246',
+            padding: '16px',
+            background: '#0d1117',
+            color: 'white'
+          },
+        }} />
         <WalletWrapper>
           <>
             <Header />

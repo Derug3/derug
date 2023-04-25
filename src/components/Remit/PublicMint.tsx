@@ -34,15 +34,18 @@ const PublicMint = () => {
 
   useEffect(() => {
     if (!nfts || nfts.length === 0) void getNfts();
-  }, []);
+  }, [wallet?.publicKey]);
 
   const getNfts = async () => {
     toggleLoading(true);
     try {
       if (wallet && remintConfig) {
-        setNfts(
-          await getNftsFromDeruggedCollection(wallet.publicKey, remintConfig)
+        const nfts = await getNftsFromDeruggedCollection(
+          wallet.publicKey,
+          remintConfig
         );
+
+        setNfts(nfts);
       }
     } catch (error) {
     } finally {
@@ -73,8 +76,8 @@ const PublicMint = () => {
         setCandyMachine(await getCandyMachine(remintConfig.candyMachine));
         toast.success(`Successfully minted ${minted.name}`);
         setNfts((prevValue) => [
-          ...prevValue,
           { name: minted.name, image: nftImg },
+          ...prevValue,
         ]);
       }
     } catch (error: any) {
@@ -88,20 +91,20 @@ const PublicMint = () => {
     return nfts.map((n) => {
       return (
         <Box className="flex flex-col items-center">
-          <img src={n.image} alt="" />
-          <p className="font-bold text-main-blue text-sm w-full">{n.name}</p>
+          <img src={n.image} alt="" className="w-36 h-28" />
+          <p className="text-white text-sm w-full break-all">{n.name}</p>
         </Box>
       );
     });
   }, [nfts]);
 
   return (
-    <Box className="w-11/12 m-auto grid grid-cols-3 gap-10 my-10">
-      <Box className="flex flex-col items-start gap-5">
-        <p className="text-main-blue text-bold text-xl">
+    <Box className="m-auto grid grid-cols-3 gap-10 m-10">
+      <Box className="flex flex-col items-start ml-10">
+        <p className="text-main-blue text-xl mb-2 flex">
           Your {remintConfig?.newName ?? collection?.name} NFTs
         </p>
-        <Box className="max-h-20 overlow-scroll grid grid-cols-5 gap-5">
+        <Box className="overflow-y-scroll grid grid-cols-3 gap-5">
           {loading
             ? generateSkeletonArrays(15).map(() => (
                 <Skeleton
@@ -134,20 +137,24 @@ const PublicMint = () => {
           <p className="text-main-blue font-bold">{mintedNft.name}</p>
         )}
         <button
-          className="w-40  border-[1px] border-main-blue text-main-blue py-1 
-          flex flex-row items-center justify-center
-          hover:bg-main-blue hover:text-black font-bold hover:border-black hover:border-[1px]"
+          style={{ border: "1px solid rgb(9, 194, 246)" }}
+          className="w-40 text-white py-1 
+          flex flex-row items-center justify-center"
           onClick={mintNfts}
         >
           {isMinting ? (
-            <Oval color="rgb(9, 194, 246)" height={"2em"} />
+            <Oval
+              color="rgb(9, 194, 246)"
+              height={"1.1em"}
+              secondaryColor="transparent"
+            />
           ) : (
             <span>Mint</span>
           )}
         </button>
       </Box>
       <Box className="flex flex-col items-start gap-3 ">
-        <p className="text-main-blue text-bold text-xl">Mint details</p>
+        <p className="text-white text-lg">MINT DETAILS</p>
         <Box className="flex flex-col gap-3 items-start">
           <p className="text-bold text-green-color text-md">Private Mint</p>
           <Box className="flex gap-5 items-center">
@@ -156,7 +163,7 @@ const PublicMint = () => {
               progress={100}
               bg="#2DD4BF"
               sx={{
-                width: "380px",
+                width: "280px",
                 height: "8px",
                 borderRadius: 0,
                 color: "rgb(45, 212, 191)",
@@ -184,7 +191,7 @@ const PublicMint = () => {
                 }
                 bg="rgb(9, 194, 246)"
                 sx={{
-                  width: "380px",
+                  width: "280px",
                   height: "8px",
                   borderRadius: 0,
                   color: "rgb(45, 212, 191)",
@@ -204,7 +211,7 @@ const PublicMint = () => {
           <Box className="flex gap-5 items-center">
             {candyMachine && (
               <>
-                <p className="text-main-blue font-bold text-lg">
+                <p className="text-white text-lg">
                   MINT PRICE :{" "}
                   {candyMachine?.price.basisPoints.toNumber() /
                     Math.pow(10, candyMachine?.price.currency.decimals)}{" "}

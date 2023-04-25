@@ -54,8 +54,17 @@ export const createOrUpdateDerugRequest = async (
 
   const derugProgram = derugProgramFactory();
 
+  let hasActiveData = false;
+
+  try {
+    await derugProgram.account.derugData.fetch(collection.derugDataAddress);
+    hasActiveData = true;
+  } catch (error) {
+    hasActiveData = false;
+  }
+
   //TODO:Change mint before mainnet
-  if (!collection.hasActiveDerugData) {
+  if (!hasActiveData) {
     instructions.push(
       await createDerugDataIx(
         collection,
@@ -138,6 +147,8 @@ export const getAllDerugRequest = async (
     const requests: IRequest[] = [];
 
     for (const derug of allRequestsForCollection) {
+      console.log(derug);
+
       requests.push({
         createdAt: derug.account.createdAt.toNumber(),
         derugger: derug.account.derugger,

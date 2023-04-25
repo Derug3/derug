@@ -1,5 +1,5 @@
 import { IUserData } from "../interface/user.interface";
-import { get } from "./request.api";
+import { deleteRequest, get } from "./request.api";
 import { PUBKEY, TWITTER_AUTH } from "./url.api";
 
 export const authorizeTwitter = async (slug: string, pubkey: string) => {
@@ -13,4 +13,8 @@ export const authorizeTwitter = async (slug: string, pubkey: string) => {
 
 export const getUserTwitterData = (pubkey: string): Promise<IUserData> => {
   return get(TWITTER_AUTH + PUBKEY + "/" + pubkey);
+};
+
+export const deleteTwitterData = (pubkey: string): Promise<any> => {
+  return deleteRequest(`${TWITTER_AUTH}${PUBKEY}/${pubkey}`);
 };

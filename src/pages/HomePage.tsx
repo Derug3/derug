@@ -1,23 +1,31 @@
 import CollectionsSlider from "../components/CollectionsSlider/CollectionsSlider";
 import { Box, Text } from "@primer/react";
 import { useEffect, useMemo, useState } from "react";
-import { getByNameOrSlug, getRandomCollections } from "../api/collections.api";
+import {
+  getByNameOrSlug,
+  getCollectionsWithTopVolume,
+  getOrderedCollectionsByVolume,
+  getRandomCollections,
+} from "../api/collections.api";
 import useDebounce from "../hooks/useDebounce";
 import {
   ICollectionData,
   ICollectionStats,
+  ICollectionVolume,
 } from "../interface/collections.interface";
 import Select from "react-select";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../utilities/constants";
-import Balancer from "react-wrap-balancer";
 import { motion } from "framer-motion";
 import { collectionsStore } from "../stores/collectionsStore";
 import { useNavigate } from "react-router";
-import { selectStyles, selectStylesSearch } from "../utilities/styles";
+import { selectStylesPrimary, selectStylesSecondary } from "../utilities/styles";
 import { ActiveListings } from "../components/ActiveListings/ActiveListings";
 import { getAllActiveCollections } from "../solana/methods/derug-request";
-import { generateSkeletonArrays } from "../utilities/nft-fetching";
 import Skeleton from "react-loading-skeleton";
+import toast from "react-hot-toast";
+import CollectionItem from "../components/MainPage/CollectionItem";
+import { CollectionVolumeFilter } from "../enums/collections.enums";
+import { mapFilterTypeToValue } from "../common/helpers";
 
 const HomePage = () => {
   const { setCollections, collections } = collectionsStore.getState();
@@ -28,6 +36,11 @@ const HomePage = () => {
   const [filteredCollections, setFilteredCollections] = useState<
     ICollectionData[] | undefined
   >(collections);
+  const [topVolumeCollections, setTopVolumeCollections] =
+    useState<ICollectionVolume[]>();
+  const [hotCollections, setHotCollections] =
+    useState<ICollectionVolume[]>();
+  const [filter, setFilter] = useState(CollectionVolumeFilter.MarketCap);
   const [loading, setLoading] = useState(true);
   const { name } = useDebounce(searchValue);
 
@@ -36,7 +49,12 @@ const HomePage = () => {
   useEffect(() => {
     void getCollectionsData();
     void getActiveCollections();
+    void getTopVolumeCollections();
   }, []);
+
+  useEffect(() => {
+    void getTopCollectionsWithFilter();
+  }, [filter]);
 
   useEffect(() => {
     void searchByName();
@@ -85,6 +103,23 @@ const HomePage = () => {
     }
   };
 
+  const getTopVolumeCollections = async () => {
+    try {
+      setTopVolumeCollections(await getCollectionsWithTopVolume());
+      setHotCollections(await getCollectionsWithTopVolume());
+    } catch (error) {
+      toast.error("Failed to load collections with colume");
+    }
+  };
+
+  const getTopCollectionsWithFilter = async () => {
+    try {
+      setTopVolumeCollections(await getOrderedCollectionsByVolume(filter));
+    } catch (error) {
+      toast.error("Failed to load collections with colume");
+    }
+  };
+
   const renderSelect = useMemo(() => {
     return (
       <Select
@@ -92,7 +127,7 @@ const HomePage = () => {
         placeholder="Search rugged collections"
         isLoading={searchLoading}
         onInputChange={handleSearch}
-        styles={selectStylesSearch}
+        styles={selectStylesPrimary}
         options={filteredCollections}
         onChange={(e) => navigate(`collection?symbol=${e.symbol}`)}
         getOptionLabel={(option) => option.name}
@@ -116,6 +151,27 @@ const HomePage = () => {
     );
   }, [filteredCollections, searchLoading]);
 
+  const renderTopCollections = useMemo(() => {
+    return topVolumeCollections?.map((c) => {
+      return <CollectionItem collection={c} key={c.symbol} bigImage={true} />;
+    });
+  }, [topVolumeCollections]);
+
+  const renderHotCollections = useMemo(() => {
+    return hotCollections?.map((c) => {
+      return <CollectionItem collection={c} key={c.symbol} bigImage={false} />;
+    });
+  }, [hotCollections]);
+
+  const getFilterOptions = useMemo(() => {
+    return Object.values(CollectionVolumeFilter).map((c: any) => {
+      return {
+        label: mapFilterTypeToValue(c as CollectionVolumeFilter),
+        value: c,
+      };
+    });
+  }, []);
+
   return (
     <Box
       sx={{
@@ -123,8 +179,8 @@ const HomePage = () => {
         margin: "auto",
         display: "flex",
         flexDirection: "column",
-        zoom: "85%",
-        paddingTop: 5,
+        zoom: "80%",
+        padding: "3em",
         overflowX: "hidden",
       }}
     >
@@ -133,6 +189,17 @@ const HomePage = () => {
           width: "100%",
           display: "flex",
           flexDirection: "column",
+        }}
+      >
+
+      </Box>
+
+      <Box
+        sx={{
+          width: "50%",
+          margin: "auto",
+          position: "relative",
+          marginBottom: "80px",
         }}
       >
         <motion.h1
@@ -150,15 +217,6 @@ const HomePage = () => {
             Getting rugged collections back to life
           </Text>
         </motion.h1>
-      </Box>
-      <Box
-        sx={{
-          width: "50%",
-          margin: "auto",
-          position: "relative",
-          marginBottom: "80px",
-        }}
-      >
         {renderSelect}
         <Text
           onClick={() =>
@@ -179,7 +237,35 @@ const HomePage = () => {
         </Text>
       </Box>
       {activeCollections && activeCollections.length ? (
-        <ActiveListings activeListings={activeCollections} />
+        <div className="flex w-full">
+
+          <ActiveListings activeListings={activeCollections} />
+          {/* here as well */}
+          {topVolumeCollections && topVolumeCollections.length > 0 && (
+            <Box
+              className="flex flex-wrap box-content cursor-pointer overflow-hidden w-1/2"
+            >
+              <Box className="flex flex-row w-full justify-between items-center">
+                <Text className="text-xl font-mono text-main-blue flex justify-center">
+                  <span
+                    className="px-4"
+                    style={{
+                      border: "1px solid rgb(9, 194, 246)",
+                      borderBottom: "none",
+                    }}
+                  >
+                    HOT 🔥
+                  </span>
+                </Text>
+              </Box>
+
+              <Box className="grid grid-cols-4 w-full" style={{ overflowY: "auto", border: "1px solid rgb(9, 194, 246)", borderBottom: 'none', maxHeight: "500px" }} >
+                {renderHotCollections}
+              </Box>
+            </Box>
+          )}
+        </div>
+
       ) : loading ? (
         <></>
       ) : (
@@ -190,7 +276,45 @@ const HomePage = () => {
           highlightColor="rgb(29,35,44)"
         />
       )}
-      {!loading && <CollectionsSlider />}
+
+      {/* todo refactor this into component */}
+      {topVolumeCollections && topVolumeCollections.length > 0 && (
+        <Box
+          className="flex flex-wrap
+           cursor-pointer overflow-hidden w-full pt-10"
+        >
+          <Box className="flex flex-row w-full justify-center items-center">
+            <Text className="text-xl font-mono text-main-blue flex justify-center">
+              <span
+                className="px-4"
+                style={{
+                  border: "1px solid rgb(9, 194, 246)",
+                  borderBottom: "none",
+                }}
+              >
+                sort collections by
+              </span>
+            </Text>
+            <Select
+              styles={{ ...selectStylesSecondary }}
+              options={getFilterOptions}
+              onChange={(e) => setFilter(e?.value as CollectionVolumeFilter)}
+              defaultValue={getFilterOptions[0]}
+              formatOptionLabel={(val) => {
+                return (
+                  <div className="w-full font-bold text-white font-md px-5">
+                    {val.label}
+                  </div>
+                );
+              }}
+            />
+          </Box>
+
+          <Box className="grid grid-cols-4 w-full" style={{ overflowY: "hidden", border: "1px solid rgb(9, 194, 246)", borderBottom: 'none' }} >
+            {renderTopCollections}
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 };

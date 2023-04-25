@@ -5,6 +5,7 @@ import { PublicKey } from "@solana/web3.js";
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { FieldErrors, useForm, useFormContext } from "react-hook-form";
 import Select from "react-select";
+import useDebounce from "../../hooks/useDebounce";
 import { DerugForm } from "../../interface/derug.interface";
 import { selectStyles } from "../../utilities/styles";
 
@@ -21,7 +22,7 @@ export interface ITreasuryTokenAccInfo {
   address: PublicKey | undefined;
   chainId?: number;
   decimals: number;
-  extensions: any;
+  extensions?: any;
   logoURI?: string;
   name: string;
   symbol: string;
@@ -45,13 +46,13 @@ const PublicMint: FC<{
     void getAllMintsInfo();
   }, []);
 
+  const { name } = useDebounce(searchValue);
+
   const {
     register,
     clearErrors,
     formState: { errors },
   } = useFormContext<DerugForm>();
-
-  console.log(errors);
 
   const getAllMintsInfo = async () => {
     const availableToken: ITreasuryTokenAccInfo[] = [];
@@ -122,28 +123,41 @@ const PublicMint: FC<{
     setAvailableTokenList(availableToken);
   };
 
-  const handleSearch = (e: any) => {
-    if (e && e !== "") {
-      toggleSearchLoading(true);
-      setSearchValue(e);
+  useEffect(() => {
+    void handleFilerCurrency();
+  }, [name]);
+
+  const handleFilerCurrency = async () => {
+    toggleSearchLoading(true);
+    if (name && name.length > 0) {
+      const tokens = await new TokenListProvider().resolve();
+
+      const filteredTokens = tokens
+        .getList()
+        .filter(
+          (t) =>
+            t.name.toLocaleLowerCase().startsWith(name.toLocaleLowerCase()) ||
+            t.symbol.toLocaleLowerCase().startsWith(name.toLocaleLowerCase())
+        );
+
+      setAvailableTokenList(
+        filteredTokens.map((t) => {
+          return { ...t, address: new PublicKey(t.address) };
+        })
+      );
     } else {
-      toggleSearchLoading(false);
+      await getAllMintsInfo();
     }
+    toggleSearchLoading(false);
   };
+
   const renderSelect = useMemo(() => {
     return (
       <div className="flex flex-col w-full gap-4">
         <Select
-          // {...register("selectedMint", {
-          //   required: {
-          //     value: isPublicMint,
-          //     message: "Currency must be specified",
-          //   },
-          // })}
-          className="w-64"
           placeholder="select token"
           isLoading={searchLoading}
-          onInputChange={handleSearch}
+          onInputChange={(e) => setSearchValue(e)}
           onChange={(e) => {
             console.log(e);
 
@@ -185,7 +199,7 @@ const PublicMint: FC<{
   }, [availableTokensList, searchLoading]);
   return (
     <div className="flex justify-evenly flex-col text-gray-400 gap-5 p-3 font-mono">
-      <Box className="flex flex-row w-full justify-start items-center">
+      <Box className="flex flex-row w-full justify-between items-center">
         <Box className="flex flex-col items-start text-start">
           <Text fontSize={2} color="white">
             Public mint
@@ -200,7 +214,7 @@ const PublicMint: FC<{
             In case you want to enable minting nft by non-current holders
           </Text>
         </Box>
-        <Box className="flex flex-col items-end gap-5 text-start">
+        <Box className="flex flex-col items-end">
           <ToggleSwitch
             aria-labelledby="switchLabel"
             size="small"
@@ -240,7 +254,6 @@ const PublicMint: FC<{
                   placeholder="price"
                   value={price}
                   accept="number"
-                  className="w-32"
                   sx={{ borderRadius: 0 }}
                   onChange={(e) => {
                     setPrice && setPrice(+e.target.value);
@@ -274,7 +287,7 @@ const PublicMint: FC<{
               </Text>
             </div>
             <div className="flex flex-col items-start gap-4 w-1/2">
-              <div className="flex justify-end items-center gap-3 w-64">
+              <div className="flex justify-end items-center gap-3 w-full">
                 <TextInput
                   {...register("privateMintEnd", {
                     required: {

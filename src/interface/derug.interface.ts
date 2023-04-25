@@ -1,4 +1,3 @@
-import { DateTime } from "@metaplex-foundation/js";
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import { Keypair, TransactionInstruction } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
@@ -81,6 +80,9 @@ export interface INonMinted {
   name: string;
   uri: string;
   creator: string;
+  newName: string;
+  newSymbol: string;
+  newUri: string;
 }
 
 export interface ICreator {
@@ -104,3 +106,9 @@ export type DerugForm = {
   selectedMint: ITreasuryTokenAccInfo;
   duration: number;
 };
+
+export interface StoreCandyMachineData {
+  derugRequest: string;
+  updateAuthority: string;
+  derugData: string;
+}

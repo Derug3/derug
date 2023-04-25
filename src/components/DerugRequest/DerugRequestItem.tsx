@@ -89,7 +89,8 @@ export const DerugRequestItem: FC<{
   return (
     <div
       className="flex flex-col w-full 
-      items-start py-4 gap-5 border-[1px] border-main-blue px-8 cursor-pointer"
+      items-start py-4 gap-5 border-[1px] border-main-blue 
+      px-8 cursor-pointer hover:shadow-lg hover:shadow-main-blue"
       onClick={() => setIsOpen(true)}
     >
       {isOpen && (
@@ -185,11 +186,7 @@ export const DerugRequestItem: FC<{
                 <div
                   className={`absolute w-[1px] h-[100%] bg-red-500`}
                   style={{
-                    left: `${
-                      (collectionDerug.thresholdDenominator /
-                        collectionDerug.totalSupply) *
-                      100
-                    }%`,
+                    left: `${10}%`,
                   }}
                 />
               )}
@@ -237,13 +234,10 @@ export const DerugRequestItem: FC<{
           {showVoteButton() && (
             <button
               onClick={castVote}
-              className="justify-center rounded-md border-[1px]
-              hover:bg-main-blue hover:text-black
-               border-main-blue bg-transparent py-2 px-10 text-main-blue mt-8"
+              className="border-[1px] border-main-blue text-lg mt-5 px-5 py-1 text-main-blue"
             >
               {loading ? (
                 <Oval
-                  wrapperClass=" w-[1.5em] "
                   color="rgb(9, 194, 246)"
                   height={"1.5em"}
                   secondaryColor={"transparent"}

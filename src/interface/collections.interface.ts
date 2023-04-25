@@ -10,10 +10,12 @@ export interface ICollectionData {
   image: string;
   twitter?: string;
   discord?: string;
+  website?: string;
   description: string;
   isFlagged: boolean;
   type?: string[];
   numMints?: number;
+  categories?: any[]
 }
 
 export interface IRequest {
@@ -129,4 +131,18 @@ export interface IActiveRequest {
   request: PublicKey;
   voteCount: number;
   winning: boolean;
+}
+
+export interface ICollectionVolume {
+  collection: ICollectionData;
+  marketCap: number;
+  symbol: string;
+  numMints: number;
+  floorPrice: number;
+  volume1h: number | null;
+  volume24h: number | null;
+  volume7d: number | null;
+  floor1h: number | null;
+  floor24h: number | null;
+  floor7d: number | null;
 }
