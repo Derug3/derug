@@ -8,6 +8,7 @@ import { IRequest } from "../../interface/collections.interface";
 import { IUserData } from "../../interface/user.interface";
 import { getTrimmedPublicKey } from "../../solana/helpers";
 import { FADE_DOWN_ANIMATION_VARIANTS } from "../../utilities/constants";
+import solanaLogo from "../../assets/solanaLogo.jpeg";
 import solanaFm from "../../assets/solanaFm.jpeg";
 
 const DerugRequestDetails: FC<{
@@ -188,11 +189,13 @@ const DerugRequestDetails: FC<{
                   </p>
                   <div className="flex flex-row gap-2 items-center">
                     <img
-                      src={derugRequest.splToken?.image}
+                      src={derugRequest.splToken?.image ?? solanaLogo}
                       className="w-5 h-5"
                       alt=""
                     />
-                    <p className="text-xl">{derugRequest.splToken?.symbol}</p>
+                    <p className="text-xl">
+                      {derugRequest.splToken?.symbol ?? "SOL"}
+                    </p>
                   </div>
                 </div>
                 {derugRequest.mintPrice && (
