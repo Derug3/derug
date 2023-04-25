@@ -20,7 +20,9 @@ export const CollectionStats: FC<{
   const { remintConfig } = useContext(CollectionContext);
 
   const remintConfigTime =
-    remintConfig && dayjs(remintConfig.privateMintEnd).isAfter(dayjs())
+    remintConfig &&
+    dayjs(remintConfig.privateMintEnd).isAfter(dayjs()) &&
+    collectionDerug?.status === DerugStatus.Reminting
       ? remintConfig.privateMintEnd
       : undefined;
 

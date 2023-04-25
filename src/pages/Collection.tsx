@@ -37,6 +37,7 @@ import { getCandyMachine, getRemintConfig } from "../solana/methods/remint";
 import PublicMint from "../components/Remit/PublicMint";
 import { CandyMachineV2 } from "@metaplex-foundation/js";
 import { DERUG } from "../api/url.api";
+import { derugProgramFactory } from "../solana/utilities";
 export const Collections: FC = () => {
   dayjs.extend(utc);
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
@@ -104,6 +105,8 @@ export const Collections: FC = () => {
     }
   };
 
+  console.log(candyMachine);
+
   useEffect(() => {
     if (basicCollectionData) void getChainCollectionDetails();
   }, [basicCollectionData]);
@@ -115,6 +118,15 @@ export const Collections: FC = () => {
       //   listings?.at(0)
       // );
 
+      const derugProgram = derugProgramFactory();
+
+      derugProgram.addEventListener("PrivateMintStarted", async (data) => {
+        if (data.derugData.toString() === collectionDerug?.address.toString()) {
+          setCollectionDerug(await getCollectionDerugData(data.derugData));
+          setRemintConfig(await getRemintConfig(data.derugData));
+        }
+      });
+
       const chainDetails = await getDummyCollectionData();
 
       chainDetails.slug = slug!;
@@ -123,6 +135,7 @@ export const Collections: FC = () => {
         const remintConfigData = await getRemintConfig(
           chainDetails.derugDataAddress
         );
+
         setRemintConfig(remintConfigData);
         if (remintConfigData) {
           setCandyMachine(await getCandyMachine(remintConfigData.candyMachine));
@@ -159,7 +172,9 @@ export const Collections: FC = () => {
       return (
         dayjs(collectionDerug.periodEnd).isBefore(dayjs()) &&
         derugRequests?.find(
-          (dr) => dr.voteCount >= collectionDerug.thresholdDenominator
+          (dr) =>
+            dr.voteCount >=
+            collectionDerug.totalSupply / collectionDerug.thresholdDenominator
         )
       );
     else return false;

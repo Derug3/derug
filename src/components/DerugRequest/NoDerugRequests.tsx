@@ -28,7 +28,7 @@ export const NoDerugRequests: FC<{
         (dr) => dr.derugger.toString() === wallet.publicKey?.toString()
       )
     );
-  }, [derugRequests, collectionDerug]);
+  }, [derugRequests, collectionDerug, wallet]);
 
   return (
     <motion.div
@@ -53,13 +53,14 @@ export const NoDerugRequests: FC<{
         <div className="text-base w-full flex items-center flex-col py-10 font-mono mt-3 text-white">
           There is no derug request yet.
           {showAddDerugButton && (
-            <Button
-              className="bg-transparent font-mono font-bold text-lg mt-5"
+            <button
+              className="bg-transparent font-mono font-bold text-lg mt-5
+              px-6 py-1"
               onClick={() => openDerugModal(true)}
-              sx={{ borderRadius: 0, padding: "0.5em 5em" }}
+              style={{ border: "1px solid rgb(9, 194, 246)", }}
             >
               Add derug request
-            </Button>
+            </button>
           )}
         </div>
       </div>

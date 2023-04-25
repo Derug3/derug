@@ -8,6 +8,8 @@ import { ANCHOR_ERROR, ERROR_NUMBER } from "./constants";
 import { Strategy, TokenListProvider } from "@solana/spl-token-registry";
 import { IUserData } from "../interface/user.interface";
 import { getUserTwitterData } from "../api/twitter.api";
+import { NATIVE_MINT } from "@solana/spl-token";
+import { CollectionVolumeFilter } from "../enums/collections.enums";
 export const splitTimestamps = (
   recentCollections: ICollectionRecentActivities[]
 ) => {
@@ -60,7 +62,7 @@ export const getNftsFromDeruggedCollection = async (
             image: (await (await fetch(nft.uri)).json()).image,
           });
         }
-      } catch (error) {}
+      } catch (error) { }
     }
 
     return collectionNfts;
@@ -94,7 +96,7 @@ export const parseKeyArray = (sc: string) => {
 
 export const parseTransactionError = (data: any) => {
   const parsedData = JSON.parse(JSON.stringify(data));
-  console.log(parsedData);
+
   const derugProgram = derugProgramFactory();
 
   if (
@@ -121,9 +123,19 @@ export const getFungibleTokenMetadata = async (
   tokenMint: PublicKey | null
 ): Promise<ISplTokenData | undefined> => {
   try {
-    if (tokenMint === null) return undefined;
     const tokenListProvider = new TokenListProvider();
     const resolved = await tokenListProvider.resolve(Strategy.Static);
+    if (tokenMint === null) {
+      const solToken = resolved
+        .getList()
+        .find((t) => t.address === NATIVE_MINT.toString())!;
+      return {
+        decimals: 9,
+        name: solToken?.name,
+        symbol: solToken.symbol,
+        image: solToken.logoURI,
+      };
+    }
     const token = resolved
       .getList()
       .find((t) => t.address === tokenMint.toString());
@@ -147,5 +159,16 @@ export const getUserDataForDerug = async (
     return await getUserTwitterData(pubkey);
   } catch (error) {
     return undefined;
+  }
+};
+
+export const mapFilterTypeToValue = (filterType: CollectionVolumeFilter) => {
+  switch (filterType) {
+    case CollectionVolumeFilter.MarketCap:
+      return "high volume";
+    case CollectionVolumeFilter.FloorPrice:
+      return "floor price";
+    case CollectionVolumeFilter.NumMints:
+      return "total supply";
   }
 };

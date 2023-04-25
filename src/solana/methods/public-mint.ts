@@ -1,5 +1,6 @@
 import {
   IdentityClient,
+  keypairIdentity,
   RpcClient,
   sol,
   toBigNumber,
@@ -13,7 +14,10 @@ import {
   Keypair,
   LAMPORTS_PER_SOL,
   PublicKey,
+  SystemProgram,
   Transaction,
+  TransactionMessage,
+  VersionedTransaction,
 } from "@solana/web3.js";
 import toast from "react-hot-toast";
 import { getCandyMachine, getNonMinted } from "../../api/public-mint.api";
@@ -31,7 +35,11 @@ import { derugProgramFactory, metaplex } from "../utilities";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { chunk } from "lodash";
-import { parseKeyArray, parseTransactionError } from "../../common/helpers";
+import {
+  getNftName,
+  parseKeyArray,
+  parseTransactionError,
+} from "../../common/helpers";
 import { RPC_CONNECTION } from "../../utilities/utilities";
 import { sendTransaction, sendVersionedTx } from "../sendTransaction";
 
@@ -93,7 +101,7 @@ export const initCandyMachine = async (
           ),
       itemsAvailable: toBigNumber(nonMintedNfts.length),
       sellerFeeBasisPoints: remintConfigAccount.sellerFeeBps,
-      authority: remintConfigAccount.authority,
+      authority: wallet.publicKey!,
       candyMachine,
       tokenMint: remintConfigAccount.mintCurrency,
       maxEditionSupply: toBigNumber(0),
@@ -119,6 +127,7 @@ export const initCandyMachine = async (
 };
 
 export const storeCandyMachineItems = async (
+  request: IRequest,
   remintConfig: IRemintConfig,
   wallet: WalletContextState,
   derug: ICollectionDerugData
@@ -131,14 +140,7 @@ export const storeCandyMachineItems = async (
     }
 
     const nonMintedNfts = await getNonMinted(derug.address.toString());
-    const nonMinted = nonMintedNfts
-      .filter((nm) => !nm.hasReminted)
-      .slice(0, derug.totalSupply);
-    if (nonMinted.length > 10) {
-      toast.success(
-        "You will have to sign multiple transactions as there are more than 50 NFTs"
-      );
-    }
+    const nonMinted = nonMintedNfts.filter((nm) => !nm.hasReminted);
 
     const chunkedNonMinted = chunk(nonMinted, 10);
     const candyMachineData = await getCandyMachine(derug.address.toString());
@@ -150,22 +152,11 @@ export const storeCandyMachineItems = async (
     const transactions: Transaction[] = [];
     metaplex.use(walletAdapterIdentity(wallet));
 
-    const tx = metaplex
-      .candyMachinesV2()
-      .builders()
-      .insertItems({
-        candyMachine: candyMachineAccount,
-        items: chunkedNonMinted[0].map((cm) => {
-          return {
-            name: cm.name,
-            uri: cm.uri,
-          };
-        }),
-      });
-
     let totalSum = 0;
 
     for (const nonMintedChunk of chunkedNonMinted) {
+      metaplex.use(walletAdapterIdentity(wallet));
+
       const secondTx = metaplex
         .candyMachinesV2()
         .builders()
@@ -174,10 +165,10 @@ export const storeCandyMachineItems = async (
             ...candyMachineAccount,
             itemsLoaded: toBigNumber(totalSum),
           },
-          items: nonMintedChunk.map((nm) => {
+          items: nonMintedChunk.map((nm, index) => {
             return {
-              name: nm.name,
-              uri: nm.uri,
+              name: nm.newName,
+              uri: nm.newUri,
             };
           }),
         })
@@ -190,20 +181,16 @@ export const storeCandyMachineItems = async (
 
     const idClient = new IdentityClient();
     idClient.setDriver(new WalletAdapterIdentityDriver(wallet));
-    const rpcClient = new RpcClient(metaplex);
 
     const signed = await idClient.signAllTransactions(transactions);
 
     for (const sig of signed) {
-      toast.promise(sendVersionedTx(RPC_CONNECTION, sig), {
+      await toast.promise(sendVersionedTx(RPC_CONNECTION, sig), {
         error: () => {
           return "Failed to insert NFTs in candy machine";
         },
         loading: "Inserting batch of NFTs",
         success: "NFTs succesfully inserted",
-      });
-      await rpcClient.sendAndConfirmTransaction(sig, {
-        commitment: "confirmed",
       });
     }
   } catch (error: any) {
@@ -227,8 +214,32 @@ export const mintNftFromCandyMachine = async (
 
     return minted.nft;
   } catch (error: any) {
-    throw new Error(
-      parseTransactionError(JSON.parse(JSON.stringify(error)).cause)
-    );
+    const parsedError = JSON.parse(JSON.stringify(error)).cause;
+    if (parsedError.logs.find((l: any) => l.includes("NotEnoughToken"))) {
+      throw new Error(" Not enough tokens to pay for this minting.");
+    }
+    throw new Error(parseTransactionError(parsedError));
   }
+};
+
+export const parseJsonMetadata = (
+  request: IRequest,
+  remintConfig: IRemintConfig,
+  jsonData: any,
+  name: string
+) => {
+  const data = {
+    ...jsonData,
+    symbol: remintConfig.newSymbol,
+    seller_fee_basis_points: remintConfig.sellerFeeBps,
+    name,
+    external_url: "",
+    creators: request.creators.map((c) => {
+      return {
+        address: c.address.toString(),
+        share: c.share,
+      };
+    }),
+  };
+  return data;
 };
