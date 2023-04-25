@@ -229,6 +229,7 @@ const HomePage = () => {
             style={{
               border: "1px solid rgb(9, 194, 246)",
               borderTop: "none",
+              paddingTop: "5px",
             }}
           >
             how it works?
