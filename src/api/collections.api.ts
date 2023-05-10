@@ -45,3 +45,7 @@ export const getOrderedCollectionsByVolume = (
 ) => {
   return get(`${COLLECTION_VOLUME}${FILTER}${ORDER_BY}${orderType}`);
 };
+
+export async function getAllCollections(): Promise<ICollectionData[]> {
+  return get(`${MAGIC_EDEN_COLLECTIONS}/all`);
+}
