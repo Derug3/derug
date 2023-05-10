@@ -77,7 +77,7 @@ const HomePage = () => {
 
   const getCollections = async () => {
     try {
-      setCollections(await getAllCollections());
+      if (collections.length === 0) setCollections(await getAllCollections());
     } catch (error) {}
   };
 
