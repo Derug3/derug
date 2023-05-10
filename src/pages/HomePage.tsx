@@ -1,7 +1,8 @@
 import CollectionsSlider from "../components/CollectionsSlider/CollectionsSlider";
 import { Box, Text } from "@primer/react";
-import { useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import {
+  getAllCollections,
   getByNameOrSlug,
   getCollectionsWithTopVolume,
   getOrderedCollectionsByVolume,
@@ -18,7 +19,10 @@ import { FADE_DOWN_ANIMATION_VARIANTS } from "../utilities/constants";
 import { motion } from "framer-motion";
 import { collectionsStore } from "../stores/collectionsStore";
 import { useNavigate } from "react-router";
-import { selectStylesPrimary, selectStylesSecondary } from "../utilities/styles";
+import {
+  selectStylesPrimary,
+  selectStylesSecondary,
+} from "../utilities/styles";
 import { ActiveListings } from "../components/ActiveListings/ActiveListings";
 import { getAllActiveCollections } from "../solana/methods/derug-request";
 import Skeleton from "react-loading-skeleton";
@@ -38,10 +42,10 @@ const HomePage = () => {
   >(collections);
   const [topVolumeCollections, setTopVolumeCollections] =
     useState<ICollectionVolume[]>();
-  const [hotCollections, setHotCollections] =
-    useState<ICollectionVolume[]>();
+  const [hotCollections, setHotCollections] = useState<ICollectionVolume[]>();
   const [filter, setFilter] = useState(CollectionVolumeFilter.MarketCap);
   const [loading, setLoading] = useState(true);
+  const [allCollections, setAllCollections] = useState<ICollectionData[]>();
   const { name } = useDebounce(searchValue);
 
   const navigate = useNavigate();
@@ -50,6 +54,7 @@ const HomePage = () => {
     void getCollectionsData();
     void getActiveCollections();
     void getTopVolumeCollections();
+    void getCollections();
   }, []);
 
   useEffect(() => {
@@ -68,6 +73,12 @@ const HomePage = () => {
       toggleSearchLoading(false);
       setFilteredCollections(collections);
     }
+  };
+
+  const getCollections = async () => {
+    try {
+      setCollections(await getAllCollections());
+    } catch (error) {}
   };
 
   const searchByName = async () => {
@@ -190,9 +201,7 @@ const HomePage = () => {
           display: "flex",
           flexDirection: "column",
         }}
-      >
-
-      </Box>
+      ></Box>
 
       <Box
         sx={{
@@ -236,15 +245,20 @@ const HomePage = () => {
           </span>
         </Text>
       </Box>
+      <Box
+        className="grid grid-cols-6 gap-5 overflow-scroll"
+        sx={{ maxHeight: "25%", overflow: "scroll" }}
+      >
+        {collections?.map((c) => {
+          return <CollectionItemTemp collection={c} key={c.name} />;
+        })}
+      </Box>
       {activeCollections && activeCollections.length ? (
         <div className="flex w-full">
-
           <ActiveListings activeListings={activeCollections} />
           {/* here as well */}
           {topVolumeCollections && topVolumeCollections.length > 0 && (
-            <Box
-              className="flex flex-wrap box-content cursor-pointer overflow-hidden w-1/2"
-            >
+            <Box className="flex flex-wrap box-content cursor-pointer overflow-hidden w-1/2">
               <Box className="flex flex-row w-full justify-between items-center">
                 <Text className="text-xl font-mono text-main-blue flex justify-center">
                   <span
@@ -259,13 +273,20 @@ const HomePage = () => {
                 </Text>
               </Box>
 
-              <Box className="grid grid-cols-4 w-full" style={{ overflowY: "auto", border: "1px solid rgb(9, 194, 246)", borderBottom: 'none', maxHeight: "500px" }} >
+              <Box
+                className="grid grid-cols-4 w-full"
+                style={{
+                  overflowY: "auto",
+                  border: "1px solid rgb(9, 194, 246)",
+                  borderBottom: "none",
+                  maxHeight: "500px",
+                }}
+              >
                 {renderHotCollections}
               </Box>
             </Box>
           )}
         </div>
-
       ) : loading ? (
         <></>
       ) : (
@@ -310,7 +331,14 @@ const HomePage = () => {
             />
           </Box>
 
-          <Box className="grid grid-cols-4 w-full" style={{ overflowY: "hidden", border: "1px solid rgb(9, 194, 246)", borderBottom: 'none' }} >
+          <Box
+            className="grid grid-cols-4 w-full"
+            style={{
+              overflowY: "hidden",
+              border: "1px solid rgb(9, 194, 246)",
+              borderBottom: "none",
+            }}
+          >
             {renderTopCollections}
           </Box>
         </Box>
@@ -320,3 +348,18 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+const CollectionItemTemp: FC<{ collection: ICollectionData }> = ({
+  collection,
+}) => {
+  const navigate = useNavigate();
+  return (
+    <div
+      onClick={() => navigate(`collection?symbol=${collection.symbol}`)}
+      className="flex flex-col items-center gap-5 cursor-pointer	  hover:shadow-lg hover:shadow-main-blue"
+    >
+      <img src={collection.image} alt="collImg" className="cursor-pointer	" />
+      <p className="font-bold text-main-blue font-xl">{collection.name}</p>
+    </div>
+  );
+};
