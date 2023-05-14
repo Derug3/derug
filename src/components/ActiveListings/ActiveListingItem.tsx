@@ -78,6 +78,7 @@ export const ActiveListingItem: FC<{
   const navigate = useNavigate();
   return (
     <motion.div
+      onClick={() => navigate(`${COLLECTION}?symbol=${collectionData.symbol}`)}
       variants={FADE_DOWN_ANIMATION_VARIANTS}
       className={`flex py-3 border-[2px] border-green-color rounded-sm p-4 hover:shadow-lg hover:shadow-main-blue`}
     >
