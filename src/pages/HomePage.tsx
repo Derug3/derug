@@ -1,7 +1,8 @@
 import CollectionsSlider from "../components/CollectionsSlider/CollectionsSlider";
 import { Box, Text } from "@primer/react";
-import { useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import {
+  getAllCollections,
   getByNameOrSlug,
   getCollectionsWithTopVolume,
   getOrderedCollectionsByVolume,
@@ -10,6 +11,7 @@ import {
 import useDebounce from "../hooks/useDebounce";
 import {
   ICollectionData,
+  ICollectionDerugData,
   ICollectionStats,
   ICollectionVolume,
 } from "../interface/collections.interface";
@@ -18,7 +20,10 @@ import { FADE_DOWN_ANIMATION_VARIANTS } from "../utilities/constants";
 import { motion } from "framer-motion";
 import { collectionsStore } from "../stores/collectionsStore";
 import { useNavigate } from "react-router";
-import { selectStylesPrimary, selectStylesSecondary } from "../utilities/styles";
+import {
+  selectStylesPrimary,
+  selectStylesSecondary,
+} from "../utilities/styles";
 import { ActiveListings } from "../components/ActiveListings/ActiveListings";
 import { getAllActiveCollections } from "../solana/methods/derug-request";
 import Skeleton from "react-loading-skeleton";
@@ -26,20 +31,20 @@ import toast from "react-hot-toast";
 import CollectionItem from "../components/MainPage/CollectionItem";
 import { CollectionVolumeFilter } from "../enums/collections.enums";
 import { mapFilterTypeToValue } from "../common/helpers";
+import HotCollections from "../components/HotCollections/HotCollections";
 
 const HomePage = () => {
   const { setCollections, collections } = collectionsStore.getState();
   const [searchValue, setSearchValue] = useState<string>();
   const [activeCollections, setActiveCollections] =
-    useState<ICollectionData[]>();
+    useState<{ derug: ICollectionDerugData; collection: ICollectionData }[]>();
   const [searchLoading, toggleSearchLoading] = useState(false);
   const [filteredCollections, setFilteredCollections] = useState<
     ICollectionData[] | undefined
   >(collections);
   const [topVolumeCollections, setTopVolumeCollections] =
     useState<ICollectionVolume[]>();
-  const [hotCollections, setHotCollections] =
-    useState<ICollectionVolume[]>();
+  const [hotCollections, setHotCollections] = useState<ICollectionVolume[]>();
   const [filter, setFilter] = useState(CollectionVolumeFilter.MarketCap);
   const [loading, setLoading] = useState(true);
   const { name } = useDebounce(searchValue);
@@ -190,9 +195,7 @@ const HomePage = () => {
           display: "flex",
           flexDirection: "column",
         }}
-      >
-
-      </Box>
+      ></Box>
 
       <Box
         sx={{
@@ -218,7 +221,7 @@ const HomePage = () => {
           </Text>
         </motion.h1>
         {renderSelect}
-        <Text
+        {/* <Text
           onClick={() =>
             window.open(`https://derug-us.gitbook.io/derug_us/`, "_blank")
           }
@@ -234,38 +237,14 @@ const HomePage = () => {
           >
             how it works?
           </span>
-        </Text>
+        </Text> */}
       </Box>
+
       {activeCollections && activeCollections.length ? (
         <div className="flex w-full">
-
           <ActiveListings activeListings={activeCollections} />
           {/* here as well */}
-          {topVolumeCollections && topVolumeCollections.length > 0 && (
-            <Box
-              className="flex flex-wrap box-content cursor-pointer overflow-hidden w-1/2"
-            >
-              <Box className="flex flex-row w-full justify-between items-center">
-                <Text className="text-xl font-mono text-main-blue flex justify-center">
-                  <span
-                    className="px-4"
-                    style={{
-                      border: "1px solid rgb(9, 194, 246)",
-                      borderBottom: "none",
-                    }}
-                  >
-                    HOT 🔥
-                  </span>
-                </Text>
-              </Box>
-
-              <Box className="grid grid-cols-4 w-full" style={{ overflowY: "auto", border: "1px solid rgb(9, 194, 246)", borderBottom: 'none', maxHeight: "500px" }} >
-                {renderHotCollections}
-              </Box>
-            </Box>
-          )}
         </div>
-
       ) : loading ? (
         <></>
       ) : (
@@ -279,40 +258,8 @@ const HomePage = () => {
 
       {/* todo refactor this into component */}
       {topVolumeCollections && topVolumeCollections.length > 0 && (
-        <Box
-          className="flex flex-wrap
-           cursor-pointer overflow-hidden w-full pt-10"
-        >
-          <Box className="flex flex-row w-full justify-center items-center">
-            <Text className="text-xl font-mono text-main-blue flex justify-center">
-              <span
-                className="px-4"
-                style={{
-                  border: "1px solid rgb(9, 194, 246)",
-                  borderBottom: "none",
-                }}
-              >
-                sort collections by
-              </span>
-            </Text>
-            <Select
-              styles={{ ...selectStylesSecondary }}
-              options={getFilterOptions}
-              onChange={(e) => setFilter(e?.value as CollectionVolumeFilter)}
-              defaultValue={getFilterOptions[0]}
-              formatOptionLabel={(val) => {
-                return (
-                  <div className="w-full font-bold text-white font-md px-5">
-                    {val.label}
-                  </div>
-                );
-              }}
-            />
-          </Box>
-
-          <Box className="grid grid-cols-4 w-full" style={{ overflowY: "hidden", border: "1px solid rgb(9, 194, 246)", borderBottom: 'none' }} >
-            {renderTopCollections}
-          </Box>
+        <Box className="w-full">
+          <HotCollections collections={topVolumeCollections} filter={filter} />
         </Box>
       )}
     </Box>
