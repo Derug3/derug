@@ -4,6 +4,7 @@ import Select from "react-select";
 import { ICollectionVolume } from "../../interface/collections.interface";
 import { CollectionVolumeFilter } from "../../enums/collections.enums";
 import HotCollectionItem from "./HotCollectionItem";
+import { selectStyles } from "../../utilities/styles";
 const HotCollections: FC<{
   collections: ICollectionVolume[];
   filter: CollectionVolumeFilter;
@@ -22,7 +23,7 @@ const HotCollections: FC<{
         <Text className="font-mono font-bold text-green-color text-xl border-b-[2px] border-green-color">
           COLLECTIONS 🔥
         </Text>
-        <Select />
+        <Select styles={selectStyles} />
       </Box>
       <Box className="grid grid-cols-3 gap-10">{renderCollectionItem}</Box>
     </Box>
