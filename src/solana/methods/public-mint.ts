@@ -243,3 +243,21 @@ export const parseJsonMetadata = (
   };
   return data;
 };
+
+export const closeCandyMachine = async (
+  remintConfig: IRemintConfig,
+  wallet: AnchorWallet
+) => {
+  try {
+    const cm = await metaplex
+      .candyMachinesV2()
+      .findByAddress({ address: remintConfig.candyMachine });
+    metaplex.use(walletAdapterIdentity(wallet));
+    await metaplex.candyMachinesV2().delete({
+      candyMachine: cm,
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};

@@ -245,14 +245,7 @@ const HomePage = () => {
           </span>
         </Text>
       </Box>
-      <Box
-        className="grid grid-cols-6 gap-5 overflow-scroll"
-        sx={{ maxHeight: "25%", overflow: "scroll" }}
-      >
-        {collections?.map((c) => {
-          return <CollectionItemTemp collection={c} key={c.name} />;
-        })}
-      </Box>
+
       {activeCollections && activeCollections.length ? (
         <div className="flex w-full">
           <ActiveListings activeListings={activeCollections} />
@@ -358,7 +351,15 @@ const CollectionItemTemp: FC<{ collection: ICollectionData }> = ({
       onClick={() => navigate(`collection?symbol=${collection.symbol}`)}
       className="flex flex-col items-center gap-5 cursor-pointer	  hover:shadow-lg hover:shadow-main-blue"
     >
-      <img src={collection.image} alt="collImg" className="cursor-pointer	" />
+      <img
+        //@ts-ignore
+        prelaod
+        as="image"
+        type="image/jpeg"
+        src={collection.image}
+        alt="collImg"
+        className="cursor-pointer	"
+      />
       <p className="font-bold text-main-blue font-xl">{collection.name}</p>
     </div>
   );
