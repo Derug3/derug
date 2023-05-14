@@ -49,6 +49,10 @@ const ListedNftItem: FC<{ listedNft: INftListing; imageUrl: string }> = ({
       {isValidSrc ? (
         <img
           src={listedNft.imageUrl}
+          //@ts-ignore
+          preload
+          as="image"
+          type="image/jpeg"
           alt="nftImg"
           style={{ opacity: hover ? 0.2 : 1 }}
           onLoad={() => setImageLoaded(true)}

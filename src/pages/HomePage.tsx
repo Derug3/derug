@@ -11,6 +11,7 @@ import {
 import useDebounce from "../hooks/useDebounce";
 import {
   ICollectionData,
+  ICollectionDerugData,
   ICollectionStats,
   ICollectionVolume,
 } from "../interface/collections.interface";
@@ -30,12 +31,13 @@ import toast from "react-hot-toast";
 import CollectionItem from "../components/MainPage/CollectionItem";
 import { CollectionVolumeFilter } from "../enums/collections.enums";
 import { mapFilterTypeToValue } from "../common/helpers";
+import HotCollections from "../components/HotCollections/HotCollections";
 
 const HomePage = () => {
   const { setCollections, collections } = collectionsStore.getState();
   const [searchValue, setSearchValue] = useState<string>();
   const [activeCollections, setActiveCollections] =
-    useState<ICollectionData[]>();
+    useState<{ derug: ICollectionDerugData; collection: ICollectionData }[]>();
   const [searchLoading, toggleSearchLoading] = useState(false);
   const [filteredCollections, setFilteredCollections] = useState<
     ICollectionData[] | undefined
@@ -45,7 +47,6 @@ const HomePage = () => {
   const [hotCollections, setHotCollections] = useState<ICollectionVolume[]>();
   const [filter, setFilter] = useState(CollectionVolumeFilter.MarketCap);
   const [loading, setLoading] = useState(true);
-  const [allCollections, setAllCollections] = useState<ICollectionData[]>();
   const { name } = useDebounce(searchValue);
 
   const navigate = useNavigate();
@@ -54,7 +55,6 @@ const HomePage = () => {
     void getCollectionsData();
     void getActiveCollections();
     void getTopVolumeCollections();
-    void getCollections();
   }, []);
 
   useEffect(() => {
@@ -73,12 +73,6 @@ const HomePage = () => {
       toggleSearchLoading(false);
       setFilteredCollections(collections);
     }
-  };
-
-  const getCollections = async () => {
-    try {
-      if (collections.length === 0) setCollections(await getAllCollections());
-    } catch (error) {}
   };
 
   const searchByName = async () => {
@@ -227,7 +221,7 @@ const HomePage = () => {
           </Text>
         </motion.h1>
         {renderSelect}
-        <Text
+        {/* <Text
           onClick={() =>
             window.open(`https://derug-us.gitbook.io/derug_us/`, "_blank")
           }
@@ -243,49 +237,13 @@ const HomePage = () => {
           >
             how it works?
           </span>
-        </Text>
+        </Text> */}
       </Box>
-      <Box
-        className="grid grid-cols-6 gap-5 overflow-scroll"
-        sx={{ maxHeight: "25%", overflow: "scroll" }}
-      >
-        {collections?.map((c) => {
-          return <CollectionItemTemp collection={c} key={c.name} />;
-        })}
-      </Box>
+
       {activeCollections && activeCollections.length ? (
         <div className="flex w-full">
           <ActiveListings activeListings={activeCollections} />
           {/* here as well */}
-          {topVolumeCollections && topVolumeCollections.length > 0 && (
-            <Box className="flex flex-wrap box-content cursor-pointer overflow-hidden w-1/2">
-              <Box className="flex flex-row w-full justify-between items-center">
-                <Text className="text-xl font-mono text-main-blue flex justify-center">
-                  <span
-                    className="px-4"
-                    style={{
-                      border: "1px solid rgb(9, 194, 246)",
-                      borderBottom: "none",
-                    }}
-                  >
-                    HOT 🔥
-                  </span>
-                </Text>
-              </Box>
-
-              <Box
-                className="grid grid-cols-4 w-full"
-                style={{
-                  overflowY: "auto",
-                  border: "1px solid rgb(9, 194, 246)",
-                  borderBottom: "none",
-                  maxHeight: "500px",
-                }}
-              >
-                {renderHotCollections}
-              </Box>
-            </Box>
-          )}
         </div>
       ) : loading ? (
         <></>
@@ -300,47 +258,8 @@ const HomePage = () => {
 
       {/* todo refactor this into component */}
       {topVolumeCollections && topVolumeCollections.length > 0 && (
-        <Box
-          className="flex flex-wrap
-           cursor-pointer overflow-hidden w-full pt-10"
-        >
-          <Box className="flex flex-row w-full justify-center items-center">
-            <Text className="text-xl font-mono text-main-blue flex justify-center">
-              <span
-                className="px-4"
-                style={{
-                  border: "1px solid rgb(9, 194, 246)",
-                  borderBottom: "none",
-                }}
-              >
-                sort collections by
-              </span>
-            </Text>
-            <Select
-              styles={{ ...selectStylesSecondary }}
-              options={getFilterOptions}
-              onChange={(e) => setFilter(e?.value as CollectionVolumeFilter)}
-              defaultValue={getFilterOptions[0]}
-              formatOptionLabel={(val) => {
-                return (
-                  <div className="w-full font-bold text-white font-md px-5">
-                    {val.label}
-                  </div>
-                );
-              }}
-            />
-          </Box>
-
-          <Box
-            className="grid grid-cols-4 w-full"
-            style={{
-              overflowY: "hidden",
-              border: "1px solid rgb(9, 194, 246)",
-              borderBottom: "none",
-            }}
-          >
-            {renderTopCollections}
-          </Box>
+        <Box className="w-full">
+          <HotCollections collections={topVolumeCollections} filter={filter} />
         </Box>
       )}
     </Box>
@@ -348,18 +267,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-const CollectionItemTemp: FC<{ collection: ICollectionData }> = ({
-  collection,
-}) => {
-  const navigate = useNavigate();
-  return (
-    <div
-      onClick={() => navigate(`collection?symbol=${collection.symbol}`)}
-      className="flex flex-col items-center gap-5 cursor-pointer	  hover:shadow-lg hover:shadow-main-blue"
-    >
-      <img src={collection.image} alt="collImg" className="cursor-pointer	" />
-      <p className="font-bold text-main-blue font-xl">{collection.name}</p>
-    </div>
-  );
-};

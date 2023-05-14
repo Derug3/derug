@@ -14,6 +14,7 @@ import {
   getFungibleTokenMetadata,
   getUserDataForDerug,
 } from "../../common/helpers";
+import { DerugStatus } from "../../enums/collections.enums";
 import {
   IChainCollectionData,
   ICollectionData,
@@ -35,7 +36,10 @@ import { derugDataSeed, metadataSeed, voteRecordSeed } from "../seeds";
 import { sendTransaction } from "../sendTransaction";
 import { derugProgramFactory, feeWallet } from "../utilities";
 import { createDerugDataIx } from "./derug";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
+dayjs.extend(utc);
 export const createOrUpdateDerugRequest = async (
   wallet: WalletContextState,
   utilities: IUtilityData[],
@@ -201,20 +205,45 @@ export const getSingleDerugRequest = async (
   };
 };
 
-export const getAllActiveCollections = async (): Promise<ICollectionData[]> => {
+export const getAllActiveCollections = async (): Promise<
+  {
+    derug: ICollectionDerugData;
+    collection: ICollectionData;
+  }[]
+> => {
   const derugProgram = derugProgramFactory();
 
   const derugAccount = await derugProgram.account.derugData.all();
-  const collections: ICollectionData[] = [];
+  const collections: {
+    derug: ICollectionDerugData;
+    collection: ICollectionData;
+  }[] = [];
 
   for (const da of derugAccount) {
     try {
-      const request = await getSingleCollection(da.account.slug);
-      collections.push(request);
+      collections.push({
+        derug: {
+          address: da.publicKey,
+          collection: da.account.collection,
+          newCollection: da.account.newCollection,
+          createdAt: da.account.createdAt?.toNumber(),
+          totalReminted: da.account.totalReminted,
+          winningRequest: da.account.winningRequest,
+          status: Object.keys(da.account.derugStatus)[0] as DerugStatus,
+          collectionMetadata: da.account.collectionMetadata,
+          thresholdDenominator: da.account.thresholdDenominator,
+          totalSuggestionCount: da.account.totalSuggestionCount,
+          addedRequests: da.account.activeRequests,
+          totalSupply: da.account.totalSupply,
+          periodEnd: dayjs.unix(da.account.periodEnd?.toNumber()).toDate(),
+        },
+        collection: await getSingleCollection(da.account.slug),
+      });
     } catch (error) {
       console.log(error);
     }
   }
+
   return collections;
 };
 
