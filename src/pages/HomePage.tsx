@@ -11,6 +11,7 @@ import {
 import useDebounce from "../hooks/useDebounce";
 import {
   ICollectionData,
+  ICollectionDerugData,
   ICollectionStats,
   ICollectionVolume,
 } from "../interface/collections.interface";
@@ -35,7 +36,7 @@ const HomePage = () => {
   const { setCollections, collections } = collectionsStore.getState();
   const [searchValue, setSearchValue] = useState<string>();
   const [activeCollections, setActiveCollections] =
-    useState<ICollectionData[]>();
+    useState<{ derug: ICollectionDerugData; collection: ICollectionData }[]>();
   const [searchLoading, toggleSearchLoading] = useState(false);
   const [filteredCollections, setFilteredCollections] = useState<
     ICollectionData[] | undefined
@@ -227,7 +228,7 @@ const HomePage = () => {
           </Text>
         </motion.h1>
         {renderSelect}
-        <Text
+        {/* <Text
           onClick={() =>
             window.open(`https://derug-us.gitbook.io/derug_us/`, "_blank")
           }
@@ -243,42 +244,13 @@ const HomePage = () => {
           >
             how it works?
           </span>
-        </Text>
+        </Text> */}
       </Box>
 
       {activeCollections && activeCollections.length ? (
         <div className="flex w-full">
           <ActiveListings activeListings={activeCollections} />
           {/* here as well */}
-          {topVolumeCollections && topVolumeCollections.length > 0 && (
-            <Box className="flex flex-wrap box-content cursor-pointer overflow-hidden w-1/2">
-              <Box className="flex flex-row w-full justify-between items-center">
-                <Text className="text-xl font-mono text-main-blue flex justify-center">
-                  <span
-                    className="px-4"
-                    style={{
-                      border: "1px solid rgb(9, 194, 246)",
-                      borderBottom: "none",
-                    }}
-                  >
-                    HOT 🔥
-                  </span>
-                </Text>
-              </Box>
-
-              <Box
-                className="grid grid-cols-4 w-full"
-                style={{
-                  overflowY: "auto",
-                  border: "1px solid rgb(9, 194, 246)",
-                  borderBottom: "none",
-                  maxHeight: "500px",
-                }}
-              >
-                {renderHotCollections}
-              </Box>
-            </Box>
-          )}
         </div>
       ) : loading ? (
         <></>
