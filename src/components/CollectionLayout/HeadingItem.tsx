@@ -26,12 +26,11 @@ const HeadingItem: FC<{
   return (
     <Heading className="flex flex-row items-center justify-between w-full">
       <Text
-        className="text-sm border-1 p-2 w-1/2"
+        className="text-sm border-1 p-2 w-1/2 rounded-lg text-gray-400"
         sx={{
           fontFamily: "monospace",
-          color: "white",
           fontWeight: 200,
-          border: "1px solid rgba(9,194,246,.15)",
+          border: "1px solid rgba(9,194,246,.35)",
           "@media (max-width: 768px)": {
             fontSize: "0.6rem",
           },
@@ -41,11 +40,10 @@ const HeadingItem: FC<{
       </Text>
       {!isCounter ? (
         <Text
-          className="text-sm p-2 w-1/2 "
+          className="text-sm p-2 w-1/2 rounded-lg text-white"
           sx={{
             fontFamily: "monospace",
-            border: "1px solid rgba(9,194,246,.15)",
-            color: "rgba(9,194,246)",
+            border: "1px solid rgba(9,194,246,.35)",
             "@media (max-width: 768px)": {
               fontSize: "0.6rem",
             },

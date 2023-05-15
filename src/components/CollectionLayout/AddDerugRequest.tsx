@@ -128,7 +128,7 @@ export const AddDerugRequst: FC<{
             selectedMint.address.toString() !== WRAPPED_SOL_MINT.toString()
             ? selectedMint.address
             : //TODO:Remove before mainnet
-              undefined,
+            undefined,
           activeListings ? activeListings[0] : undefined
         );
         const addedRequests = [...(derugRequests ?? [])];
@@ -160,7 +160,8 @@ export const AddDerugRequst: FC<{
   };
 
   useEffect(() => {
-    validateCreators(creators, methods.setError, methods.clearErrors);
+    if (creators[creators.length - 1]?.address)
+      validateCreators(creators, methods.setError, methods.clearErrors);
   }, [creators]);
 
   useEffect(() => {
@@ -177,7 +178,7 @@ export const AddDerugRequst: FC<{
   const storeUserData = async () => {
     try {
       setUserData(await getUserTwitterData(wallet.publicKey?.toString()!));
-    } catch (error) {}
+    } catch (error) { }
   };
 
   return (
@@ -381,15 +382,15 @@ export const AddDerugRequst: FC<{
                     {" "}
                     {(methods.formState.errors.creatorsFees ||
                       methods.formState.errors.creatorsKey) && (
-                      <p className="text-red-500 text-xs">
-                        {
-                          (
-                            methods.formState.errors.creatorsFees ??
-                            methods.formState.errors.creatorsKey
-                          )?.message
-                        }
-                      </p>
-                    )}
+                        <p className="text-red-500 text-xs">
+                          {
+                            (
+                              methods.formState.errors.creatorsFees ??
+                              methods.formState.errors.creatorsKey
+                            )?.message
+                          }
+                        </p>
+                      )}
                   </>
                 </div>
               </Box>

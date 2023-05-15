@@ -155,12 +155,12 @@ const PublicMint: FC<{
     return (
       <div className="flex flex-col w-full gap-4">
         <Select
+          className="border"
           placeholder="select token"
           isLoading={searchLoading}
           onInputChange={(e) => setSearchValue(e)}
           onChange={(e) => {
             console.log(e);
-
             handleMintChange(e!);
             clearErrors("selectedMint");
           }}

@@ -128,7 +128,7 @@ const HomePage = () => {
   const renderSelect = useMemo(() => {
     return (
       <Select
-        className="absolute top-0 left-0 w-full h-full z-10"
+        className="absolute top-0 left-0 w-full h-full z-10 p-2 border border-gray-200 rounded-lg shadow"
         placeholder="Search rugged collections"
         isLoading={searchLoading}
         onInputChange={handleSearch}
@@ -245,21 +245,14 @@ const HomePage = () => {
           <ActiveListings activeListings={activeCollections} />
           {/* here as well */}
         </div>
-      ) : loading ? (
-        <></>
-      ) : (
-        <Skeleton
-          height={150}
-          borderRadius={0}
-          baseColor="rgb(22,27,34)"
-          highlightColor="rgb(29,35,44)"
-        />
-      )}
+      ) :
+        // loading ? (
+        (<></>)}
 
       {/* todo refactor this into component */}
       {topVolumeCollections && topVolumeCollections.length > 0 && (
         <Box className="w-full">
-          <HotCollections collections={topVolumeCollections} filter={filter} />
+          <HotCollections collections={topVolumeCollections} filter={filter} setFilter={setFilter} />
         </Box>
       )}
     </Box>
