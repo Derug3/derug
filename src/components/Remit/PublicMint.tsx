@@ -1,14 +1,17 @@
 import { Box, Button, ProgressBar } from "@primer/react";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import solanaLogo from "../../assets/solanaLogo.jpeg";
 import { getNftsFromDeruggedCollection } from "../../common/helpers";
 import { CollectionContext } from "../../stores/collectionContext";
 import { generateSkeletonArrays } from "../../utilities/nft-fetching";
 import { NftWithToken } from "@metaplex-foundation/js";
-import { mintNftFromCandyMachine } from "../../solana/methods/public-mint";
+import {
+  closeCandyMachine,
+  mintNftFromCandyMachine,
+} from "../../solana/methods/public-mint";
 import toast from "react-hot-toast";
 import { getCandyMachine } from "../../solana/methods/remint";
 import { Oval } from "react-loader-spinner";
@@ -35,6 +38,18 @@ const PublicMint = () => {
   useEffect(() => {
     if (!nfts || nfts.length === 0) void getNfts();
   }, [wallet?.publicKey]);
+
+  const stopMint = useCallback(async () => {
+    try {
+      if (remintConfig && wallet) {
+        await closeCandyMachine(remintConfig, wallet);
+
+        setCandyMachine(undefined);
+      }
+    } catch (error) {
+      toast.error("Failed to stop minting ");
+    }
+  }, [remintConfig, wallet]);
 
   const getNfts = async () => {
     toggleLoading(true);
@@ -97,6 +112,17 @@ const PublicMint = () => {
       );
     });
   }, [nfts]);
+
+  const showCloseMinitngButton = useMemo(() => {
+    return (
+      wallet?.publicKey.toString() ===
+        candyMachine?.authorityAddress.toString() &&
+      candyMachine?.itemsAvailable &&
+      candyMachine.itemsMinted &&
+      candyMachine?.itemsAvailable.toNumber() >
+        candyMachine?.itemsMinted.toNumber()
+    );
+  }, [candyMachine, wallet]);
 
   return (
     <Box className="m-auto grid grid-cols-3 gap-10 m-10">
@@ -230,6 +256,14 @@ const PublicMint = () => {
             )}
           </Box>
         </Box>
+        {showCloseMinitngButton && (
+          <Button
+            onClick={stopMint}
+            className="boder-[2px] border-main-blue px-3 py-1 rounded-sm bg-transparent hover:shadow-lg hover:shadow-main-blue"
+          >
+            Stop minting
+          </Button>
+        )}
       </Box>
     </Box>
   );
