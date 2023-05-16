@@ -54,7 +54,8 @@ const ListedNftItem: FC<{ listedNft: INftListing; imageUrl: string }> = ({
           as="image"
           type="image/jpeg"
           alt="nftImg"
-          style={{ opacity: hover ? 0.2 : 1 }}
+          className="rounded-lg p-3"
+          style={{ opacity: hover ? 0.2 : 1, borderRadius: "2em" }}
           onLoad={() => setImageLoaded(true)}
           onError={() => setIsValidSrc(false)}
         />
@@ -95,7 +96,6 @@ const ListedNftItem: FC<{ listedNft: INftListing; imageUrl: string }> = ({
                 bg: "transparent",
                 fontFamily: "monospace",
                 padding: "1em",
-                borderRadius: 0,
               }}
               onClick={() => window.open(getUrl, "_blank")}
             >

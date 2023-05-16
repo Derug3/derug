@@ -200,7 +200,6 @@ export const DerugRequestItem: FC<{
                 sx={{
                   width: "380px",
                   height: "12px",
-                  borderRadius: 0,
                   color: "rgb(45, 212, 191)",
                   "@media (max-width: 768px)": {
                     width: "200px",

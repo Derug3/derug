@@ -32,6 +32,7 @@ const CreatorsArray: FC<{
     setCreators(temp);
   };
 
+
   return (
     <Box className="w-full">
       {creators &&
@@ -44,7 +45,7 @@ const CreatorsArray: FC<{
               <TextInput
                 placeholder="Address"
                 value={creator.address}
-                sx={{ width: "100%", borderRadius: 0 }}
+                sx={{ width: "100%" }}
                 onChange={(e) =>
                   handleItemsAddressChange(e.target.value, index)
                 }
@@ -52,7 +53,7 @@ const CreatorsArray: FC<{
               <TextInput
                 placeholder="Percentage"
                 value={creator.share}
-                sx={{ width: "30%", borderRadius: 0 }}
+                sx={{ width: "30%" }}
                 onChange={(e) =>
                   handleItemsPercentageChange(e.target.value, index)
                 }
@@ -61,7 +62,6 @@ const CreatorsArray: FC<{
 
             <Button
               variant="danger"
-              sx={{ borderRadius: 0 }}
               onClick={() => removeItems(index)}
             >
               remove

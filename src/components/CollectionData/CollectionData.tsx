@@ -22,7 +22,7 @@ const CollectionData = () => {
           <img
             src={collection?.image}
             alt="collectionImg"
-            className="rounded-[50%] w-32"
+            className="rounded-[2em] w-32"
           />
         ) : (
           <Skeleton

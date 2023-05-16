@@ -63,15 +63,16 @@ const HeaderNav: FC = () => {
   };
 
   return (
-    <Header
-      className="flex items-center w-full justify-between -z-10"
+    <><Header
+      className="flex items-center w-full justify-between px-10  rounded-lg shadow-xl"
       sx={{
         p: 0,
         padding: "0.5em 1.5em",
         background: "transparent",
-        borderBottom: "1px solid  rgb(9, 194, 246)",
+        // borderBottom: "1px solid  rgb(9, 194, 246)",
       }}
     >
+
       <Header.Item onClick={() => navigate(HOME)}>
         <img
           src={derugPfp}
@@ -80,25 +81,24 @@ const HeaderNav: FC = () => {
             paddingLeft: "1em",
             cursor: "pointer",
             filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 1px)",
-          }}
-        />
+          }} />
       </Header.Item>
       <div className="flex">
         {/* <Header.Item full>
-          <motion.button className="font-mono" {...FADE_IN_ANIMATION_SETTINGS}>
-            
-          </motion.button>
-        </Header.Item> */}
+      <motion.button className="font-mono" {...FADE_IN_ANIMATION_SETTINGS}>
+        
+      </motion.button>
+    </Header.Item> */}
         <Header.Item full className="flex gap-10">
           <motion.button className="font-mono" {...FADE_IN_ANIMATION_SETTINGS}>
             <WalletMultiButton
+              className="p-4 border border-gray-200 rounded-lg shadow"
               style={{
                 // backgroundColor: "rgba(0,183,234,15px)",
                 fontSize: "1em",
                 fontFamily: "monospace",
-                filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 15px)",
-              }}
-            />
+                // filter: "drop-shadow(rgb(9, 194, 246) 0px 0px 15px)",
+              }} />
           </motion.button>
           {wallet && wallet.publicKey && (
             <div className="flex flex-row gap-3 cursor-pointer" onClick={userData ? unlinkTwitter : linkTwitter}>
@@ -109,8 +109,7 @@ const HeaderNav: FC = () => {
                 {userData && (
                   <img
                     src={userData.image}
-                    className="w-10"
-                  />
+                    className="w-10" />
                 )}
                 <p className="flex gap-3 text-md">
                   {userData ? userData.twitterHandle : <>
@@ -146,7 +145,6 @@ const HeaderNav: FC = () => {
             //         color: "rgb(9, 194, 246) ",
             //       }}
             //     /> */}
-
             //   </ActionMenu.Button>
             //   <ActionMenu.Overlay
             //     className="z-20"
@@ -197,6 +195,8 @@ const HeaderNav: FC = () => {
         </Header.Item>
       </div>
     </Header>
+    </>
+
   );
 };
 
