@@ -54,7 +54,7 @@ export const NoDerugRequests: FC<{
           There is no derug request yet.
           {showAddDerugButton && (
             <button
-              className="bg-transparent font-mono font-bold text-lg mt-5
+              className="font-mono text-lg mt-5 rounded-lg
               px-6 py-1"
               onClick={() => openDerugModal(true)}
               style={{ border: "1px solid rgb(9, 194, 246)", }}

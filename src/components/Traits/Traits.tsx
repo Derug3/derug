@@ -13,7 +13,7 @@ const Traits: FC<{ trait: ITrait }> = ({ trait }) => {
           key={t.name}
           className="flex flex-col gap-2 items-start justify-start mb-2"
         >
-          <img src={t.image} className="w-32" />
+          <img src={t.image} className="w-32 rounded-lg" />
           <Box className="flex flex-col items-start justify-start w-full">
             <Text className="text-sm text-left" sx={{ color: "white" }}>
               {t.name}
@@ -40,13 +40,13 @@ const Traits: FC<{ trait: ITrait }> = ({ trait }) => {
       <Box className="grid grid-cols-6 mt-3 gap-2">
         {loading
           ? generateSkeletonArrays(32).map((_, i) => (
-              <Skeleton
-                height={128}
-                width={128}
-                baseColor="rgb(22,27,34)"
-                highlightColor="rgb(29,35,44)"
-              />
-            ))
+            <Skeleton
+              height={128}
+              width={128}
+              baseColor="rgb(22,27,34)"
+              highlightColor="rgb(29,35,44)"
+            />
+          ))
           : renderTraits}
       </Box>
     </Box>

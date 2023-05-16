@@ -76,6 +76,7 @@ export const DerugRequest: FC = () => {
         sx={{
           width: "600px",
           filter: "drop-shadow(rgb(246, 242, 9) 0px 0px 10px)",
+          borderRadius: "10px",
         }}
         aria-labelledby="header-id"
       >

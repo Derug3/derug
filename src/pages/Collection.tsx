@@ -286,16 +286,16 @@ export const Collections: FC = () => {
         <>
           {(collectionDerug.status === DerugStatus.Initialized ||
             collectionDerug.status === DerugStatus.Voting) &&
-          showDerugRequests &&
-          !hasWinning ? (
+            showDerugRequests &&
+            !hasWinning ? (
             <DerugRequest />
           ) : (
             <>
               {remintConfig &&
-              (dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) ||
-                (remintConfig.mintPrice && !remintConfig.privateMintEnd)) &&
-              candyMachine &&
-              candyMachine.itemsLoaded.toNumber() > 0 ? (
+                (dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) ||
+                  (remintConfig.mintPrice && !remintConfig.privateMintEnd)) &&
+                candyMachine &&
+                candyMachine.itemsLoaded.toNumber() > 0 ? (
                 <PublicMint />
               ) : (
                 collectionDerug &&
