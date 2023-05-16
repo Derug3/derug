@@ -20,7 +20,7 @@ import "rc-slider/assets/index.css";
 import UtilityArray from "./UtilityArray";
 import { FaTwitter } from "react-icons/fa";
 import CreatorsArray from "./CreatorsArray";
-import PublicMint, { ITreasuryTokenAccInfo } from "./PublicMint";
+import MintDetails, { ITreasuryTokenAccInfo } from "./MintDetails";
 import { getTrimmedPublicKey } from "../../solana/helpers";
 import { PublicKey } from "@solana/web3.js";
 import { FormProvider, useForm } from "react-hook-form";
@@ -193,26 +193,22 @@ export const AddDerugRequst: FC<{
             isOpen={isOpen}
             onDismiss={() => setIsOpen(false)}
             sx={{
-              width: "80%",
+              width: "90%",
               maxHeight: "100%",
-
-              borderRadius: 0,
             }}
             aria-labelledby="header-id"
           >
             <Dialog.Header
               id="header-id"
               className="flex justify-between items-center bg-gray-800"
-              sx={{
-                borderRadius: 0,
-              }}
+
             >
               <span className="text-white font-mono">Derug Request</span>
             </Dialog.Header>
 
             <Box className="grid grid-cols-2 gap-4 m-5">
               <Box
-                className="flex justify-between flex-row text-gray-400 font-mono"
+                className="flex justify-between flex-row text-gray-400 font-mono rounded-lg"
                 style={{
                   border: "1px solid rgb(9, 194, 246)",
                 }}
@@ -242,7 +238,7 @@ export const AddDerugRequst: FC<{
                         <button
                           onClick={linkTwitter}
                           type="button"
-                          className="flex border-[1px] border-main-blue py-1  items-center gap-4"
+                          className="flex border-[1px] border-main-blue p-1 px-5 items-center gap-4 rounded-lg"
                         >
                           Link twitter
                           <FaTwitter style={{ color: "rgb(29 161 242)" }} />
@@ -281,7 +277,6 @@ export const AddDerugRequst: FC<{
                         className="text-gray-400"
                         value={newName}
                         sx={{
-                          borderRadius: 0,
                           width: "100%",
                         }}
                       />
@@ -311,7 +306,6 @@ export const AddDerugRequst: FC<{
                         }
                         value={symbol}
                         sx={{
-                          borderRadius: 0,
                           width: "100%",
                         }}
                       />
@@ -330,7 +324,7 @@ export const AddDerugRequst: FC<{
                         {...methods.register("fee")}
                         placeholder="Fee"
                         value={sellerFee}
-                        sx={{ borderRadius: 0, width: "30%" }}
+                        sx={{ width: "30%" }}
                         onChange={(e) =>
                           handleSellerFeeChange(Number(e.target.value))
                         }
@@ -354,7 +348,7 @@ export const AddDerugRequst: FC<{
                 </div>
               </Box>
               <Box
-                className="flex justify-start flex-col text-white font-mono"
+                className="flex justify-start flex-col text-white font-mono rounded-lg"
                 style={{ border: "1px solid rgb(9, 194, 246)" }}
               >
                 <span
@@ -371,7 +365,7 @@ export const AddDerugRequst: FC<{
                   <Button
                     size="large"
                     variant="outline"
-                    sx={{ borderRadius: 0, backgroundColor: "transparent" }}
+                    sx={{ backgroundColor: "transparent" }}
                     ref={returnFocusRef}
                     disabled={creators.length >= 4}
                     onClick={() => addCreator()}
@@ -397,7 +391,7 @@ export const AddDerugRequst: FC<{
             </Box>
             <Box className="grid grid-cols-2 gap-4 mx-5">
               <Box
-                className="flex justify-start flex-col font-mono"
+                className="flex justify-start flex-col font-mono rounded-lg"
                 style={{
                   border: "1px solid rgb(9, 194, 246)",
                 }}
@@ -411,7 +405,7 @@ export const AddDerugRequst: FC<{
                 >
                   Mint details
                 </span>
-                <PublicMint
+                <MintDetails
                   price={price}
                   setPrice={setPrice}
                   handleMintChange={(e) => setSelectedMint(e)}
@@ -420,7 +414,7 @@ export const AddDerugRequst: FC<{
                 />
               </Box>
               <Box
-                className="flex justify-between flex-col text-white gap-5 font-mono w-full"
+                className="flex justify-between flex-col text-white gap-5 font-mono w-full rounded-lg"
                 style={{ border: "1px solid rgb(9, 194, 246)" }}
               >
                 <span
@@ -461,7 +455,7 @@ export const AddDerugRequst: FC<{
                 <Button
                   size="large"
                   variant="outline"
-                  sx={{ borderRadius: 0, backgroundColor: "transparent" }}
+                  sx={{ backgroundColor: "transparent" }}
                   ref={returnFocusRef}
                   onClick={() => addUtility()}
                 >
@@ -470,26 +464,21 @@ export const AddDerugRequst: FC<{
               </Box>
               <Button
                 size="large"
-                sx={{
-                  borderRadius: 0,
-                }}
-                disabled={false}
-                type="submit"
-              >
-                Submit request
-              </Button>
-              <Button
-                size="large"
                 type="button"
                 variant="danger"
-                sx={{
-                  borderRadius: 0,
-                }}
                 disabled={false}
                 onClick={() => setIsOpen(false)}
               >
                 Cancel request
               </Button>
+              <Button
+                size="large"
+                disabled={false}
+                type="submit"
+              >
+                Submit request
+              </Button>
+
             </Box>
           </Dialog>
         </form>

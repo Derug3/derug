@@ -213,7 +213,6 @@ export const Collections: FC = () => {
         className="overflow-y-auto pt-5"
         style={{
           zoom: "85%",
-          height: "85vh",
         }}
       >
         <Box

@@ -53,7 +53,7 @@ const UtilityArray: FC<{
                   <TextInput
                     placeholder={placeholder}
                     value={u.title}
-                    sx={{ width: "100%", borderRadius: 0 }}
+                    sx={{ width: "100%" }}
                     onChange={(e) =>
                       handleItemsNameChange(e.target.value, index)
                     }
@@ -61,7 +61,7 @@ const UtilityArray: FC<{
                   <Textarea
                     placeholder="Enter a description"
                     value={u.description}
-                    sx={{ width: "100%", borderRadius: 0 }}
+                    sx={{ width: "100%" }}
                     onChange={(e) =>
                       handleItemsDescChange(e.target.value, index)
                     }
@@ -69,7 +69,6 @@ const UtilityArray: FC<{
                 </div>
                 <Button
                   variant="danger"
-                  sx={{ borderRadius: 0 }}
                   onClick={() => removeItems(index)}
                 >
                   remove

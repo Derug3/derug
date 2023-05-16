@@ -152,7 +152,6 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
                   sx={{
                     color: "white",
                     padding: "1.25em",
-                    borderRadius: 0,
                     width: "30%",
                   }}
                   onClick={claimDerugVictory}
@@ -171,7 +170,6 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
                   sx={{
                     width: "380px",
                     height: "30px",
-                    borderRadius: 0,
                     color: "rgb(45, 212, 191)",
                     "@media (max-width: 768px)": {
                       width: "200px",
@@ -198,7 +196,6 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
                     className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 p-1 "
                     sx={{
                       color: "white",
-                      borderRadius: 0,
                     }}
                     onClick={initPublicMinting}
                   >
