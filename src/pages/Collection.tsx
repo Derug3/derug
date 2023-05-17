@@ -105,8 +105,6 @@ export const Collections: FC = () => {
     }
   };
 
-  console.log(candyMachine);
-
   useEffect(() => {
     if (basicCollectionData) void getChainCollectionDetails();
   }, [basicCollectionData]);
@@ -285,7 +283,8 @@ export const Collections: FC = () => {
       {collectionDerug ? (
         <>
           {(collectionDerug.status === DerugStatus.Initialized ||
-            collectionDerug.status === DerugStatus.Voting) &&
+            collectionDerug.status === DerugStatus.Voting ||
+            collectionDerug.status === DerugStatus.UploadingMetadata) &&
           showDerugRequests &&
           !hasWinning ? (
             <DerugRequest />
@@ -293,7 +292,8 @@ export const Collections: FC = () => {
             <>
               {remintConfig &&
               (dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) ||
-                (remintConfig.mintPrice && !remintConfig.privateMintEnd)) &&
+                (remintConfig.mintPrice !== undefined &&
+                  !remintConfig.privateMintEnd)) &&
               candyMachine &&
               candyMachine.itemsLoaded.toNumber() > 0 ? (
                 <PublicMint />

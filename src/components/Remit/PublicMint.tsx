@@ -1,4 +1,4 @@
-import { Box, Button, ProgressBar } from "@primer/react";
+import { Box, Button, ProgressBar, Text } from "@primer/react";
 import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
@@ -15,6 +15,8 @@ import {
 import toast from "react-hot-toast";
 import { getCandyMachine } from "../../solana/methods/remint";
 import { Oval } from "react-loader-spinner";
+import { UserMint } from "../../interface/collections.interface";
+import { getUserMints } from "../../api/public-mint.api";
 
 const PublicMint = () => {
   const {
@@ -35,8 +37,11 @@ const PublicMint = () => {
 
   const [nftImage, setNftImage] = useState<string>();
 
+  const [userMint, setUserMint] = useState<UserMint>();
+
   useEffect(() => {
     if (!nfts || nfts.length === 0) void getNfts();
+    void getUserMintData();
   }, [wallet?.publicKey]);
 
   const stopMint = useCallback(async () => {
@@ -50,6 +55,17 @@ const PublicMint = () => {
       toast.error("Failed to stop minting ");
     }
   }, [remintConfig, wallet]);
+
+  const getUserMintData = async () => {
+    if (remintConfig && remintConfig.walletLimit && wallet) {
+      setUserMint(
+        await getUserMints(
+          wallet?.publicKey.toString(),
+          remintConfig.candyMachine.toString()
+        )
+      );
+    }
+  };
 
   const getNfts = async () => {
     toggleLoading(true);
@@ -95,6 +111,7 @@ const PublicMint = () => {
           ...prevValue,
         ]);
       }
+      await getUserMintData();
     } catch (error: any) {
       toast.error(`Failed to mint:${error.message}`);
     } finally {
@@ -162,22 +179,26 @@ const PublicMint = () => {
         {mintedNft && (
           <p className="text-main-blue font-bold">{mintedNft.name}</p>
         )}
-        <button
-          style={{ border: "1px solid rgb(9, 194, 246)" }}
-          className="w-40 text-white py-1 
+        {!remintConfig?.walletLimit ||
+          (remintConfig.walletLimit &&
+            (userMint?.mintedCount ?? 0) < remintConfig.walletLimit && (
+              <button
+                style={{ border: "1px solid rgb(9, 194, 246)" }}
+                className="w-40 text-white py-1 
           flex flex-row items-center justify-center"
-          onClick={mintNfts}
-        >
-          {isMinting ? (
-            <Oval
-              color="rgb(9, 194, 246)"
-              height={"1.1em"}
-              secondaryColor="transparent"
-            />
-          ) : (
-            <span>Mint</span>
-          )}
-        </button>
+                onClick={mintNfts}
+              >
+                {isMinting ? (
+                  <Oval
+                    color="rgb(9, 194, 246)"
+                    height={"1.1em"}
+                    secondaryColor="transparent"
+                  />
+                ) : (
+                  <span>Mint</span>
+                )}
+              </button>
+            ))}
       </Box>
       <Box className="flex flex-col items-start gap-3 ">
         <p className="text-white text-lg">MINT DETAILS</p>
@@ -256,6 +277,16 @@ const PublicMint = () => {
             )}
           </Box>
         </Box>
+        {remintConfig && remintConfig.walletLimit && (
+          <Box className="w-full justify-between text-left">
+            <Text className="font-bold text-main-blue text-sm font-mono">
+              Left to mint with this wallet:
+            </Text>{" "}
+            <Text className="font-xl font-bold text-green-color text-sm font-mono">
+              {remintConfig?.walletLimit - (userMint?.mintedCount ?? 0)} NFTs
+            </Text>
+          </Box>
+        )}
         {showCloseMinitngButton && (
           <Button
             onClick={stopMint}

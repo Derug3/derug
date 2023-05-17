@@ -5,7 +5,15 @@ import {
   StoreCandyMachineData,
 } from "../interface/derug.interface";
 import { get, post } from "./request.api";
-import { COLLECTION, METADATA, NON_MINTED, PUBLIC_REMINT } from "./url.api";
+import {
+  COLLECTION,
+  GET,
+  METADATA,
+  NON_MINTED,
+  PUBLIC_REMINT,
+  SAVE,
+  USER_MINT,
+} from "./url.api";
 
 export const saveCandyMachineData = async (
   candyMachineDto: CandyMachineDto
@@ -31,4 +39,15 @@ export const storeAllNfts = async (
 
 export const getPrivateMintNft = (metadata: string): Promise<INonMinted> => {
   return get(`${PUBLIC_REMINT}${METADATA}/${metadata}`);
+};
+
+export const saveUserMint = (userPubkey: string, candyMachine: string) => {
+  return post(`${USER_MINT}${SAVE}`, {
+    userPubkey: userPubkey,
+    candyMachinePubkey: candyMachine,
+  });
+};
+
+export const getUserMints = (userPubkey: string, candyMachine: string) => {
+  return get(`${USER_MINT}${GET}/${candyMachine}/${userPubkey}`);
 };

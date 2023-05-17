@@ -198,18 +198,22 @@ const DerugRequestDetails: FC<{
                     </p>
                   </div>
                 </div>
-                {derugRequest.mintPrice && (
-                  <div className="flex bg-black flex-col w-full p-3 gap-4 items-start rounded-md ">
-                    <p className="border-b-[2px] border-green-color">
-                      Public Mint price
-                    </p>
-                    <p className="text-xl">
-                      {derugRequest.mintPrice /
-                        Math.pow(10, derugRequest.splToken?.decimals ?? 0)}{" "}
-                      {derugRequest.splToken?.symbol}
-                    </p>
-                  </div>
-                )}
+                {derugRequest.mintPrice !== undefined &&
+                  derugRequest.mintPrice !== null && (
+                    <div className="flex bg-black flex-col w-full p-3 gap-4 items-start rounded-md ">
+                      <p className="border-b-[2px] border-green-color">
+                        Public Mint price
+                      </p>
+                      <p className="text-xl">
+                        {derugRequest.mintPrice /
+                          Math.pow(
+                            10,
+                            derugRequest.splToken?.decimals ?? 0
+                          )}{" "}
+                        {derugRequest.splToken?.symbol}
+                      </p>
+                    </div>
+                  )}
               </div>
             </div>
           )}

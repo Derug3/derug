@@ -144,14 +144,14 @@ export const ActiveListingItem: FC<{
             </Box>
           )}
           {(twitterUserData || winningRequest) && (
-            <Box className="flex justify-between">
+            <Box className="flex justify-between items-center">
               <Text className="text-text-color font-bold font-mono">
                 Won by:
               </Text>
               {twitterUserData && (
-                <Box className="flex gap-2">
+                <Box className="flex gap-2 items-center">
                   <img
-                    className="w-16 rounded-[50px]"
+                    className="w-8 rounded-[50px]"
                     src={twitterUserData.image}
                     alt=""
                   />

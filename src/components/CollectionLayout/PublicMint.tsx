@@ -42,6 +42,8 @@ const PublicMint: FC<{
   const [availableTokensList, setAvailableTokenList] =
     useState<ITreasuryTokenAccInfo[]>();
 
+  const [limitPerWallet, setLimitPerWallet] = useState<number | null>(null);
+  const [hasLimitPerWallet, toggleHasLimitPerWallet] = useState(false);
   useEffect(() => {
     void getAllMintsInfo();
   }, []);
@@ -51,6 +53,7 @@ const PublicMint: FC<{
   const {
     register,
     clearErrors,
+    setValue,
     formState: { errors },
   } = useFormContext<DerugForm>();
 
@@ -314,6 +317,47 @@ const PublicMint: FC<{
             </div>
           </Box>
         )}
+      </Box>
+      <Box className="flex justify-between items-center ">
+        <Box className="flex gap-2 items-center w-full">
+          <Text fontSize={2} color="white">
+            {" "}
+            Limit per Wallet (Public Mint)
+          </Text>
+          <ToggleSwitch
+            aria-labelledby="switchLabel"
+            size="small"
+            aria-describedby="switchCaption"
+            defaultChecked={hasLimitPerWallet}
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+            onChange={(e) => {
+              toggleHasLimitPerWallet(!hasLimitPerWallet);
+              setValue("hasWalletLimit", !hasLimitPerWallet);
+            }}
+          />
+        </Box>
+        <Box className="flex items-center gap-3 ">
+          {" "}
+          {hasLimitPerWallet && (
+            <>
+              <TextInput
+                type={"number"}
+                min={0}
+                step="0"
+                sx={{ borderRadius: 0, width: "50%" }}
+                {...register("limitPerWallet", {
+                  min: {
+                    value: 0,
+                    message: "Minimum  is 0",
+                  },
+                })}
+              />
+              <Text>nfts</Text>
+            </>
+          )}
+        </Box>
       </Box>
     </div>
   );
