@@ -96,7 +96,6 @@ export const AddDerugRequst: FC<{
 
   const submitRequest = async (data: any) => {
     try {
-      debugger;
       if (wallet && chainCollectionData && utility && collectionStats && data) {
         const requestAddress = await createOrUpdateDerugRequest(
           wallet,
@@ -114,6 +113,7 @@ export const AddDerugRequst: FC<{
           +sellerFee * 10,
           data.symbol,
           data.name,
+          data.hasWalletLimit ? +data.limitPerWallet : null,
           creators.map((c) => {
             return {
               address: new PublicKey(c.address),

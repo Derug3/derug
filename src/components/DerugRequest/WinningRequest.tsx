@@ -26,7 +26,11 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
 
   const [loading, toggleLoading] = useState(false);
 
+  const [claiming, toggleClaiming] = useState(false);
+
   const wallet = useWallet();
+
+  console.log(request, "REQUEST");
 
   const renderUtilities = useMemo(() => {
     return request.utility.map((u, i) => {
@@ -61,6 +65,7 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
 
   const claimDerugVictory = async () => {
     try {
+      toggleClaiming(true);
       if (wallet && collectionDerug && request && chainCollectionData) {
         await claimVictory(
           wallet!,
@@ -73,8 +78,9 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
         );
         setCollectionDerug(updatedDerug);
       }
+      toggleClaiming(false);
     } catch (error: any) {
-      console.log(error);
+      toggleClaiming(false);
 
       toast.error(error.message);
     }
@@ -147,17 +153,28 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
               collectionDerug.status !== DerugStatus.Reminting &&
               collectionDerug.status !== DerugStatus.UploadingMetadata &&
               wallet.publicKey?.toString() === request.derugger.toString() && (
-                <Button
-                  className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 "
-                  sx={{
+                <button
+                  className="flex items-center justify-center hover:shadow-lg hover:shadow-main-blue"
+                  style={{
                     color: "white",
-                    padding: "1.25em",
+                    padding: "0.25em",
+                    borderRadius: 0,
                     width: "30%",
+                    border: "2px solid rgba(9, 194, 246)",
+                    background: "transparent",
                   }}
                   onClick={claimDerugVictory}
                 >
-                  <span className="text-xl lowercase">Claim victory</span>
-                </Button>
+                  {claiming ? (
+                    <Oval
+                      color="rgb(9, 194, 246)"
+                      height={"1.5em"}
+                      secondaryColor="transparent"
+                    />
+                  ) : (
+                    <span className="text-xl ">Claim Victory</span>
+                  )}
+                </button>
               )}
             <div className="flex w-full justify-between">
               <div className="flex items-center gap-5">
@@ -189,11 +206,13 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
               </div>
               {remintConfig &&
                 (dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) ||
-                  (remintConfig.mintPrice && !remintConfig.privateMintEnd)) &&
+                  (remintConfig.mintPrice !== undefined &&
+                    !remintConfig.privateMintEnd)) &&
                 wallet.publicKey?.toString() === request.derugger.toString() &&
                 collectionDerug?.status !== DerugStatus.UploadingMetadata && (
                   <Button
-                    className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 p-1 "
+                    className="animate-text bg-gradient-to-r from-teal-500 
+                    via-purple-500 to-orange-500 p-1 rounded-md"
                     sx={{
                       color: "white",
                     }}
@@ -204,7 +223,11 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
                         Initialize public mint
                       </span>
                     ) : (
-                      <Oval color="rgb(9, 194, 246)" height={"3em"} />
+                      <Oval
+                        color="rgb(9, 194, 246)"
+                        height={"1.1em"}
+                        secondaryColor="transparent"
+                      />
                     )}
                   </Button>
                 )}

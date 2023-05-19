@@ -470,6 +470,7 @@ export async function getRemintConfig(
       mintCurrency: remintConfigAccount.mintCurrency ?? undefined,
       mintPrice: remintConfigAccount.publicMintPrice?.toNumber(),
       derugRequest: remintConfigAccount.derugRequest,
+      walletLimit: remintConfigAccount.walletLimit,
       newName: remintConfigAccount.newName,
       newSymbol: remintConfigAccount.newSymbol,
       sellerFeeBps: remintConfigAccount.sellerFeeBps,

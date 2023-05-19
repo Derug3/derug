@@ -52,6 +52,7 @@ export interface IRemintConfig {
   candyMachineCreator: PublicKey;
   authority: PublicKey;
   privateMintEnd?: Date;
+  walletLimit: number | null;
   mintCurrency?: PublicKey;
   candyMachine: PublicKey;
   sellerFeeBps: number;
@@ -105,6 +106,8 @@ export type DerugForm = {
   price: number;
   selectedMint: ITreasuryTokenAccInfo;
   duration: number;
+  limitPerWallet: number;
+  hasWalletLimit: boolean;
 };
 
 export interface StoreCandyMachineData {
