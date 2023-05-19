@@ -49,14 +49,15 @@
 .wallet-adapter-button-trigger {
   /* background: #f8f8f9 !important; */
   background: transparent !important;
-  border: 1px solid rgb(9, 194, 246) !important;
+  /* border: 1px solid rgb(9, 194, 246) !important; */
 }
 
 .wallet-adapter-button {
   color: white !important;
   font-family: monospace !important;
   font-weight: bold !important;
-  border-bottom: 1px solid rgb(9, 194, 246) !important;
+  border: 1px solid rgba(229, 231, 235, 0.5) !important;
+  border-radius: 0.5em !important;
 }
 
 .wallet-adapter-button:hover {

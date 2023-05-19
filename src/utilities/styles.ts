@@ -2,7 +2,6 @@ export const selectStyles = {
   control(base: any, props: any) {
     return {
       background: "#0d1117",
-      border: "1px solid #30363d",
       fontFamily: "monospace",
       height: "32px",
       display: "flex",
@@ -50,9 +49,7 @@ export const selectStylesPrimary = {
   control(base: any, props: any) {
     return {
       background: "#0d1117",
-      border: "1px solid  rgb(9, 194, 246)",
       fontFamily: "monospace",
-      height: "32px",
       display: "flex",
       alignItems: "center",
     };

@@ -29,13 +29,14 @@ export interface ITreasuryTokenAccInfo {
   tags?: string[];
 }
 
-const PublicMint: FC<{
+const MintDetails: FC<{
   price?: number;
   setPrice?: (price: number) => void;
   duration?: number;
   setDuration?: (price: number) => void;
   handleMintChange: (mint: ITreasuryTokenAccInfo) => void;
-}> = ({ price, duration, setPrice, setDuration, handleMintChange }) => {
+  selectedMint?: ITreasuryTokenAccInfo;
+}> = ({ price, duration, setPrice, setDuration, handleMintChange, selectedMint }) => {
   const [isPublicMint, setIsPublicMint] = useState<boolean>(true);
   const [searchLoading, toggleSearchLoading] = useState(false);
   const [searchValue, setSearchValue] = useState<string>();
@@ -124,6 +125,7 @@ const PublicMint: FC<{
         extensions: usdtToken?.extensions,
       });
     setAvailableTokenList(availableToken);
+    handleMintChange(availableToken[0])
   };
 
   useEffect(() => {
@@ -156,17 +158,18 @@ const PublicMint: FC<{
 
   const renderSelect = useMemo(() => {
     return (
-      <div className="flex flex-col w-full gap-4">
+      availableTokensList?.length && <div className="flex flex-col w-full gap-4">
         <Select
+          className="border border-gray-700 rounded-lg shadow-lg px-2"
           placeholder="select token"
           isLoading={searchLoading}
           onInputChange={(e) => setSearchValue(e)}
           onChange={(e) => {
             console.log(e);
-
             handleMintChange(e!);
             clearErrors("selectedMint");
           }}
+          defaultValue={availableTokensList[0]}
           styles={selectStyles}
           options={availableTokensList}
           getOptionLabel={(option: ITreasuryTokenAccInfo) => option.name}
@@ -257,7 +260,6 @@ const PublicMint: FC<{
                   placeholder="price"
                   value={price}
                   accept="number"
-                  sx={{ borderRadius: 0 }}
                   onChange={(e) => {
                     setPrice && setPrice(+e.target.value);
                     e.target.value !== "" && clearErrors("price");
@@ -301,7 +303,7 @@ const PublicMint: FC<{
                   type={"number"}
                   placeholder="duration"
                   value={duration}
-                  sx={{ borderRadius: 0, width: "100%" }}
+                  sx={{ width: "100%" }}
                   onChange={(e) => {
                     setDuration && setDuration(+e.target.value);
                     e.target.value !== "" && clearErrors("privateMintEnd");
@@ -363,4 +365,4 @@ const PublicMint: FC<{
   );
 };
 
-export default PublicMint;
+export default MintDetails;

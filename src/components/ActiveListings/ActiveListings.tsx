@@ -105,8 +105,8 @@ export const ActiveListings: FC<{
     {activeListings && (
       <Box className="flex flex-col w-full gap-5">
         <Box className="flex flex-col justify-between items-start">
-          <Text className="text-xl font-mono text-green-color font-bold flex text-start border-b-[2px] border-green-color">
-            <span className="px-4">ACTIVE DERUGS 🛠</span>
+          <Text className="text-2xl font-mono text-gray-500	font-bold flex w-full text-center">
+            <span className="w-full px-4">ACTIVE DERUGS 🛠</span>
           </Text>
         </Box>
         <Box

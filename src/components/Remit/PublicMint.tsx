@@ -133,11 +133,11 @@ const PublicMint = () => {
   const showCloseMinitngButton = useMemo(() => {
     return (
       wallet?.publicKey.toString() ===
-        candyMachine?.authorityAddress.toString() &&
+      candyMachine?.authorityAddress.toString() &&
       candyMachine?.itemsAvailable &&
       candyMachine.itemsMinted &&
       candyMachine?.itemsAvailable.toNumber() >
-        candyMachine?.itemsMinted.toNumber()
+      candyMachine?.itemsMinted.toNumber()
     );
   }, [candyMachine, wallet]);
 
@@ -150,13 +150,13 @@ const PublicMint = () => {
         <Box className="overflow-y-scroll grid grid-cols-3 gap-5">
           {loading
             ? generateSkeletonArrays(15).map(() => (
-                <Skeleton
-                  height={100}
-                  width={110}
-                  baseColor="rgb(22,27,34)"
-                  highlightColor="rgb(29,35,44)"
-                />
-              ))
+              <Skeleton
+                height={100}
+                width={110}
+                baseColor="rgb(22,27,34)"
+                highlightColor="rgb(29,35,44)"
+              />
+            ))
             : renderNfts}
         </Box>
       </Box>
@@ -212,7 +212,6 @@ const PublicMint = () => {
               sx={{
                 width: "280px",
                 height: "8px",
-                borderRadius: 0,
                 color: "rgb(45, 212, 191)",
                 "@media (max-width: 768px)": {
                   width: "200px",
@@ -240,7 +239,6 @@ const PublicMint = () => {
                 sx={{
                   width: "280px",
                   height: "8px",
-                  borderRadius: 0,
                   color: "rgb(45, 212, 191)",
                   "@media (max-width: 768px)": {
                     width: "200px",

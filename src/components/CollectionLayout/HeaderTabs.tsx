@@ -10,7 +10,8 @@ const getNavStyling = (tab: string, selected: string) => {
     backgroundColor: tab === selected ? "rgba(9, 194, 246,.35)" : "transparent",
     color: tab === selected ? "rgba(9, 194, 246)" : "white",
     fontSize: "1rem",
-    fontWeight: "bold",
+    borderRadius: "1.5em",
+    // fontWeight: "bold",
     fontFamily: "monospace",
     cursor: "pointer",
     borderBottom: "none",
@@ -45,7 +46,7 @@ export const HeaderTabs: FC<{
   return (
     <div
       className="flex w-full self-start bg-gradient-to-r
-  font-mono text-gray-700 leading-6 px-10 border-none justify-end"
+  font-mono text-gray-700 leading-6 px-10 pb-2 border-none justify-end"
     >
       <div className="w-full gap-5 flex justify-end">
         <Box
@@ -77,19 +78,20 @@ export const HeaderTabs: FC<{
                   sx={{
                     padding: "1.25em 3.25em",
                     color: "rgba(9, 194, 246)",
-                    borderRadius: 0,
                   }}
+                  className="rounded-lg"
                   onClick={() => openDerugModal(true)}
                 >
-                  <span className="text-sm uppercase">Add derug request</span>
+                  <span className="text-sm uppercase rounded-lg">Add derug request</span>
                 </Button>
               )}
             <TabNav
               aria-label="Main"
-              className="flex justify-end w-fit"
+              className="flex justify-end w-fit border-none"
               style={{
-                borderBottom: "1px solid  rgba(9, 194, 246)",
+                // borderBottom: "1px solid  rgba(9, 194, 246)",
                 position: "sticky",
+                borderRadius: "2em",
               }}
             >
               <TabNav.Link

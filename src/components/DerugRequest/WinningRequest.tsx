@@ -187,7 +187,6 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
                   sx={{
                     width: "380px",
                     height: "30px",
-                    borderRadius: 0,
                     color: "rgb(45, 212, 191)",
                     "@media (max-width: 768px)": {
                       width: "200px",
@@ -216,7 +215,6 @@ const WinningRequest: FC<{ request: IRequest }> = ({ request }) => {
                     via-purple-500 to-orange-500 p-1 rounded-md"
                     sx={{
                       color: "white",
-                      borderRadius: 0,
                     }}
                     onClick={initPublicMinting}
                   >

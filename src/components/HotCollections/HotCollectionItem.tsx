@@ -26,18 +26,18 @@ const HotCollectionItem: FC<{
   return (
     <Box
       onClick={() => navigate(`${COLLECTION}?symbol=${collection.symbol}`)}
-      className="flex gap-3 items-center border-b-[2px] cursor-pointer 
-      border-main-blue py-2 px-4 rounded-sm hover:shadow-lg hover:shadow-main-blue"
+      className="flex gap-3 items-center p-6 border border-gray-500 rounded-lg dark:border-gray dark:hover:bg-gray-800"
+      style={{ background: '#0d1117' }}
     >
       <img src={collection.collection.image} className="w-24 rounded-sm " />
       <Box className="flex flex-col items-start gap-5 w-full">
         <Box className="w-full flex justify-between">
-          <Text className="text-xl  text-green-color font-bold  border-b-[2px] border-green-color">
+          <Text className="text-xl text-gray-400 uppercase font-mono">
             {collection.collection.name}
           </Text>
           <Box className="flex gap-4">
             <img
-              className="w-8 rounded-xl"
+              className="w-8 rounded-lg shadow-xl"
               src={tensorLogo}
               onClick={(e) => {
                 e.stopPropagation();
@@ -63,7 +63,7 @@ const HotCollectionItem: FC<{
         <Box className="flex w-full justify-between w-full font-mono">
           <Text className="text-text-color">
             <span className="font-bold"> {getFilterText[0]}: </span>
-            <span className="font-bold text-main-blue">
+            <span className="text-green-color">
               {" "}
               {getFilterText[1]}
             </span>
