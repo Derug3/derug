@@ -100,6 +100,7 @@ export interface IChainCollectionData {
   derugDataAddress: PublicKey;
   totalSupply: number;
   hasActiveDerugData: boolean;
+  firstCreator: string;
 }
 
 export interface ICollectionRecentActivities {

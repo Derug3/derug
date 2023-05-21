@@ -77,5 +77,6 @@ export async function getCollectionChainData(
     totalSupply: collection.numMints!,
     derugDataAddress: derugData,
     hasActiveDerugData,
+    firstCreator: metadataAccount.data.creators[0].address.toString(),
   };
 }

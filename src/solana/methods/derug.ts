@@ -7,7 +7,7 @@ import {
 } from "../../interface/collections.interface";
 import { PublicKey } from "@solana/web3.js";
 import { metadataSeed } from "../seeds";
-import { derugProgramFactory } from "../utilities";
+import { derugProgramFactory, heliusMintlistEndpoint } from "../utilities";
 import { WalletContextState } from "@solana/wallet-adapter-react";
 import { METAPLEX_PROGRAM, RPC_CONNECTION } from "../../utilities/utilities";
 import { TOKEN_PROGRAM_ID } from "@project-serum/anchor/dist/cjs/utils/token";
@@ -60,6 +60,8 @@ export const createDerugDataIx = async (
 
   //TODO:PUT REAL VALUE BEFORE MAINNET
 
+  // const totalSupply = await getMintList(collection.firstCreator);
+
   const ix = await derugProgram.methods
     .initializeDerug(150, collection.slug)
     .accounts({
@@ -101,5 +103,38 @@ export const getCollectionDerugData = async (
   } catch (error) {
     console.log(error);
     throw error;
+  }
+};
+
+const getMintList = async (creator: string) => {
+  try {
+    let response: any;
+    let mints: string[] = [];
+    do {
+      response = await (
+        await fetch(heliusMintlistEndpoint, {
+          method: "POST",
+          body: JSON.stringify({
+            query: {
+              firstVerifiedCreators: [creator],
+            },
+            options: {
+              limit: 1000,
+              paginationToken: response?.paginationToken,
+            },
+          }),
+        })
+      ).json();
+      console.log(response);
+
+      mints = [...mints, ...response.result.map((nft: any) => nft.mint)];
+    } while (
+      response &&
+      response.paginationToken &&
+      response.paginationToken !== ""
+    );
+    return mints.length;
+  } catch (error) {
+    console.log(error);
   }
 };

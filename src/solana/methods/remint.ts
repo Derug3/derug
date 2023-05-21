@@ -262,7 +262,7 @@ export const claimVictory = async (
   storeAllNfts({
     derugData: derug.address.toString(),
     derugRequest: request.address.toString(),
-    updateAuthority: chainCollectionData.rugUpdateAuthority,
+    updateAuthority: chainCollectionData.firstCreator,
   });
 };
 
