@@ -13,6 +13,7 @@ export function makeRequest(
       Authorization: `Bearer ${authorizationToken}`,
     },
     body: JSON.stringify(body),
+    mode: "cors",
   });
 }
 
