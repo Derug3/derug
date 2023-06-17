@@ -30,7 +30,6 @@ import Skeleton from "react-loading-skeleton";
 import toast from "react-hot-toast";
 import CollectionItem from "../components/MainPage/CollectionItem";
 import { CollectionVolumeFilter } from "../enums/collections.enums";
-import { mapFilterTypeToValue } from "../common/helpers";
 import HotCollections from "../components/HotCollections/HotCollections";
 
 const HomePage = () => {
@@ -45,7 +44,7 @@ const HomePage = () => {
   const [topVolumeCollections, setTopVolumeCollections] =
     useState<ICollectionVolume[]>();
   const [hotCollections, setHotCollections] = useState<ICollectionVolume[]>();
-  const [filter, setFilter] = useState(CollectionVolumeFilter.MarketCap);
+  const [filter, setFilter] = useState(CollectionVolumeFilter.NumMints);
   const [loading, setLoading] = useState(true);
   const { name } = useDebounce(searchValue);
 
@@ -167,15 +166,6 @@ const HomePage = () => {
       return <CollectionItem collection={c} key={c.symbol} bigImage={false} />;
     });
   }, [hotCollections]);
-
-  const getFilterOptions = useMemo(() => {
-    return Object.values(CollectionVolumeFilter).map((c: any) => {
-      return {
-        label: mapFilterTypeToValue(c as CollectionVolumeFilter),
-        value: c,
-      };
-    });
-  }, []);
 
   return (
     <Box

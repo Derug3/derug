@@ -40,7 +40,7 @@ const HotCollections: FC<{
           className="p-2 border border-gray-200 rounded-lg shadow"
           options={getFilterOptions}
           onChange={(e) => setFilter(e?.value as CollectionVolumeFilter)}
-          defaultValue={getFilterOptions[0]}
+          defaultValue={getFilterOptions[1]}
           formatOptionLabel={(val) => {
             return (
               <div className="w-full font-bold text-white font-md px-5">
