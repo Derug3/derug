@@ -40,5 +40,6 @@ export const getDummyCollectionData =
       totalSupply: 99,
       rugUpdateAuthority: "G6wLaE6jYvVB1QpjtBqUvfYGymnRmkof52WDKXJdAqKA",
       derugDataAddress: derugData,
+      firstCreator: "",
     };
   };
