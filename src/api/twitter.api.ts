@@ -4,7 +4,7 @@ import { PUBKEY, TWITTER_AUTH } from "./url.api";
 
 export const authorizeTwitter = async (slug: string, pubkey: string) => {
   try {
-    const data = await get(`${TWITTER_AUTH}/${slug + "!" + pubkey}`);
+    const data = await get(`${TWITTER_AUTH}/${pubkey}`);
     window.open(data.url);
   } catch (error: any) {
     console.log(error);
