@@ -48,6 +48,7 @@ export const createOrUpdateDerugRequest = async (
   sellerFeeBps: number,
   newSymbol: string,
   newName: string,
+  walletLimit: number,
   creators?: ICreator[],
   publicMintPrice?: number,
   privateMintDuration?: number,
@@ -107,6 +108,7 @@ export const createOrUpdateDerugRequest = async (
       privateMintDuration ? new BN(privateMintDuration) : null,
       newName,
       newSymbol,
+      walletLimit,
       creators ?? []
     )
     .accounts({

@@ -95,6 +95,8 @@ export const AddDerugRequst: FC<{
   const methods = useForm<DerugForm>();
 
   const submitRequest = async (data: any) => {
+    // todo remove before mainnet
+    const randomNumber = 3;
     try {
       debugger;
       if (wallet && chainCollectionData && utility && collectionStats && data) {
@@ -114,6 +116,7 @@ export const AddDerugRequst: FC<{
           +sellerFee * 10,
           data.symbol,
           data.name,
+          randomNumber,
           creators.map((c) => {
             return {
               address: new PublicKey(c.address),

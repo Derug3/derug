@@ -1,2319 +1,2355 @@
 export type DerugProgram = {
-  version: "0.1.0";
-  name: "derug_program";
-  instructions: [
+  "version": "0.1.0",
+  "name": "derug_program",
+  "instructions": [
     {
-      name: "initializeDerug";
-      accounts: [
+      "name": "initializeDerug",
+      "accounts": [
         {
-          name: "collectionKey";
-          isMut: false;
-          isSigner: false;
+          "name": "collectionKey",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "derugData";
-          isMut: true;
-          isSigner: false;
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "collectionMetadata";
-          isMut: false;
-          isSigner: false;
+          "name": "collectionMetadata",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "payer";
-          isMut: true;
-          isSigner: true;
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [
+      ],
+      "args": [
         {
-          name: "totalSupply";
-          type: "u32";
+          "name": "totalSupply",
+          "type": "u32"
         },
         {
-          name: "slug";
-          type: "string";
+          "name": "slug",
+          "type": "string"
         }
-      ];
+      ]
     },
     {
-      name: "createOrUpdateDerugRequest";
-      accounts: [
+      "name": "createOrUpdateDerugRequest",
+      "accounts": [
         {
-          name: "derugRequest";
-          isMut: true;
-          isSigner: false;
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugData";
-          isMut: true;
-          isSigner: false;
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer";
-          isMut: true;
-          isSigner: true;
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "feeWallet";
-          isMut: true;
-          isSigner: false;
+          "name": "feeWallet",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [
+      ],
+      "args": [
         {
-          name: "utilityDtos";
-          type: {
-            vec: {
-              defined: "UpdateUtilityDataDto";
-            };
-          };
+          "name": "utilityDtos",
+          "type": {
+            "vec": {
+              "defined": "UpdateUtilityDataDto"
+            }
+          }
         },
         {
-          name: "sellerFeeBps";
-          type: "u32";
+          "name": "sellerFeeBps",
+          "type": "u32"
         },
         {
-          name: "publicMintPrice";
-          type: {
-            option: "u64";
-          };
+          "name": "publicMintPrice",
+          "type": {
+            "option": "u64"
+          }
         },
         {
-          name: "privateMintDuration";
-          type: {
-            option: "i64";
-          };
+          "name": "privateMintDuration",
+          "type": {
+            "option": "i64"
+          }
         },
         {
-          name: "newName";
-          type: "string";
+          "name": "newName",
+          "type": "string"
         },
         {
-          name: "newSymbol";
-          type: "string";
+          "name": "newSymbol",
+          "type": "string"
         },
         {
-          name: "creators";
-          type: {
-            vec: {
-              defined: "DeruggerCreator";
-            };
-          };
+          "name": "walletLimit",
+          "type": {
+            "option": "u8"
+          }
+        },
+        {
+          "name": "creators",
+          "type": {
+            "vec": {
+              "defined": "DeruggerCreator"
+            }
+          }
         }
-      ];
+      ]
     },
     {
-      name: "vote";
-      accounts: [
+      "name": "vote",
+      "accounts": [
         {
-          name: "derugRequest";
-          isMut: true;
-          isSigner: false;
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugData";
-          isMut: true;
-          isSigner: false;
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "feeWallet";
-          isMut: true;
-          isSigner: false;
+          "name": "feeWallet",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer";
-          isMut: true;
-          isSigner: true;
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": []
     },
     {
-      name: "cancelDerugRequest";
-      accounts: [
+      "name": "cancelDerugRequest",
+      "accounts": [
         {
-          name: "derugRequest";
-          isMut: true;
-          isSigner: false;
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugData";
-          isMut: true;
-          isSigner: false;
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer";
-          isMut: true;
-          isSigner: true;
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": []
     },
     {
-      name: "claimVictory";
-      accounts: [
+      "name": "claimVictory",
+      "accounts": [
         {
-          name: "derugRequest";
-          isMut: true;
-          isSigner: false;
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugData";
-          isMut: true;
-          isSigner: false;
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer";
-          isMut: true;
-          isSigner: true;
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "remintConfig";
-          isMut: true;
-          isSigner: false;
+          "name": "remintConfig",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "feeWallet";
-          isMut: true;
-          isSigner: false;
+          "name": "feeWallet",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": []
     },
     {
-      name: "initializeReminting";
-      accounts: [
+      "name": "initializeReminting",
+      "accounts": [
         {
-          name: "derugRequest";
-          isMut: true;
-          isSigner: false;
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugData";
-          isMut: true;
-          isSigner: false;
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "newCollection";
-          isMut: true;
-          isSigner: false;
+          "name": "newCollection",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "tokenAccount";
-          isMut: true;
-          isSigner: false;
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "masterEdition";
-          isMut: true;
-          isSigner: false;
+          "name": "masterEdition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "metadataAccount";
-          isMut: true;
-          isSigner: false;
+          "name": "metadataAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "pdaAuthority";
-          isMut: false;
-          isSigner: false;
+          "name": "pdaAuthority",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "remintConfig";
-          isMut: true;
-          isSigner: false;
+          "name": "remintConfig",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "collectionAuthorityRecord";
-          isMut: true;
-          isSigner: false;
+          "name": "collectionAuthorityRecord",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer";
-          isMut: true;
-          isSigner: true;
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "feeWallet";
-          isMut: true;
-          isSigner: false;
+          "name": "feeWallet",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "metadataProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "rent";
-          isMut: false;
-          isSigner: false;
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "tokenProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": []
     },
     {
-      name: "remintNft";
-      accounts: [
+      "name": "remintNft",
+      "accounts": [
         {
-          name: "derugRequest";
-          isMut: false;
-          isSigner: false;
+          "name": "derugRequest",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "derugData";
-          isMut: true;
-          isSigner: false;
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "newCollection";
-          isMut: false;
-          isSigner: false;
+          "name": "newCollection",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "oldCollection";
-          isMut: false;
-          isSigner: false;
+          "name": "oldCollection",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "oldMint";
-          isMut: true;
-          isSigner: false;
+          "name": "oldMint",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "newMint";
-          isMut: true;
-          isSigner: false;
+          "name": "newMint",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "oldToken";
-          isMut: true;
-          isSigner: false;
+          "name": "oldToken",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "newToken";
-          isMut: true;
-          isSigner: false;
+          "name": "newToken",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "oldMetadata";
-          isMut: true;
-          isSigner: false;
+          "name": "oldMetadata",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "newMetadata";
-          isMut: true;
-          isSigner: false;
+          "name": "newMetadata",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "remintConfig";
-          isMut: false;
-          isSigner: false;
+          "name": "remintConfig",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "oldEdition";
-          isMut: true;
-          isSigner: false;
+          "name": "oldEdition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "newEdition";
-          isMut: true;
-          isSigner: false;
+          "name": "newEdition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "pdaAuthority";
-          isMut: false;
-          isSigner: false;
+          "name": "pdaAuthority",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "payer";
-          isMut: true;
-          isSigner: true;
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "feeWallet";
-          isMut: true;
-          isSigner: false;
+          "name": "feeWallet",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "metadataProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "rent";
-          isMut: false;
-          isSigner: false;
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "tokenProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [
+      ],
+      "args": [
         {
-          name: "newName";
-          type: "string";
+          "name": "newName",
+          "type": "string"
         },
         {
-          name: "newUri";
-          type: "string";
+          "name": "newUri",
+          "type": "string"
         }
-      ];
+      ]
     },
     {
-      name: "updateVerifyCollection";
-      accounts: [
+      "name": "updateVerifyCollection",
+      "accounts": [
         {
-          name: "payer";
-          isMut: true;
-          isSigner: true;
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "nftMint";
-          isMut: false;
-          isSigner: false;
+          "name": "nftMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "nftMetadata";
-          isMut: true;
-          isSigner: false;
+          "name": "nftMetadata",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugRequest";
-          isMut: false;
-          isSigner: false;
+          "name": "derugRequest",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "derugData";
-          isMut: false;
-          isSigner: false;
+          "name": "derugData",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "pdaAuthority";
-          isMut: false;
-          isSigner: false;
+          "name": "pdaAuthority",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "collectionMint";
-          isMut: true;
-          isSigner: false;
+          "name": "collectionMint",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "collectionMetadata";
-          isMut: true;
-          isSigner: false;
+          "name": "collectionMetadata",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "collectionMasterEdition";
-          isMut: true;
-          isSigner: false;
+          "name": "collectionMasterEdition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugger";
-          isMut: true;
-          isSigner: false;
+          "name": "derugger",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "collectionAuthority";
-          isMut: false;
-          isSigner: false;
+          "name": "collectionAuthority",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "metadataProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "feeWallet";
-          isMut: true;
-          isSigner: false;
+          "name": "feeWallet",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": []
     },
     {
-      name: "closeProgramAccount";
-      accounts: [
+      "name": "closeProgramAccount",
+      "accounts": [
         {
-          name: "derugData";
-          isMut: true;
-          isSigner: false;
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugRequest";
-          isMut: true;
-          isSigner: false;
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer";
-          isMut: false;
-          isSigner: true;
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
         },
         {
-          name: "remintConfig";
-          isMut: true;
-          isSigner: false;
+          "name": "remintConfig",
+          "isMut": true,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": []
     },
     {
-      name: "closeSingleRequest";
-      accounts: [
+      "name": "closeSingleRequest",
+      "accounts": [
         {
-          name: "derugRequest";
-          isMut: true;
-          isSigner: false;
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer";
-          isMut: false;
-          isSigner: true;
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
         }
-      ];
-      args: [];
+      ],
+      "args": []
     },
     {
-      name: "closeRemintConfig";
-      accounts: [
+      "name": "closeRemintConfig",
+      "accounts": [
         {
-          name: "remintConfg";
-          isMut: true;
-          isSigner: false;
+          "name": "remintConfg",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer";
-          isMut: true;
-          isSigner: true;
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         }
-      ];
-      args: [];
+      ],
+      "args": []
     },
     {
-      name: "freezeNft";
-      accounts: [
+      "name": "freezeNft",
+      "accounts": [
         {
-          name: "nftMint";
-          isMut: true;
-          isSigner: false;
+          "name": "nftMint",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "nftMasterEdition";
-          isMut: true;
-          isSigner: false;
+          "name": "nftMasterEdition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "delegate";
-          isMut: true;
-          isSigner: false;
+          "name": "delegate",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "nftTokenAccount";
-          isMut: true;
-          isSigner: false;
+          "name": "nftTokenAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer";
-          isMut: true;
-          isSigner: true;
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "metaplexProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "metaplexProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "tokenProgram";
-          isMut: false;
-          isSigner: false;
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         }
-      ];
-      args: [];
+      ],
+      "args": []
     },
     {
-      name: "initPrivateMint";
-      accounts: [
+      "name": "initPrivateMint",
+      "accounts": [
         {
-          name: "derugData";
-          isMut: true;
-          isSigner: false;
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugRequest";
-          isMut: true;
-          isSigner: false;
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "remintConfig";
-          isMut: true;
-          isSigner: false;
+          "name": "remintConfig",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer";
-          isMut: false;
-          isSigner: true;
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
         }
-      ];
-      args: [];
+      ],
+      "args": []
     }
-  ];
-  accounts: [
+  ],
+  "accounts": [
     {
-      name: "derugData";
-      type: {
-        kind: "struct";
-        fields: [
+      "name": "derugData",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "slug";
-            type: "string";
+            "name": "slug",
+            "type": "string"
           },
           {
-            name: "collection";
-            type: "publicKey";
+            "name": "collection",
+            "type": "publicKey"
           },
           {
-            name: "rugUpdateAuthority";
-            type: "publicKey";
+            "name": "rugUpdateAuthority",
+            "type": "publicKey"
           },
           {
-            name: "collectionMetadata";
-            type: {
-              option: "publicKey";
-            };
+            "name": "collectionMetadata",
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
-            name: "totalSupply";
-            type: "u32";
+            "name": "totalSupply",
+            "type": "u32"
           },
           {
-            name: "newCollection";
-            type: {
-              option: "publicKey";
-            };
+            "name": "newCollection",
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
-            name: "thresholdDenominator";
-            type: "u8";
+            "name": "thresholdDenominator",
+            "type": "u8"
           },
           {
-            name: "dateAdded";
-            type: "i64";
+            "name": "dateAdded",
+            "type": "i64"
           },
           {
-            name: "derugStatus";
-            type: {
-              defined: "DerugStatus";
-            };
+            "name": "derugStatus",
+            "type": {
+              "defined": "DerugStatus"
+            }
           },
           {
-            name: "periodEnd";
-            type: "i64";
+            "name": "periodEnd",
+            "type": "i64"
           },
           {
-            name: "totalReminted";
-            type: "u32";
+            "name": "totalReminted",
+            "type": "u32"
           },
           {
-            name: "winningRequest";
-            type: {
-              option: "publicKey";
-            };
+            "name": "winningRequest",
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
-            name: "totalSuggestionCount";
-            type: "u8";
+            "name": "totalSuggestionCount",
+            "type": "u8"
           },
           {
-            name: "collectionName";
-            type: "string";
+            "name": "collectionName",
+            "type": "string"
           },
           {
-            name: "collectionSymbol";
-            type: "string";
+            "name": "collectionSymbol",
+            "type": "string"
           },
           {
-            name: "collectionUri";
-            type: "string";
+            "name": "collectionUri",
+            "type": "string"
           },
           {
-            name: "activeRequests";
-            type: {
-              vec: {
-                defined: "ActiveRequest";
-              };
-            };
+            "name": "activeRequests",
+            "type": {
+              "vec": {
+                "defined": "ActiveRequest"
+              }
+            }
           }
-        ];
-      };
+        ]
+      }
     },
     {
-      name: "derugRequest";
-      type: {
-        kind: "struct";
-        fields: [
+      "name": "derugRequest",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "derugData";
-            type: "publicKey";
+            "name": "derugData",
+            "type": "publicKey"
           },
           {
-            name: "newName";
-            type: "string";
+            "name": "newName",
+            "type": "string"
           },
           {
-            name: "newSymbol";
-            type: "string";
+            "name": "newSymbol",
+            "type": "string"
           },
           {
-            name: "derugger";
-            type: "publicKey";
+            "name": "derugger",
+            "type": "publicKey"
           },
           {
-            name: "createdAt";
-            type: "i64";
+            "name": "createdAt",
+            "type": "i64"
           },
           {
-            name: "voteCount";
-            type: "u32";
+            "name": "voteCount",
+            "type": "u32"
           },
           {
-            name: "requestStatus";
-            type: {
-              defined: "RequestStatus";
-            };
+            "name": "walletLimit",
+            "type": {
+              "option": "u8"
+            }
           },
           {
-            name: "mintPrice";
-            type: {
-              option: "u64";
-            };
+            "name": "requestStatus",
+            "type": {
+              "defined": "RequestStatus"
+            }
           },
           {
-            name: "mintCurrency";
-            type: {
-              option: "publicKey";
-            };
+            "name": "mintPrice",
+            "type": {
+              "option": "u64"
+            }
           },
           {
-            name: "privateMintDuration";
-            type: {
-              option: "i64";
-            };
+            "name": "mintCurrency",
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
-            name: "creators";
-            type: {
-              vec: {
-                defined: "DeruggerCreator";
-              };
-            };
+            "name": "privateMintDuration",
+            "type": {
+              "option": "i64"
+            }
           },
           {
-            name: "sellerFeeBps";
-            type: "u32";
+            "name": "creators",
+            "type": {
+              "vec": {
+                "defined": "DeruggerCreator"
+              }
+            }
           },
           {
-            name: "utilityData";
-            type: {
-              vec: {
-                defined: "UtilityData";
-              };
-            };
+            "name": "sellerFeeBps",
+            "type": "u32"
+          },
+          {
+            "name": "utilityData",
+            "type": {
+              "vec": {
+                "defined": "UtilityData"
+              }
+            }
           }
-        ];
-      };
+        ]
+      }
     },
     {
-      name: "remintConfig";
-      type: {
-        kind: "struct";
-        fields: [
+      "name": "remintConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "derugRequest";
-            type: "publicKey";
+            "name": "derugRequest",
+            "type": "publicKey"
           },
           {
-            name: "newName";
-            type: "string";
+            "name": "newName",
+            "type": "string"
           },
           {
-            name: "newSymbol";
-            type: "string";
+            "name": "newSymbol",
+            "type": "string"
           },
           {
-            name: "authority";
-            type: "publicKey";
+            "name": "authority",
+            "type": "publicKey"
           },
           {
-            name: "collection";
-            type: "publicKey";
+            "name": "collection",
+            "type": "publicKey"
           },
           {
-            name: "publicMintPrice";
-            type: {
-              option: "u64";
-            };
+            "name": "publicMintPrice",
+            "type": {
+              "option": "u64"
+            }
           },
           {
-            name: "mintCurrency";
-            type: {
-              option: "publicKey";
-            };
+            "name": "mintCurrency",
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
-            name: "mintFeeTreasury";
-            type: {
-              option: "publicKey";
-            };
+            "name": "mintFeeTreasury",
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
-            name: "privateMintEnd";
-            type: {
-              option: "i64";
-            };
+            "name": "privateMintEnd",
+            "type": {
+              "option": "i64"
+            }
           },
           {
-            name: "creators";
-            type: {
-              vec: {
-                defined: "DeruggerCreator";
-              };
-            };
+            "name": "creators",
+            "type": {
+              "vec": {
+                "defined": "DeruggerCreator"
+              }
+            }
           },
           {
-            name: "candyMachineKey";
-            type: "publicKey";
+            "name": "walletLimit",
+            "type": {
+              "option": "u8"
+            }
           },
           {
-            name: "candyMachineCreator";
-            type: "publicKey";
+            "name": "candyMachineKey",
+            "type": "publicKey"
           },
           {
-            name: "sellerFeeBps";
-            type: "u32";
+            "name": "candyMachineCreator",
+            "type": "publicKey"
+          },
+          {
+            "name": "sellerFeeBps",
+            "type": "u32"
           }
-        ];
-      };
+        ]
+      }
     },
     {
-      name: "voteRecord";
-      type: {
-        kind: "struct";
-        fields: [
+      "name": "voteRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "voted";
-            type: "bool";
+            "name": "voted",
+            "type": "bool"
           }
-        ];
-      };
+        ]
+      }
     }
-  ];
-  types: [
+  ],
+  "types": [
     {
-      name: "ActiveRequest";
-      type: {
-        kind: "struct";
-        fields: [
+      "name": "ActiveRequest",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "request";
-            type: "publicKey";
+            "name": "request",
+            "type": "publicKey"
           },
           {
-            name: "voteCount";
-            type: "i32";
+            "name": "voteCount",
+            "type": "i32"
           },
           {
-            name: "winning";
-            type: "bool";
+            "name": "winning",
+            "type": "bool"
           }
-        ];
-      };
+        ]
+      }
     },
     {
-      name: "DeruggerCreator";
-      type: {
-        kind: "struct";
-        fields: [
+      "name": "DeruggerCreator",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "address";
-            type: "publicKey";
+            "name": "address",
+            "type": "publicKey"
           },
           {
-            name: "share";
-            type: "u8";
+            "name": "share",
+            "type": "u8"
           }
-        ];
-      };
+        ]
+      }
     },
     {
-      name: "UtilityData";
-      type: {
-        kind: "struct";
-        fields: [
+      "name": "UtilityData",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "title";
-            type: "string";
+            "name": "title",
+            "type": "string"
           },
           {
-            name: "description";
-            type: "string";
+            "name": "description",
+            "type": "string"
           },
           {
-            name: "isActive";
-            type: "bool";
+            "name": "isActive",
+            "type": "bool"
           }
-        ];
-      };
+        ]
+      }
     },
     {
-      name: "UpdateUtilityDataDto";
-      type: {
-        kind: "struct";
-        fields: [
+      "name": "UpdateUtilityDataDto",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "title";
-            type: "string";
+            "name": "title",
+            "type": "string"
           },
           {
-            name: "description";
-            type: "string";
+            "name": "description",
+            "type": "string"
           },
           {
-            name: "action";
-            type: {
-              defined: "Action";
-            };
+            "name": "action",
+            "type": {
+              "defined": "Action"
+            }
           }
-        ];
-      };
+        ]
+      }
     },
     {
-      name: "DerugStatus";
-      type: {
-        kind: "enum";
-        variants: [
+      "name": "DerugStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
           {
-            name: "Initialized";
+            "name": "Initialized"
           },
           {
-            name: "Voting";
+            "name": "Voting"
           },
           {
-            name: "Succeeded";
+            "name": "Succeeded"
           },
           {
-            name: "UploadingMetadata";
+            "name": "UploadingMetadata"
           },
           {
-            name: "Reminting";
+            "name": "Reminting"
           },
           {
-            name: "PublicMint";
+            "name": "PublicMint"
           },
           {
-            name: "Completed";
+            "name": "Completed"
           }
-        ];
-      };
+        ]
+      }
     },
     {
-      name: "RequestStatus";
-      type: {
-        kind: "enum";
-        variants: [
+      "name": "RequestStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
           {
-            name: "Initialized";
+            "name": "Initialized"
           },
           {
-            name: "Voting";
+            "name": "Voting"
           },
           {
-            name: "Succeeded";
+            "name": "Succeeded"
           },
           {
-            name: "UploadingMetadata";
+            "name": "UploadingMetadata"
           },
           {
-            name: "Reminting";
+            "name": "Reminting"
           },
           {
-            name: "PublicMint";
+            "name": "PublicMint"
           },
           {
-            name: "Completed";
+            "name": "Completed"
           }
-        ];
-      };
+        ]
+      }
     },
     {
-      name: "Action";
-      type: {
-        kind: "enum";
-        variants: [
+      "name": "Action",
+      "type": {
+        "kind": "enum",
+        "variants": [
           {
-            name: "Add";
+            "name": "Add"
           },
           {
-            name: "Remove";
+            "name": "Remove"
           }
-        ];
-      };
+        ]
+      }
     }
-  ];
-  events: [
+  ],
+  "events": [
     {
-      name: "NftRemintedEvent";
-      fields: [
+      "name": "NftRemintedEvent",
+      "fields": [
         {
-          name: "reminter";
-          type: "publicKey";
-          index: false;
+          "name": "reminter",
+          "type": "publicKey",
+          "index": false
         },
         {
-          name: "newNftMint";
-          type: "publicKey";
-          index: false;
+          "name": "newNftMint",
+          "type": "publicKey",
+          "index": false
         },
         {
-          name: "newNftMetadata";
-          type: "publicKey";
-          index: false;
+          "name": "newNftMetadata",
+          "type": "publicKey",
+          "index": false
         },
         {
-          name: "oldNftMint";
-          type: "publicKey";
-          index: false;
+          "name": "oldNftMint",
+          "type": "publicKey",
+          "index": false
         },
         {
-          name: "oldNftMetadata";
-          type: "publicKey";
-          index: false;
+          "name": "oldNftMetadata",
+          "type": "publicKey",
+          "index": false
         }
-      ];
+      ]
     },
     {
-      name: "PrivateMintStarted";
-      fields: [
+      "name": "PrivateMintStarted",
+      "fields": [
         {
-          name: "derugData";
-          type: "publicKey";
-          index: false;
+          "name": "derugData",
+          "type": "publicKey",
+          "index": false
         },
         {
-          name: "remintConfig";
-          type: "publicKey";
-          index: false;
+          "name": "remintConfig",
+          "type": "publicKey",
+          "index": false
         }
-      ];
+      ]
     }
-  ];
-  errors: [
+  ],
+  "errors": [
     {
-      code: 6000;
-      name: "RuggerSigner";
-      msg: "This wallet rugged the collection";
+      "code": 6000,
+      "name": "RuggerSigner",
+      "msg": "This wallet rugged the collection"
     },
     {
-      code: 6001;
-      name: "InvalidVoteRecord";
-      msg: "Vote record seeds aren't correct";
+      "code": 6001,
+      "name": "InvalidVoteRecord",
+      "msg": "Vote record seeds aren't correct"
     },
     {
-      code: 6002;
-      name: "InvalidTokenAccountMint";
-      msg: "Token account is not correct for the mint";
+      "code": 6002,
+      "name": "InvalidTokenAccountMint",
+      "msg": "Token account is not correct for the mint"
     },
     {
-      code: 6003;
-      name: "InvalidMetadata";
-      msg: "Metadata is not correct for the mint";
+      "code": 6003,
+      "name": "InvalidMetadata",
+      "msg": "Metadata is not correct for the mint"
     },
     {
-      code: 6004;
-      name: "EmptyTokenAccount";
-      msg: "Token account doesn't possess the nft";
+      "code": 6004,
+      "name": "EmptyTokenAccount",
+      "msg": "Token account doesn't possess the nft"
     },
     {
-      code: 6005;
-      name: "WrongOwner";
-      msg: "Payer doesn't own the token account";
+      "code": 6005,
+      "name": "WrongOwner",
+      "msg": "Payer doesn't own the token account"
     },
     {
-      code: 6006;
-      name: "AlereadyVoted";
-      msg: "User alredy voted with given nft";
+      "code": 6006,
+      "name": "AlereadyVoted",
+      "msg": "User alredy voted with given nft"
     },
     {
-      code: 6007;
-      name: "WrongDerugger";
-      msg: "Signer isn't the required derugger";
+      "code": 6007,
+      "name": "WrongDerugger",
+      "msg": "Signer isn't the required derugger"
     },
     {
-      code: 6008;
-      name: "InvalidWinningRequest";
-      msg: "Request isn't the winning one";
+      "code": 6008,
+      "name": "InvalidWinningRequest",
+      "msg": "Request isn't the winning one"
     },
     {
-      code: 6009;
-      name: "TimeIsOut";
-      msg: "You cannot make requests anymore";
+      "code": 6009,
+      "name": "TimeIsOut",
+      "msg": "You cannot make requests anymore"
     },
     {
-      code: 6010;
-      name: "NoWinner";
-      msg: "There is no winner yet";
+      "code": 6010,
+      "name": "NoWinner",
+      "msg": "There is no winner yet"
     },
     {
-      code: 6011;
-      name: "CandyMachineUsed";
-      msg: "This is not a new candy machine";
+      "code": 6011,
+      "name": "CandyMachineUsed",
+      "msg": "This is not a new candy machine"
     },
     {
-      code: 6012;
-      name: "InvalidStatus";
-      msg: "Derug isn't in the required state";
+      "code": 6012,
+      "name": "InvalidStatus",
+      "msg": "Derug isn't in the required state"
     },
     {
-      code: 6013;
-      name: "WrongCollection";
-      msg: "Wrong collection sent ";
+      "code": 6013,
+      "name": "WrongCollection",
+      "msg": "Wrong collection sent "
     },
     {
-      code: 6014;
-      name: "InvalidSellerFeeBps";
-      msg: "Invalid seller fee basis points amount";
+      "code": 6014,
+      "name": "InvalidSellerFeeBps",
+      "msg": "Invalid seller fee basis points amount"
     },
     {
-      code: 6015;
-      name: "InvalidMintCurrency";
-      msg: "Invalid mint currency";
+      "code": 6015,
+      "name": "InvalidMintCurrency",
+      "msg": "Invalid mint currency"
     },
     {
-      code: 6016;
-      name: "InvalidTokenOwner";
-      msg: "Invalid token owner";
+      "code": 6016,
+      "name": "InvalidTokenOwner",
+      "msg": "Invalid token owner"
     },
     {
-      code: 6017;
-      name: "TooManyCreators";
-      msg: "Too many creators";
+      "code": 6017,
+      "name": "TooManyCreators",
+      "msg": "Too many creators"
     },
     {
-      code: 6018;
-      name: "PrivateMintEnded";
-      msg: "Private mint ended";
+      "code": 6018,
+      "name": "PrivateMintEnded",
+      "msg": "Private mint ended"
     }
-  ];
+  ]
 };
 
 export const IDL: DerugProgram = {
-  version: "0.1.0",
-  name: "derug_program",
-  instructions: [
+  "version": "0.1.0",
+  "name": "derug_program",
+  "instructions": [
     {
-      name: "initializeDerug",
-      accounts: [
+      "name": "initializeDerug",
+      "accounts": [
         {
-          name: "collectionKey",
-          isMut: false,
-          isSigner: false,
+          "name": "collectionKey",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "derugData",
-          isMut: true,
-          isSigner: false,
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "collectionMetadata",
-          isMut: false,
-          isSigner: false,
+          "name": "collectionMetadata",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "payer",
-          isMut: true,
-          isSigner: true,
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [
+      "args": [
         {
-          name: "totalSupply",
-          type: "u32",
+          "name": "totalSupply",
+          "type": "u32"
         },
         {
-          name: "slug",
-          type: "string",
-        },
-      ],
+          "name": "slug",
+          "type": "string"
+        }
+      ]
     },
     {
-      name: "createOrUpdateDerugRequest",
-      accounts: [
+      "name": "createOrUpdateDerugRequest",
+      "accounts": [
         {
-          name: "derugRequest",
-          isMut: true,
-          isSigner: false,
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugData",
-          isMut: true,
-          isSigner: false,
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer",
-          isMut: true,
-          isSigner: true,
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "feeWallet",
-          isMut: true,
-          isSigner: false,
+          "name": "feeWallet",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [
+      "args": [
         {
-          name: "utilityDtos",
-          type: {
-            vec: {
-              defined: "UpdateUtilityDataDto",
-            },
-          },
+          "name": "utilityDtos",
+          "type": {
+            "vec": {
+              "defined": "UpdateUtilityDataDto"
+            }
+          }
         },
         {
-          name: "sellerFeeBps",
-          type: "u32",
+          "name": "sellerFeeBps",
+          "type": "u32"
         },
         {
-          name: "publicMintPrice",
-          type: {
-            option: "u64",
-          },
+          "name": "publicMintPrice",
+          "type": {
+            "option": "u64"
+          }
         },
         {
-          name: "privateMintDuration",
-          type: {
-            option: "i64",
-          },
+          "name": "privateMintDuration",
+          "type": {
+            "option": "i64"
+          }
         },
         {
-          name: "newName",
-          type: "string",
+          "name": "newName",
+          "type": "string"
         },
         {
-          name: "newSymbol",
-          type: "string",
+          "name": "newSymbol",
+          "type": "string"
         },
         {
-          name: "creators",
-          type: {
-            vec: {
-              defined: "DeruggerCreator",
-            },
-          },
+          "name": "walletLimit",
+          "type": {
+            "option": "u8"
+          }
         },
-      ],
+        {
+          "name": "creators",
+          "type": {
+            "vec": {
+              "defined": "DeruggerCreator"
+            }
+          }
+        }
+      ]
     },
     {
-      name: "vote",
-      accounts: [
+      "name": "vote",
+      "accounts": [
         {
-          name: "derugRequest",
-          isMut: true,
-          isSigner: false,
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugData",
-          isMut: true,
-          isSigner: false,
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "feeWallet",
-          isMut: true,
-          isSigner: false,
+          "name": "feeWallet",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer",
-          isMut: true,
-          isSigner: true,
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [],
+      "args": []
     },
     {
-      name: "cancelDerugRequest",
-      accounts: [
+      "name": "cancelDerugRequest",
+      "accounts": [
         {
-          name: "derugRequest",
-          isMut: true,
-          isSigner: false,
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugData",
-          isMut: true,
-          isSigner: false,
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer",
-          isMut: true,
-          isSigner: true,
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [],
+      "args": []
     },
     {
-      name: "claimVictory",
-      accounts: [
+      "name": "claimVictory",
+      "accounts": [
         {
-          name: "derugRequest",
-          isMut: true,
-          isSigner: false,
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugData",
-          isMut: true,
-          isSigner: false,
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer",
-          isMut: true,
-          isSigner: true,
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "remintConfig",
-          isMut: true,
-          isSigner: false,
+          "name": "remintConfig",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "feeWallet",
-          isMut: true,
-          isSigner: false,
+          "name": "feeWallet",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [],
+      "args": []
     },
     {
-      name: "initializeReminting",
-      accounts: [
+      "name": "initializeReminting",
+      "accounts": [
         {
-          name: "derugRequest",
-          isMut: true,
-          isSigner: false,
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugData",
-          isMut: true,
-          isSigner: false,
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "newCollection",
-          isMut: true,
-          isSigner: false,
+          "name": "newCollection",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "tokenAccount",
-          isMut: true,
-          isSigner: false,
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "masterEdition",
-          isMut: true,
-          isSigner: false,
+          "name": "masterEdition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "metadataAccount",
-          isMut: true,
-          isSigner: false,
+          "name": "metadataAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "pdaAuthority",
-          isMut: false,
-          isSigner: false,
+          "name": "pdaAuthority",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "remintConfig",
-          isMut: true,
-          isSigner: false,
+          "name": "remintConfig",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "collectionAuthorityRecord",
-          isMut: true,
-          isSigner: false,
+          "name": "collectionAuthorityRecord",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer",
-          isMut: true,
-          isSigner: true,
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "feeWallet",
-          isMut: true,
-          isSigner: false,
+          "name": "feeWallet",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "metadataProgram",
-          isMut: false,
-          isSigner: false,
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "rent",
-          isMut: false,
-          isSigner: false,
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "tokenProgram",
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [],
+      "args": []
     },
     {
-      name: "remintNft",
-      accounts: [
+      "name": "remintNft",
+      "accounts": [
         {
-          name: "derugRequest",
-          isMut: false,
-          isSigner: false,
+          "name": "derugRequest",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "derugData",
-          isMut: true,
-          isSigner: false,
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "newCollection",
-          isMut: false,
-          isSigner: false,
+          "name": "newCollection",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "oldCollection",
-          isMut: false,
-          isSigner: false,
+          "name": "oldCollection",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "oldMint",
-          isMut: true,
-          isSigner: false,
+          "name": "oldMint",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "newMint",
-          isMut: true,
-          isSigner: false,
+          "name": "newMint",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "oldToken",
-          isMut: true,
-          isSigner: false,
+          "name": "oldToken",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "newToken",
-          isMut: true,
-          isSigner: false,
+          "name": "newToken",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "oldMetadata",
-          isMut: true,
-          isSigner: false,
+          "name": "oldMetadata",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "newMetadata",
-          isMut: true,
-          isSigner: false,
+          "name": "newMetadata",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "remintConfig",
-          isMut: false,
-          isSigner: false,
+          "name": "remintConfig",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "oldEdition",
-          isMut: true,
-          isSigner: false,
+          "name": "oldEdition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "newEdition",
-          isMut: true,
-          isSigner: false,
+          "name": "newEdition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "pdaAuthority",
-          isMut: false,
-          isSigner: false,
+          "name": "pdaAuthority",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "payer",
-          isMut: true,
-          isSigner: true,
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "feeWallet",
-          isMut: true,
-          isSigner: false,
+          "name": "feeWallet",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "metadataProgram",
-          isMut: false,
-          isSigner: false,
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "rent",
-          isMut: false,
-          isSigner: false,
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "tokenProgram",
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [
+      "args": [
         {
-          name: "newName",
-          type: "string",
+          "name": "newName",
+          "type": "string"
         },
         {
-          name: "newUri",
-          type: "string",
-        },
-      ],
+          "name": "newUri",
+          "type": "string"
+        }
+      ]
     },
     {
-      name: "updateVerifyCollection",
-      accounts: [
+      "name": "updateVerifyCollection",
+      "accounts": [
         {
-          name: "payer",
-          isMut: true,
-          isSigner: true,
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "nftMint",
-          isMut: false,
-          isSigner: false,
+          "name": "nftMint",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "nftMetadata",
-          isMut: true,
-          isSigner: false,
+          "name": "nftMetadata",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugRequest",
-          isMut: false,
-          isSigner: false,
+          "name": "derugRequest",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "derugData",
-          isMut: false,
-          isSigner: false,
+          "name": "derugData",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "pdaAuthority",
-          isMut: false,
-          isSigner: false,
+          "name": "pdaAuthority",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "collectionMint",
-          isMut: true,
-          isSigner: false,
+          "name": "collectionMint",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "collectionMetadata",
-          isMut: true,
-          isSigner: false,
+          "name": "collectionMetadata",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "collectionMasterEdition",
-          isMut: true,
-          isSigner: false,
+          "name": "collectionMasterEdition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugger",
-          isMut: true,
-          isSigner: false,
+          "name": "derugger",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "collectionAuthority",
-          isMut: false,
-          isSigner: false,
+          "name": "collectionAuthority",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "metadataProgram",
-          isMut: false,
-          isSigner: false,
+          "name": "metadataProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "feeWallet",
-          isMut: true,
-          isSigner: false,
+          "name": "feeWallet",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [],
+      "args": []
     },
     {
-      name: "closeProgramAccount",
-      accounts: [
+      "name": "closeProgramAccount",
+      "accounts": [
         {
-          name: "derugData",
-          isMut: true,
-          isSigner: false,
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugRequest",
-          isMut: true,
-          isSigner: false,
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer",
-          isMut: false,
-          isSigner: true,
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
         },
         {
-          name: "remintConfig",
-          isMut: true,
-          isSigner: false,
-        },
+          "name": "remintConfig",
+          "isMut": true,
+          "isSigner": false
+        }
       ],
-      args: [],
+      "args": []
     },
     {
-      name: "closeSingleRequest",
-      accounts: [
+      "name": "closeSingleRequest",
+      "accounts": [
         {
-          name: "derugRequest",
-          isMut: true,
-          isSigner: false,
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer",
-          isMut: false,
-          isSigner: true,
-        },
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        }
       ],
-      args: [],
+      "args": []
     },
     {
-      name: "closeRemintConfig",
-      accounts: [
+      "name": "closeRemintConfig",
+      "accounts": [
         {
-          name: "remintConfg",
-          isMut: true,
-          isSigner: false,
+          "name": "remintConfg",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer",
-          isMut: true,
-          isSigner: true,
-        },
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        }
       ],
-      args: [],
+      "args": []
     },
     {
-      name: "freezeNft",
-      accounts: [
+      "name": "freezeNft",
+      "accounts": [
         {
-          name: "nftMint",
-          isMut: true,
-          isSigner: false,
+          "name": "nftMint",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "nftMasterEdition",
-          isMut: true,
-          isSigner: false,
+          "name": "nftMasterEdition",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "delegate",
-          isMut: true,
-          isSigner: false,
+          "name": "delegate",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "nftTokenAccount",
-          isMut: true,
-          isSigner: false,
+          "name": "nftTokenAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer",
-          isMut: true,
-          isSigner: true,
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
         },
         {
-          name: "systemProgram",
-          isMut: false,
-          isSigner: false,
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "metaplexProgram",
-          isMut: false,
-          isSigner: false,
+          "name": "metaplexProgram",
+          "isMut": false,
+          "isSigner": false
         },
         {
-          name: "tokenProgram",
-          isMut: false,
-          isSigner: false,
-        },
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
       ],
-      args: [],
+      "args": []
     },
     {
-      name: "initPrivateMint",
-      accounts: [
+      "name": "initPrivateMint",
+      "accounts": [
         {
-          name: "derugData",
-          isMut: true,
-          isSigner: false,
+          "name": "derugData",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "derugRequest",
-          isMut: true,
-          isSigner: false,
+          "name": "derugRequest",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "remintConfig",
-          isMut: true,
-          isSigner: false,
+          "name": "remintConfig",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          name: "payer",
-          isMut: false,
-          isSigner: true,
-        },
+          "name": "payer",
+          "isMut": false,
+          "isSigner": true
+        }
       ],
-      args: [],
-    },
+      "args": []
+    }
   ],
-  accounts: [
+  "accounts": [
     {
-      name: "derugData",
-      type: {
-        kind: "struct",
-        fields: [
+      "name": "derugData",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "slug",
-            type: "string",
+            "name": "slug",
+            "type": "string"
           },
           {
-            name: "collection",
-            type: "publicKey",
+            "name": "collection",
+            "type": "publicKey"
           },
           {
-            name: "rugUpdateAuthority",
-            type: "publicKey",
+            "name": "rugUpdateAuthority",
+            "type": "publicKey"
           },
           {
-            name: "collectionMetadata",
-            type: {
-              option: "publicKey",
-            },
+            "name": "collectionMetadata",
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
-            name: "totalSupply",
-            type: "u32",
+            "name": "totalSupply",
+            "type": "u32"
           },
           {
-            name: "newCollection",
-            type: {
-              option: "publicKey",
-            },
+            "name": "newCollection",
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
-            name: "thresholdDenominator",
-            type: "u8",
+            "name": "thresholdDenominator",
+            "type": "u8"
           },
           {
-            name: "dateAdded",
-            type: "i64",
+            "name": "dateAdded",
+            "type": "i64"
           },
           {
-            name: "derugStatus",
-            type: {
-              defined: "DerugStatus",
-            },
+            "name": "derugStatus",
+            "type": {
+              "defined": "DerugStatus"
+            }
           },
           {
-            name: "periodEnd",
-            type: "i64",
+            "name": "periodEnd",
+            "type": "i64"
           },
           {
-            name: "totalReminted",
-            type: "u32",
+            "name": "totalReminted",
+            "type": "u32"
           },
           {
-            name: "winningRequest",
-            type: {
-              option: "publicKey",
-            },
+            "name": "winningRequest",
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
-            name: "totalSuggestionCount",
-            type: "u8",
+            "name": "totalSuggestionCount",
+            "type": "u8"
           },
           {
-            name: "collectionName",
-            type: "string",
+            "name": "collectionName",
+            "type": "string"
           },
           {
-            name: "collectionSymbol",
-            type: "string",
+            "name": "collectionSymbol",
+            "type": "string"
           },
           {
-            name: "collectionUri",
-            type: "string",
+            "name": "collectionUri",
+            "type": "string"
           },
           {
-            name: "activeRequests",
-            type: {
-              vec: {
-                defined: "ActiveRequest",
-              },
-            },
-          },
-        ],
-      },
+            "name": "activeRequests",
+            "type": {
+              "vec": {
+                "defined": "ActiveRequest"
+              }
+            }
+          }
+        ]
+      }
     },
     {
-      name: "derugRequest",
-      type: {
-        kind: "struct",
-        fields: [
+      "name": "derugRequest",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "derugData",
-            type: "publicKey",
+            "name": "derugData",
+            "type": "publicKey"
           },
           {
-            name: "newName",
-            type: "string",
+            "name": "newName",
+            "type": "string"
           },
           {
-            name: "newSymbol",
-            type: "string",
+            "name": "newSymbol",
+            "type": "string"
           },
           {
-            name: "derugger",
-            type: "publicKey",
+            "name": "derugger",
+            "type": "publicKey"
           },
           {
-            name: "createdAt",
-            type: "i64",
+            "name": "createdAt",
+            "type": "i64"
           },
           {
-            name: "voteCount",
-            type: "u32",
+            "name": "voteCount",
+            "type": "u32"
           },
           {
-            name: "requestStatus",
-            type: {
-              defined: "RequestStatus",
-            },
+            "name": "walletLimit",
+            "type": {
+              "option": "u8"
+            }
           },
           {
-            name: "mintPrice",
-            type: {
-              option: "u64",
-            },
+            "name": "requestStatus",
+            "type": {
+              "defined": "RequestStatus"
+            }
           },
           {
-            name: "mintCurrency",
-            type: {
-              option: "publicKey",
-            },
+            "name": "mintPrice",
+            "type": {
+              "option": "u64"
+            }
           },
           {
-            name: "privateMintDuration",
-            type: {
-              option: "i64",
-            },
+            "name": "mintCurrency",
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
-            name: "creators",
-            type: {
-              vec: {
-                defined: "DeruggerCreator",
-              },
-            },
+            "name": "privateMintDuration",
+            "type": {
+              "option": "i64"
+            }
           },
           {
-            name: "sellerFeeBps",
-            type: "u32",
+            "name": "creators",
+            "type": {
+              "vec": {
+                "defined": "DeruggerCreator"
+              }
+            }
           },
           {
-            name: "utilityData",
-            type: {
-              vec: {
-                defined: "UtilityData",
-              },
-            },
+            "name": "sellerFeeBps",
+            "type": "u32"
           },
-        ],
-      },
+          {
+            "name": "utilityData",
+            "type": {
+              "vec": {
+                "defined": "UtilityData"
+              }
+            }
+          }
+        ]
+      }
     },
     {
-      name: "remintConfig",
-      type: {
-        kind: "struct",
-        fields: [
+      "name": "remintConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "derugRequest",
-            type: "publicKey",
+            "name": "derugRequest",
+            "type": "publicKey"
           },
           {
-            name: "newName",
-            type: "string",
+            "name": "newName",
+            "type": "string"
           },
           {
-            name: "newSymbol",
-            type: "string",
+            "name": "newSymbol",
+            "type": "string"
           },
           {
-            name: "authority",
-            type: "publicKey",
+            "name": "authority",
+            "type": "publicKey"
           },
           {
-            name: "collection",
-            type: "publicKey",
+            "name": "collection",
+            "type": "publicKey"
           },
           {
-            name: "publicMintPrice",
-            type: {
-              option: "u64",
-            },
+            "name": "publicMintPrice",
+            "type": {
+              "option": "u64"
+            }
           },
           {
-            name: "mintCurrency",
-            type: {
-              option: "publicKey",
-            },
+            "name": "mintCurrency",
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
-            name: "mintFeeTreasury",
-            type: {
-              option: "publicKey",
-            },
+            "name": "mintFeeTreasury",
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
-            name: "privateMintEnd",
-            type: {
-              option: "i64",
-            },
+            "name": "privateMintEnd",
+            "type": {
+              "option": "i64"
+            }
           },
           {
-            name: "creators",
-            type: {
-              vec: {
-                defined: "DeruggerCreator",
-              },
-            },
+            "name": "creators",
+            "type": {
+              "vec": {
+                "defined": "DeruggerCreator"
+              }
+            }
           },
           {
-            name: "candyMachineKey",
-            type: "publicKey",
+            "name": "walletLimit",
+            "type": {
+              "option": "u8"
+            }
           },
           {
-            name: "candyMachineCreator",
-            type: "publicKey",
+            "name": "candyMachineKey",
+            "type": "publicKey"
           },
           {
-            name: "sellerFeeBps",
-            type: "u32",
+            "name": "candyMachineCreator",
+            "type": "publicKey"
           },
-        ],
-      },
+          {
+            "name": "sellerFeeBps",
+            "type": "u32"
+          }
+        ]
+      }
     },
     {
-      name: "voteRecord",
-      type: {
-        kind: "struct",
-        fields: [
+      "name": "voteRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "voted",
-            type: "bool",
-          },
-        ],
-      },
-    },
+            "name": "voted",
+            "type": "bool"
+          }
+        ]
+      }
+    }
   ],
-  types: [
+  "types": [
     {
-      name: "ActiveRequest",
-      type: {
-        kind: "struct",
-        fields: [
+      "name": "ActiveRequest",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "request",
-            type: "publicKey",
+            "name": "request",
+            "type": "publicKey"
           },
           {
-            name: "voteCount",
-            type: "i32",
+            "name": "voteCount",
+            "type": "i32"
           },
           {
-            name: "winning",
-            type: "bool",
-          },
-        ],
-      },
+            "name": "winning",
+            "type": "bool"
+          }
+        ]
+      }
     },
     {
-      name: "DeruggerCreator",
-      type: {
-        kind: "struct",
-        fields: [
+      "name": "DeruggerCreator",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "address",
-            type: "publicKey",
+            "name": "address",
+            "type": "publicKey"
           },
           {
-            name: "share",
-            type: "u8",
-          },
-        ],
-      },
+            "name": "share",
+            "type": "u8"
+          }
+        ]
+      }
     },
     {
-      name: "UtilityData",
-      type: {
-        kind: "struct",
-        fields: [
+      "name": "UtilityData",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "title",
-            type: "string",
+            "name": "title",
+            "type": "string"
           },
           {
-            name: "description",
-            type: "string",
+            "name": "description",
+            "type": "string"
           },
           {
-            name: "isActive",
-            type: "bool",
-          },
-        ],
-      },
+            "name": "isActive",
+            "type": "bool"
+          }
+        ]
+      }
     },
     {
-      name: "UpdateUtilityDataDto",
-      type: {
-        kind: "struct",
-        fields: [
+      "name": "UpdateUtilityDataDto",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            name: "title",
-            type: "string",
+            "name": "title",
+            "type": "string"
           },
           {
-            name: "description",
-            type: "string",
+            "name": "description",
+            "type": "string"
           },
           {
-            name: "action",
-            type: {
-              defined: "Action",
-            },
-          },
-        ],
-      },
+            "name": "action",
+            "type": {
+              "defined": "Action"
+            }
+          }
+        ]
+      }
     },
     {
-      name: "DerugStatus",
-      type: {
-        kind: "enum",
-        variants: [
+      "name": "DerugStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
           {
-            name: "Initialized",
+            "name": "Initialized"
           },
           {
-            name: "Voting",
+            "name": "Voting"
           },
           {
-            name: "Succeeded",
+            "name": "Succeeded"
           },
           {
-            name: "UploadingMetadata",
+            "name": "UploadingMetadata"
           },
           {
-            name: "Reminting",
+            "name": "Reminting"
           },
           {
-            name: "PublicMint",
+            "name": "PublicMint"
           },
           {
-            name: "Completed",
-          },
-        ],
-      },
+            "name": "Completed"
+          }
+        ]
+      }
     },
     {
-      name: "RequestStatus",
-      type: {
-        kind: "enum",
-        variants: [
+      "name": "RequestStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
           {
-            name: "Initialized",
+            "name": "Initialized"
           },
           {
-            name: "Voting",
+            "name": "Voting"
           },
           {
-            name: "Succeeded",
+            "name": "Succeeded"
           },
           {
-            name: "UploadingMetadata",
+            "name": "UploadingMetadata"
           },
           {
-            name: "Reminting",
+            "name": "Reminting"
           },
           {
-            name: "PublicMint",
+            "name": "PublicMint"
           },
           {
-            name: "Completed",
-          },
-        ],
-      },
+            "name": "Completed"
+          }
+        ]
+      }
     },
     {
-      name: "Action",
-      type: {
-        kind: "enum",
-        variants: [
+      "name": "Action",
+      "type": {
+        "kind": "enum",
+        "variants": [
           {
-            name: "Add",
+            "name": "Add"
           },
           {
-            name: "Remove",
-          },
-        ],
-      },
-    },
+            "name": "Remove"
+          }
+        ]
+      }
+    }
   ],
-  events: [
+  "events": [
     {
-      name: "NftRemintedEvent",
-      fields: [
+      "name": "NftRemintedEvent",
+      "fields": [
         {
-          name: "reminter",
-          type: "publicKey",
-          index: false,
+          "name": "reminter",
+          "type": "publicKey",
+          "index": false
         },
         {
-          name: "newNftMint",
-          type: "publicKey",
-          index: false,
+          "name": "newNftMint",
+          "type": "publicKey",
+          "index": false
         },
         {
-          name: "newNftMetadata",
-          type: "publicKey",
-          index: false,
+          "name": "newNftMetadata",
+          "type": "publicKey",
+          "index": false
         },
         {
-          name: "oldNftMint",
-          type: "publicKey",
-          index: false,
+          "name": "oldNftMint",
+          "type": "publicKey",
+          "index": false
         },
         {
-          name: "oldNftMetadata",
-          type: "publicKey",
-          index: false,
-        },
-      ],
+          "name": "oldNftMetadata",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
     },
     {
-      name: "PrivateMintStarted",
-      fields: [
+      "name": "PrivateMintStarted",
+      "fields": [
         {
-          name: "derugData",
-          type: "publicKey",
-          index: false,
+          "name": "derugData",
+          "type": "publicKey",
+          "index": false
         },
         {
-          name: "remintConfig",
-          type: "publicKey",
-          index: false,
-        },
-      ],
-    },
+          "name": "remintConfig",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    }
   ],
-  errors: [
+  "errors": [
     {
-      code: 6000,
-      name: "RuggerSigner",
-      msg: "This wallet rugged the collection",
+      "code": 6000,
+      "name": "RuggerSigner",
+      "msg": "This wallet rugged the collection"
     },
     {
-      code: 6001,
-      name: "InvalidVoteRecord",
-      msg: "Vote record seeds aren't correct",
+      "code": 6001,
+      "name": "InvalidVoteRecord",
+      "msg": "Vote record seeds aren't correct"
     },
     {
-      code: 6002,
-      name: "InvalidTokenAccountMint",
-      msg: "Token account is not correct for the mint",
+      "code": 6002,
+      "name": "InvalidTokenAccountMint",
+      "msg": "Token account is not correct for the mint"
     },
     {
-      code: 6003,
-      name: "InvalidMetadata",
-      msg: "Metadata is not correct for the mint",
+      "code": 6003,
+      "name": "InvalidMetadata",
+      "msg": "Metadata is not correct for the mint"
     },
     {
-      code: 6004,
-      name: "EmptyTokenAccount",
-      msg: "Token account doesn't possess the nft",
+      "code": 6004,
+      "name": "EmptyTokenAccount",
+      "msg": "Token account doesn't possess the nft"
     },
     {
-      code: 6005,
-      name: "WrongOwner",
-      msg: "Payer doesn't own the token account",
+      "code": 6005,
+      "name": "WrongOwner",
+      "msg": "Payer doesn't own the token account"
     },
     {
-      code: 6006,
-      name: "AlereadyVoted",
-      msg: "User alredy voted with given nft",
+      "code": 6006,
+      "name": "AlereadyVoted",
+      "msg": "User alredy voted with given nft"
     },
     {
-      code: 6007,
-      name: "WrongDerugger",
-      msg: "Signer isn't the required derugger",
+      "code": 6007,
+      "name": "WrongDerugger",
+      "msg": "Signer isn't the required derugger"
     },
     {
-      code: 6008,
-      name: "InvalidWinningRequest",
-      msg: "Request isn't the winning one",
+      "code": 6008,
+      "name": "InvalidWinningRequest",
+      "msg": "Request isn't the winning one"
     },
     {
-      code: 6009,
-      name: "TimeIsOut",
-      msg: "You cannot make requests anymore",
+      "code": 6009,
+      "name": "TimeIsOut",
+      "msg": "You cannot make requests anymore"
     },
     {
-      code: 6010,
-      name: "NoWinner",
-      msg: "There is no winner yet",
+      "code": 6010,
+      "name": "NoWinner",
+      "msg": "There is no winner yet"
     },
     {
-      code: 6011,
-      name: "CandyMachineUsed",
-      msg: "This is not a new candy machine",
+      "code": 6011,
+      "name": "CandyMachineUsed",
+      "msg": "This is not a new candy machine"
     },
     {
-      code: 6012,
-      name: "InvalidStatus",
-      msg: "Derug isn't in the required state",
+      "code": 6012,
+      "name": "InvalidStatus",
+      "msg": "Derug isn't in the required state"
     },
     {
-      code: 6013,
-      name: "WrongCollection",
-      msg: "Wrong collection sent ",
+      "code": 6013,
+      "name": "WrongCollection",
+      "msg": "Wrong collection sent "
     },
     {
-      code: 6014,
-      name: "InvalidSellerFeeBps",
-      msg: "Invalid seller fee basis points amount",
+      "code": 6014,
+      "name": "InvalidSellerFeeBps",
+      "msg": "Invalid seller fee basis points amount"
     },
     {
-      code: 6015,
-      name: "InvalidMintCurrency",
-      msg: "Invalid mint currency",
+      "code": 6015,
+      "name": "InvalidMintCurrency",
+      "msg": "Invalid mint currency"
     },
     {
-      code: 6016,
-      name: "InvalidTokenOwner",
-      msg: "Invalid token owner",
+      "code": 6016,
+      "name": "InvalidTokenOwner",
+      "msg": "Invalid token owner"
     },
     {
-      code: 6017,
-      name: "TooManyCreators",
-      msg: "Too many creators",
+      "code": 6017,
+      "name": "TooManyCreators",
+      "msg": "Too many creators"
     },
     {
-      code: 6018,
-      name: "PrivateMintEnded",
-      msg: "Private mint ended",
-    },
-  ],
+      "code": 6018,
+      "name": "PrivateMintEnded",
+      "msg": "Private mint ended"
+    }
+  ]
 };
