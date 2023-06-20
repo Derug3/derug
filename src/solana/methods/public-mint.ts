@@ -20,12 +20,7 @@ import {
   VersionedTransaction,
 } from "@solana/web3.js";
 import toast from "react-hot-toast";
-import {
-  getCandyMachine,
-  getNonMinted,
-  getUserMints,
-  saveUserMint,
-} from "../../api/public-mint.api";
+import { getCandyMachine, getNonMinted } from "../../api/public-mint.api";
 import {
   ICollectionDerugData,
   IRequest,
@@ -47,7 +42,6 @@ import {
 } from "../../common/helpers";
 import { RPC_CONNECTION } from "../../utilities/utilities";
 import { sendTransaction, sendVersionedTx } from "../sendTransaction";
-import { PLATFORM_FEE } from "../../common/constants";
 
 dayjs.extend(utc);
 
@@ -83,10 +77,7 @@ export const initCandyMachine = async (
       parseKeyArray(candyMachineData.candyMachineSecretKey)
     );
 
-    if (
-      remintConfigAccount.publicMintPrice === undefined ||
-      remintConfigAccount.publicMintPrice === null
-    ) {
+    if (!remintConfigAccount.publicMintPrice) {
       toast.error("You did not select public mint!");
       return;
     }
@@ -217,33 +208,12 @@ export const mintNftFromCandyMachine = async (
       address: remintConfig.candyMachine,
     });
 
-    if (remintConfig.walletLimit) {
-      const userMintedCount = await getUserMints(
-        wallet.publicKey.toString(),
-        remintConfig.candyMachine.toString()
-      );
-
-      if (
-        userMintedCount &&
-        userMintedCount.mintedCount === remintConfig.walletLimit
-      ) {
-        throw new Error("Failed to mint. Reached wallet limit!");
-      }
-    }
-
     const minted = await metaplex.candyMachinesV2().mint({
       candyMachine,
     });
 
-    await saveUserMint(
-      wallet.publicKey.toString(),
-      remintConfig.candyMachine.toString()
-    );
-
     return minted.nft;
   } catch (error: any) {
-    console.log(error);
-
     const parsedError = JSON.parse(JSON.stringify(error)).cause;
     if (parsedError.logs.find((l: any) => l.includes("NotEnoughToken"))) {
       throw new Error(" Not enough tokens to pay for this minting.");

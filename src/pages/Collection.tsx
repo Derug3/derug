@@ -105,7 +105,6 @@ export const Collections: FC = () => {
     }
   };
 
-
   useEffect(() => {
     if (basicCollectionData) void getChainCollectionDetails();
   }, [basicCollectionData]);
@@ -174,37 +173,40 @@ export const Collections: FC = () => {
   }, [collectionDerug, derugRequests]);
 
   const privateMintStart = useMemo(() => {
-    return collectionDerug &&
-      (hasWinning ||
-        collectionDerug.addedRequests.find((ar) => ar.winning))
-  }, [collectionDerug, derugRequests])
-
+    return (
+      collectionDerug &&
+      (hasWinning || collectionDerug.addedRequests.find((ar) => ar.winning))
+    );
+  }, [collectionDerug, derugRequests]);
 
   const derugInProgress = useMemo(() => {
-    return (collectionDerug && collectionDerug.status === DerugStatus.Initialized ||
-      collectionDerug && collectionDerug.status === DerugStatus.Voting ||
-      collectionDerug && collectionDerug.status === DerugStatus.UploadingMetadata) &&
+    return (
+      ((collectionDerug &&
+        collectionDerug.status === DerugStatus.Initialized) ||
+        (collectionDerug && collectionDerug.status === DerugStatus.Voting) ||
+        (collectionDerug &&
+          collectionDerug.status === DerugStatus.UploadingMetadata)) &&
       showDerugRequests &&
-      !hasWinning;
-  }, [collectionDerug, derugRequests])
+      !hasWinning
+    );
+  }, [collectionDerug, derugRequests]);
 
   const privateMintEnd = useMemo(() => {
-    return remintConfig &&
+    return (
+      remintConfig &&
       (dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) ||
         (remintConfig.mintPrice !== undefined &&
           !remintConfig.privateMintEnd)) &&
       candyMachine &&
-      candyMachine.itemsLoaded.toNumber() > 0;
-  }, [remintConfig, candyMachine])
-
+      candyMachine.itemsLoaded.toNumber() > 0
+    );
+  }, [remintConfig, candyMachine]);
 
   const getWinningRequest = useMemo(() => {
     return derugRequests?.sort((a, b) => a.voteCount - b.voteCount)[
       derugRequests.length - 1
     ];
   }, [derugRequests]);
-
-
 
   return (
     <CollectionContext.Provider
@@ -317,7 +319,8 @@ export const Collections: FC = () => {
               {privateMintEnd ? (
                 <PublicMint />
               ) : (
-                privateMintStart && derugRequests && (
+                privateMintStart &&
+                derugRequests && (
                   <Remint getWinningRequest={getWinningRequest} />
                 )
               )}
