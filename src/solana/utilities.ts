@@ -2,6 +2,8 @@ import { bundlrStorage, Metaplex } from "@metaplex-foundation/js";
 import { AnchorProvider, Program } from "@project-serum/anchor";
 import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet";
 import { Keypair, PublicKey } from "@solana/web3.js";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { mplCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
 import { DerugProgram, IDL } from "../solana/idl/derug_program";
 import { DERUG_PROGRAM_ID, RPC_CONNECTION } from "../utilities/utilities";
 export const derugProgramFactory = () => {
@@ -20,6 +22,11 @@ export const feeWallet = new PublicKey(
 
 export const metadataUploaderWallet = new PublicKey(
   "KQ1jcFYvnH9DNUzBfVbquRohP9uZ6C7DVJJDyqiGB4P"
+);
+
+//TODO:load from env
+export const umi = createUmi("https://api.devnet.solana.com").use(
+  mplCandyMachine()
 );
 
 //TODO mainnet: load this from env file

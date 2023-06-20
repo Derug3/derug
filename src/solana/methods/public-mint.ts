@@ -1,37 +1,54 @@
 import {
   IdentityClient,
-  keypairIdentity,
-  RpcClient,
-  sol,
   toBigNumber,
   toDateTime,
   token,
   walletAdapterIdentity,
   WalletAdapterIdentityDriver,
 } from "@metaplex-foundation/js";
+import {
+  addConfigLines,
+  AllowList,
+  create,
+  DefaultGuardSetArgs,
+  fetchCandyMachine,
+  getMerkleRoot,
+  GuardGroupArgs,
+  MintLimit,
+} from "@metaplex-foundation/mpl-candy-machine";
+
+import {
+  createSignerFromKeypair,
+  percentAmount,
+  publicKey,
+  createNoopSigner,
+  TransactionBuilder,
+  sol,
+} from "@metaplex-foundation/umi";
+
 import { AnchorWallet, WalletContextState } from "@solana/wallet-adapter-react";
 import {
   Keypair,
   LAMPORTS_PER_SOL,
   PublicKey,
-  SystemProgram,
   Transaction,
-  TransactionMessage,
-  VersionedTransaction,
 } from "@solana/web3.js";
 import toast from "react-hot-toast";
-import { getCandyMachine, getNonMinted } from "../../api/public-mint.api";
+import {
+  getCandyMachine,
+  getNonMinted,
+  getWlConfig,
+} from "../../api/public-mint.api";
 import {
   ICollectionDerugData,
   IRequest,
 } from "../../interface/collections.interface";
 import {
   CandyMachineDto,
-  IDerugInstruction,
   IRemintConfig,
 } from "../../interface/derug.interface";
 import { remintConfigSeed } from "../seeds";
-import { derugProgramFactory, metaplex } from "../utilities";
+import { derugProgramFactory, metaplex, umi } from "../utilities";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { chunk } from "lodash";
@@ -42,6 +59,17 @@ import {
 } from "../../common/helpers";
 import { RPC_CONNECTION } from "../../utilities/utilities";
 import { sendTransaction, sendVersionedTx } from "../sendTransaction";
+import {
+  PROGRAM_ID,
+  TokenStandard,
+} from "@metaplex-foundation/mpl-token-metadata";
+import { WlType } from "../../enums/collections.enums";
+import {
+  none,
+  OptionOrNullable,
+  signerIdentity,
+  some,
+} from "@metaplex-foundation/umi";
 
 dayjs.extend(utc);
 
@@ -92,32 +120,113 @@ export const initCandyMachine = async (
         .toDate();
     }
 
-    metaplex.use(walletAdapterIdentity(wallet));
-    await metaplex.candyMachinesV2().create({
-      price: remintConfigAccount.mintCurrency
-        ? token(remintConfigAccount.publicMintPrice?.toNumber())
-        : sol(
-            remintConfigAccount.publicMintPrice?.toNumber() / LAMPORTS_PER_SOL
-          ),
-      itemsAvailable: toBigNumber(nonMintedNfts.length),
-      sellerFeeBasisPoints: remintConfigAccount.sellerFeeBps,
-      authority: wallet.publicKey!,
-      candyMachine,
-      tokenMint: remintConfigAccount.mintCurrency,
-      maxEditionSupply: toBigNumber(0),
-      goLiveDate: toDateTime(privateMintEnd),
-      retainAuthority: true,
-      isMutable: true,
-      creators: remintConfigAccount.creators.map((c) => {
-        return {
-          address: c.address,
-          share: c.share,
-          verified: true,
-        };
-      }),
-      symbol: remintConfigAccount.newSymbol,
-      wallet: remintConfigAccount.mintFeeTreasury ?? undefined,
+    const wlConfig = await getWlConfig();
+
+    let allowListConfig: OptionOrNullable<AllowList> = none();
+
+    if (wlConfig && wlConfig.type === WlType.AllowList) {
+      const merkleRoot = getMerkleRoot(wlConfig.wallets!);
+
+      allowListConfig = some({
+        merkleRoot,
+      });
+    }
+
+    //TODO:handle mint limit per wallet
+    let mintLimit: OptionOrNullable<MintLimit> = none();
+
+    let groups: GuardGroupArgs<DefaultGuardSetArgs>[] | undefined = [
+      {
+        label: "all",
+        guards: {
+          solPayment: remintConfigAccount.mintCurrency
+            ? none()
+            : some({
+                destination: publicKey(remintConfigAccount.authority),
+                lamports: sol(
+                  remintConfigAccount.publicMintPrice.toNumber() /
+                    LAMPORTS_PER_SOL
+                ),
+              }),
+          tokenPayment: remintConfigAccount.mintCurrency
+            ? some({
+                amount: Number(remintConfigAccount.mintPrice),
+                mint: publicKey(remintConfigAccount.mintCurrency),
+                destinationAta: publicKey(remintConfigAccount.mintFeeTreasury!),
+              })
+            : none(),
+          startDate:
+            wlConfig && wlConfig.duration
+              ? some({ date: dayjs().add(wlConfig.duration, "days").toDate() })
+              : none(),
+        },
+      },
+    ];
+
+    if (wlConfig && wlConfig.type === WlType.AllowList && wlConfig.duration) {
+      groups.unshift({
+        label: "wl",
+        guards: {
+          allowList: allowListConfig,
+          endDate: some({
+            date: dayjs().add(wlConfig.duration, "days").toDate(),
+          }),
+        },
+      });
+    }
+
+    const cmSigner = createSignerFromKeypair(umi, {
+      publicKey: publicKey(candyMachine.publicKey),
+      secretKey: candyMachine.secretKey,
     });
+
+    const createResponse = await create(umi, {
+      candyMachine: cmSigner,
+      itemsAvailable: nonMintedNfts.length,
+      sellerFeeBasisPoints: percentAmount(
+        remintConfigAccount.sellerFeeBps / 100,
+        2
+      ),
+      creators: remintConfigAccount.creators.map((c) => ({
+        address: publicKey(c.address),
+        percentageShare: c.share,
+        verified: true,
+      })),
+      groups,
+      authority: publicKey(remintConfigAccount.authority),
+      tokenStandard: TokenStandard.NonFungible,
+      isMutable: true,
+      symbol: remintConfigAccount.newSymbol,
+      tokenMetadataProgram: publicKey(PROGRAM_ID),
+      guards: {
+        allowList: allowListConfig,
+      },
+      collectionMint: publicKey(remintConfigAccount.collection),
+      collectionUpdateAuthority: createNoopSigner(
+        publicKey(remintConfigAccount.authority)
+      ),
+    });
+
+    await sendTransaction(
+      RPC_CONNECTION,
+      [
+        {
+          instructions: createResponse.getInstructions().map((ix) => ({
+            data: Buffer.from(ix.data),
+            programId: new PublicKey(ix.programId),
+            keys: ix.keys.map((key) => ({
+              isSigner: key.isSigner,
+              isWritable: key.isWritable,
+              pubkey: new PublicKey(key.pubkey),
+            })),
+          })),
+          pendingDescription: "Creating candy machine",
+          successDescription: "Candy machine successfully created",
+        },
+      ],
+      wallet
+    );
+
     return candyMachine.publicKey;
   } catch (error: any) {
     console.log(error);
@@ -149,35 +258,27 @@ export const storeCandyMachineItems = async (
       address: new PublicKey(candyMachineData.candyMachineKey),
     });
 
-    const transactions: Transaction[] = [];
     metaplex.use(walletAdapterIdentity(wallet));
 
-    let totalSum = 0;
+    const txBuilders: TransactionBuilder[] = [];
 
     for (const nonMintedChunk of chunkedNonMinted) {
-      metaplex.use(walletAdapterIdentity(wallet));
+      const candyMachine = await fetchCandyMachine(
+        umi,
+        publicKey(new PublicKey(candyMachineData.candyMachineKey))
+      );
 
-      const secondTx = metaplex
-        .candyMachinesV2()
-        .builders()
-        .insertItems({
-          candyMachine: {
-            ...candyMachineAccount,
-            itemsLoaded: toBigNumber(totalSum),
-          },
-          items: nonMintedChunk.map((nm, index) => {
-            return {
-              name: nm.newName,
-              uri: nm.newUri,
-            };
-          }),
-        })
-        .toTransaction(await RPC_CONNECTION.getLatestBlockhash());
-
-      totalSum += nonMintedChunk.length;
-
-      transactions.push(secondTx);
+      const insertResponse = addConfigLines(umi, {
+        candyMachine: publicKey(candyMachineAccount.address),
+        configLines: nonMintedChunk.map((nmc) => ({
+          name: nmc.name,
+          uri: nmc.uri,
+        })),
+        index: candyMachine.itemsLoaded,
+      });
     }
+
+    const transactions: Transaction[] = [];
 
     const idClient = new IdentityClient();
     idClient.setDriver(new WalletAdapterIdentityDriver(wallet));

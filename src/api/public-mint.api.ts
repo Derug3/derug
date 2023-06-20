@@ -1,4 +1,6 @@
 import { Keypair } from "@solana/web3.js";
+import { WlType } from "../enums/collections.enums";
+import { WlSettingsDto } from "../interface/collections.interface";
 import {
   CandyMachineDto,
   INonMinted,
@@ -31,4 +33,12 @@ export const storeAllNfts = async (
 
 export const getPrivateMintNft = (metadata: string): Promise<INonMinted> => {
   return get(`${PUBLIC_REMINT}${METADATA}/${metadata}`);
+};
+
+export const getWlConfig = async (): Promise<WlSettingsDto> => {
+  return {
+    derugRequest: "",
+    type: WlType.AllowList,
+    wallets: [],
+  };
 };

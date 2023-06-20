@@ -1,5 +1,5 @@
 import { PublicKey } from "@solana/web3.js";
-import { DerugStatus, ListingSource } from "../enums/collections.enums";
+import { DerugStatus, ListingSource, WlType } from "../enums/collections.enums";
 import { ICreator, ISplTokenData } from "./derug.interface";
 import { IUserData } from "./user.interface";
 
@@ -15,7 +15,7 @@ export interface ICollectionData {
   isFlagged: boolean;
   type?: string[];
   numMints?: number;
-  categories?: any[]
+  categories?: any[];
 }
 
 export interface IRequest {
@@ -145,4 +145,11 @@ export interface ICollectionVolume {
   floor1h: number | null;
   floor24h: number | null;
   floor7d: number | null;
+}
+
+export interface WlSettingsDto {
+  type: WlType;
+  derugRequest: string;
+  wallets?: string[];
+  duration?: number;
 }

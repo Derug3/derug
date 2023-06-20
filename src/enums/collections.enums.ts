@@ -34,3 +34,8 @@ export enum CollectionVolumeFilter {
   NumMints = "numMints",
   FloorPrice = "floorPrice",
 }
+
+export enum WlType {
+  Token,
+  AllowList,
+}
