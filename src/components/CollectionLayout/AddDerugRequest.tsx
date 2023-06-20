@@ -96,8 +96,6 @@ export const AddDerugRequst: FC<{
   const methods = useForm<DerugForm>();
 
   const submitRequest = async (data: any) => {
-    // todo remove before mainnet
-    const randomNumber = 3;
     try {
       if (wallet && chainCollectionData && utility && collectionStats && data) {
         const requestAddress = await createOrUpdateDerugRequest(
