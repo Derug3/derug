@@ -82,19 +82,12 @@ export const HeaderTabs: FC<{
                   className="rounded-lg"
                   onClick={() => openDerugModal(true)}
                 >
-                  <span className="text-sm uppercase rounded-lg">Add derug request</span>
+                  <span className="text-sm uppercase rounded-lg">
+                    Add derug request
+                  </span>
                 </Button>
               )}
-            <Button
-              sx={{
-                padding: "1.25em 3.25em",
-                color: "rgba(9, 194, 246)",
-              }}
-              className="rounded-lg"
-              onClick={() => openDerugModal(true)}
-            >
-              <span className="text-sm uppercase rounded-lg">Add derug request</span>
-            </Button>
+
             <TabNav
               aria-label="Main"
               className="flex justify-end w-fit border-none"
