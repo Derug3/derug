@@ -48,7 +48,7 @@ export const createOrUpdateDerugRequest = async (
   sellerFeeBps: number,
   newSymbol: string,
   newName: string,
-  walletLimit: number,
+  walletLimit: number | null,
   creators?: ICreator[],
   publicMintPrice?: number,
   privateMintDuration?: number,
@@ -104,7 +104,7 @@ export const createOrUpdateDerugRequest = async (
         return { ...ut, action: mapUtilityAction(ut.action) };
       }),
       sellerFeeBps,
-      publicMintPrice ? new BN(publicMintPrice) : null,
+      new BN(publicMintPrice ?? 0),
       privateMintDuration ? new BN(privateMintDuration) : null,
       newName,
       newSymbol,
@@ -153,8 +153,6 @@ export const getAllDerugRequest = async (
     const requests: IRequest[] = [];
 
     for (const derug of allRequestsForCollection) {
-      console.log(derug);
-
       requests.push({
         createdAt: derug.account.createdAt.toNumber(),
         derugger: derug.account.derugger,
@@ -163,6 +161,7 @@ export const getAllDerugRequest = async (
         address: derug.publicKey,
         newName: derug.account.newName,
         newSymbol: derug.account.newSymbol,
+        walletLimit: derug.account.walletLimit,
         mintCurrency: derug.account.mintCurrency,
         mintPrice: derug.account.mintPrice?.toNumber(),
         sellerFeeBps: derug.account.sellerFeeBps,
@@ -199,6 +198,7 @@ export const getSingleDerugRequest = async (
     newName: derugAccount.newName,
     newSymbol: derugAccount.newSymbol,
     mintCurrency: derugAccount.mintCurrency,
+    walletLimit: derugAccount.walletLimit,
     mintPrice: derugAccount.mintPrice?.toNumber(),
     sellerFeeBps: derugAccount.sellerFeeBps,
     privateMintDuration: derugAccount.privateMintDuration?.toNumber(),

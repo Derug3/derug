@@ -98,7 +98,6 @@ export const AddDerugRequst: FC<{
     // todo remove before mainnet
     const randomNumber = 3;
     try {
-      debugger;
       if (wallet && chainCollectionData && utility && collectionStats && data) {
         const requestAddress = await createOrUpdateDerugRequest(
           wallet,
@@ -116,7 +115,7 @@ export const AddDerugRequst: FC<{
           +sellerFee * 10,
           data.symbol,
           data.name,
-          randomNumber,
+          data.hasWalletLimit ? +data.limitPerWallet : null,
           creators.map((c) => {
             return {
               address: new PublicKey(c.address),
