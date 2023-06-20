@@ -105,6 +105,7 @@ export const Collections: FC = () => {
     }
   };
 
+
   useEffect(() => {
     if (basicCollectionData) void getChainCollectionDetails();
   }, [basicCollectionData]);
@@ -151,12 +152,6 @@ export const Collections: FC = () => {
     }
   };
 
-  const getWinningRequest = useMemo(() => {
-    return derugRequests?.sort((a, b) => a.voteCount - b.voteCount)[
-      derugRequests.length - 1
-    ];
-  }, [derugRequests]);
-
   const showDerugRequests = useMemo(() => {
     if (collectionDerug) {
       return !!!collectionDerug.winningRequest;
@@ -177,6 +172,39 @@ export const Collections: FC = () => {
       );
     else return false;
   }, [collectionDerug, derugRequests]);
+
+  const privateMintStart = useMemo(() => {
+    return collectionDerug &&
+      (hasWinning ||
+        collectionDerug.addedRequests.find((ar) => ar.winning))
+  }, [collectionDerug, derugRequests])
+
+
+  const derugInProgress = useMemo(() => {
+    return (collectionDerug && collectionDerug.status === DerugStatus.Initialized ||
+      collectionDerug && collectionDerug.status === DerugStatus.Voting ||
+      collectionDerug && collectionDerug.status === DerugStatus.UploadingMetadata) &&
+      showDerugRequests &&
+      !hasWinning;
+  }, [collectionDerug, derugRequests])
+
+  const privateMintEnd = useMemo(() => {
+    return remintConfig &&
+      (dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) ||
+        (remintConfig.mintPrice !== undefined &&
+          !remintConfig.privateMintEnd)) &&
+      candyMachine &&
+      candyMachine.itemsLoaded.toNumber() > 0;
+  }, [remintConfig, candyMachine])
+
+
+  const getWinningRequest = useMemo(() => {
+    return derugRequests?.sort((a, b) => a.voteCount - b.voteCount)[
+      derugRequests.length - 1
+    ];
+  }, [derugRequests]);
+
+
 
   return (
     <CollectionContext.Provider
@@ -282,26 +310,14 @@ export const Collections: FC = () => {
       </Box>
       {collectionDerug ? (
         <>
-          {(collectionDerug.status === DerugStatus.Initialized ||
-            collectionDerug.status === DerugStatus.Voting ||
-            collectionDerug.status === DerugStatus.UploadingMetadata) &&
-            showDerugRequests &&
-            !hasWinning ? (
+          {derugInProgress ? (
             <DerugRequest />
           ) : (
             <>
-              {remintConfig &&
-                (dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) ||
-                  (remintConfig.mintPrice !== undefined &&
-                    !remintConfig.privateMintEnd)) &&
-                candyMachine &&
-                candyMachine.itemsLoaded.toNumber() > 0 ? (
+              {privateMintEnd ? (
                 <PublicMint />
               ) : (
-                collectionDerug &&
-                (hasWinning ||
-                  collectionDerug.addedRequests.find((ar) => ar.winning)) &&
-                derugRequests && (
+                privateMintStart && derugRequests && (
                   <Remint getWinningRequest={getWinningRequest} />
                 )
               )}

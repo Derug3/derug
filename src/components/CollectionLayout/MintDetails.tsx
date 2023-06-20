@@ -32,11 +32,13 @@ export interface ITreasuryTokenAccInfo {
 const MintDetails: FC<{
   price?: number;
   setPrice?: (price: number) => void;
-  duration?: number;
-  setDuration?: (price: number) => void;
+  privateMintDuration?: number;
+  wlMintDuration?: number;
+  setPrivateMintDuration?: (price: number) => void;
+  setWlMintDuration?: (price: number) => void;
   handleMintChange: (mint: ITreasuryTokenAccInfo) => void;
   selectedMint?: ITreasuryTokenAccInfo;
-}> = ({ price, duration, setPrice, setDuration, handleMintChange, selectedMint }) => {
+}> = ({ price, privateMintDuration, wlMintDuration, setPrice, setPrivateMintDuration, setWlMintDuration, handleMintChange, selectedMint }) => {
   const [isPublicMint, setIsPublicMint] = useState<boolean>(true);
   const [searchLoading, toggleSearchLoading] = useState(false);
   const [searchValue, setSearchValue] = useState<string>();
@@ -44,7 +46,8 @@ const MintDetails: FC<{
     useState<ITreasuryTokenAccInfo[]>();
 
   const [limitPerWallet, setLimitPerWallet] = useState<number | null>(null);
-  const [hasLimitPerWallet, toggleHasLimitPerWallet] = useState(false);
+  const [hasLimitPerWalletPublic, toggleHasLimitPerWalletPublic] = useState(false);
+  const [hasLimitPerWalletWL, toggleHasLimitPerWalletWL] = useState(false);
   useEffect(() => {
     void getAllMintsInfo();
   }, []);
@@ -301,17 +304,14 @@ const MintDetails: FC<{
                     },
                   })}
                   type={"number"}
-                  placeholder="duration"
-                  value={duration}
+                  placeholder="duration in hours"
+                  value={privateMintDuration}
                   sx={{ width: "100%" }}
                   onChange={(e) => {
-                    setDuration && setDuration(+e.target.value);
+                    setPrivateMintDuration && setPrivateMintDuration(+e.target.value);
                     e.target.value !== "" && clearErrors("privateMintEnd");
                   }}
                 />
-                <Text fontSize={1} color="white">
-                  hours
-                </Text>
               </div>
               {errors.privateMintEnd && (
                 <p className="text-red-500">{errors.privateMintEnd.message}</p>
@@ -321,7 +321,71 @@ const MintDetails: FC<{
         )}
       </Box>
       <Box className="flex justify-between items-center ">
-        <Box className="flex gap-2 items-center w-full">
+        <Box className="flex gap-2 items-center w-100">
+          <Text fontSize={2} color="white">
+            {" "}
+            Limit per Wallet (WL Mint)
+          </Text>
+          <ToggleSwitch
+            aria-labelledby="switchLabel"
+            size="small"
+            aria-describedby="switchCaption"
+            defaultChecked={hasLimitPerWalletWL}
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+            onChange={(e) => {
+              toggleHasLimitPerWalletWL(!hasLimitPerWalletWL);
+              setValue("hasWalletLimit", !hasLimitPerWalletWL);
+            }}
+          />
+        </Box>
+        <Box className="flex items-center gap-3 ">
+          {" "}
+          {hasLimitPerWalletWL && (
+            <>
+              <TextInput
+                type={"number"}
+                min={0}
+                step="0"
+                placeholder="nfts"
+                sx={{ borderRadius: 0 }}
+                {...register("limitPerWallet", {
+                  min: {
+                    value: 0,
+                    message: "Minimum  is 0",
+                  },
+                })}
+              />
+              <div className="flex flex-col items-start gap-4 w-1/2">
+                <div className="flex justify-end items-center gap-3 w-full">
+                  <TextInput
+                    {...register("wlMintDuration", {
+                      required: {
+                        value: isPublicMint,
+                        message: "Private mint duration can't be empty",
+                      },
+                    })}
+                    type={"number"}
+                    placeholder="duration in hours"
+                    value={wlMintDuration}
+                    sx={{ width: "100%" }}
+                    onChange={(e) => {
+                      setWlMintDuration && setWlMintDuration(+e.target.value);
+                      e.target.value !== "" && clearErrors("wlMintDuration");
+                    }}
+                  />
+                </div>
+                {errors.privateMintEnd && (
+                  <p className="text-red-500">{errors.privateMintEnd.message}</p>
+                )}
+              </div>
+            </>
+          )}
+        </Box>
+      </Box>
+      <Box className="flex justify-between items-center ">
+        <Box className="flex gap-2 items-center w-100">
           <Text fontSize={2} color="white">
             {" "}
             Limit per Wallet (Public Mint)
@@ -330,37 +394,36 @@ const MintDetails: FC<{
             aria-labelledby="switchLabel"
             size="small"
             aria-describedby="switchCaption"
-            defaultChecked={hasLimitPerWallet}
+            defaultChecked={hasLimitPerWalletPublic}
             onClick={(e) => {
               e.preventDefault();
             }}
             onChange={(e) => {
-              toggleHasLimitPerWallet(!hasLimitPerWallet);
-              setValue("hasWalletLimit", !hasLimitPerWallet);
+              toggleHasLimitPerWalletPublic(!hasLimitPerWalletPublic);
+              setValue("hasWalletLimit", !hasLimitPerWalletPublic);
             }}
           />
         </Box>
         <Box className="flex items-center gap-3 ">
           {" "}
-          {hasLimitPerWallet && (
-            <>
-              <TextInput
-                type={"number"}
-                min={0}
-                step="0"
-                sx={{ borderRadius: 0, width: "50%" }}
-                {...register("limitPerWallet", {
-                  min: {
-                    value: 0,
-                    message: "Minimum  is 0",
-                  },
-                })}
-              />
-              <Text>nfts</Text>
-            </>
+          {hasLimitPerWalletPublic && (
+            <TextInput
+              type={"number"}
+              min={0}
+              step="0"
+              placeholder="amount of nfts"
+              sx={{ borderRadius: 0 }}
+              {...register("limitPerWallet", {
+                min: {
+                  value: 0,
+                  message: "Minimum  is 0",
+                },
+              })}
+            />
           )}
         </Box>
       </Box>
+
     </div>
   );
 };

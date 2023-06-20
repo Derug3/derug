@@ -1,0 +1,11 @@
+export const whitelisted = [
+    '6smu36j5E6AfW4NM2RQPpDbdzEpp9tKZvg7ZTE2KKgcL',
+    '6smu36j5E6AfW4NM2RQPpDbdzEpp9tKZvg7ZTE2KKgc3',
+    '6smu36j5E6AfW4NM2RQPpDbdzEpp9tKZvg7ZTE2KKgc4',
+    '6smu36j5E6AfW4NM2RQPpDbdzEpp9tKZvg7ZTE2KKgc5',
+    '6smu36j5E6AfW4NM2RQPpDbdzEpp9tKZvg7ZTE2KKgc6',
+    '6smu36j5E6AfW4NM2RQPpDbdzEpp9tKZvg7ZTE2KKgc7',
+    '6smu36j5E6AfW4NM2RQPpDbdzEpp9tKZvg7ZTE2KKgc8',
+    '6smu36j5E6AfW4NM2RQPpDbdzEpp9tKZvg7ZTE2KKgc9',
+    '6smu36j5E6AfW4NM2RQPpDbdzEpp9tKZvg7ZTE2KKgca',
+]

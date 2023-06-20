@@ -55,7 +55,8 @@ export const AddDerugRequst: FC<{
   const [symbol, setSymbol] = useState<string>();
   const [newName, setNewName] = useState<string>();
   const [price, setPrice] = useState<number>();
-  const [duration, setDuration] = useState<number>();
+  const [privateMintDuration, setPrivateMintDuration] = useState<number>();
+  const [wlMintDuration, setWlMintDuration] = useState<number>();
   const [selectedMint, setSelectedMint] = useState<ITreasuryTokenAccInfo>();
 
   const {
@@ -411,8 +412,10 @@ export const AddDerugRequst: FC<{
                   price={price}
                   setPrice={setPrice}
                   handleMintChange={(e) => setSelectedMint(e)}
-                  duration={duration}
-                  setDuration={setDuration}
+                  privateMintDuration={privateMintDuration}
+                  wlMintDuration={wlMintDuration}
+                  setPrivateMintDuration={setPrivateMintDuration}
+                  setWlMintDuration={setWlMintDuration}
                 />
               </Box>
               <Box
