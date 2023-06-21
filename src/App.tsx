@@ -9,7 +9,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 function App() {
   return (
-    <div className="App flex h-full flex-col justify-between" style={{ backgroundColor: "#151c26" }}>
+    <div className="App flex h-full flex-col justify-between">
       <ApolloProvider client={gqlClient}>
         <Toaster position="bottom-right" toastOptions={{
           className: '',

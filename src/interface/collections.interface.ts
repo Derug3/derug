@@ -15,7 +15,7 @@ export interface ICollectionData {
   isFlagged: boolean;
   type?: string[];
   numMints?: number;
-  categories?: any[]
+  categories?: any[];
 }
 
 export interface IRequest {
@@ -33,6 +33,7 @@ export interface IRequest {
   newName: string;
   utility: IUtility[];
   splToken?: ISplTokenData;
+  walletLimit: number | null;
   userData?: IUserData;
 }
 export interface IUtility {
@@ -145,4 +146,10 @@ export interface ICollectionVolume {
   floor1h: number | null;
   floor24h: number | null;
   floor7d: number | null;
+}
+
+export interface UserMint {
+  userPubkey: string;
+  candyMachine: string;
+  mintedCount: number;
 }

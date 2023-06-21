@@ -115,7 +115,7 @@ export const ActiveListings: FC<{
             overflowY: "scroll",
           }}
         >
-          {activeListings.map((cd) => {
+          {activeListings?.map((cd) => {
             return (
               <ActiveListingItem
                 derugData={cd.derug}

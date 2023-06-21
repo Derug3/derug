@@ -30,6 +30,7 @@ export const Remint: FC<{
   const [loading, toggleLoading] = useState(true);
 
   const [nonMintedNfts, setNonMintedNfts] = useState<INonMinted[]>([]);
+  const [hasError, toggleHasError] = useState(false);
 
   const [isReminting, toggleIsReminting] = useState(false);
 
@@ -54,7 +55,7 @@ export const Remint: FC<{
         setNonMintedNfts(
           await getNonMinted(collectionDerug?.address.toString())
         );
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const getCollectionNfts = async () => {
@@ -132,9 +133,10 @@ export const Remint: FC<{
           collectionNfts?.filter((nft) => !nft.remintingStatus)
         );
       }
+      toggleHasError(false);
     } catch (error) {
       console.log(error);
-
+      toggleHasError(true);
       setCollectionNfts(
         collectionNfts?.map((cnft) => {
           if (cnft.remintingStatus) {
@@ -175,7 +177,8 @@ export const Remint: FC<{
           <>
             {collectionDerug &&
               collectionDerug.status === DerugStatus.Reminting &&
-              dayjs(remintConfig?.privateMintEnd).isAfter(dayjs()) && (
+              (dayjs(remintConfig?.privateMintEnd).isAfter(dayjs()) ||
+                hasError) && (
                 <Box className="flex flex-col items-center gap-10 w-full mt-10">
                   {!loading &&
                     collectionNfts &&

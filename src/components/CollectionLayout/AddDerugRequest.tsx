@@ -55,7 +55,8 @@ export const AddDerugRequst: FC<{
   const [symbol, setSymbol] = useState<string>();
   const [newName, setNewName] = useState<string>();
   const [price, setPrice] = useState<number>();
-  const [duration, setDuration] = useState<number>();
+  const [privateMintDuration, setPrivateMintDuration] = useState<number>();
+  const [wlMintDuration, setWlMintDuration] = useState<number>();
   const [selectedMint, setSelectedMint] = useState<ITreasuryTokenAccInfo>();
 
   const {
@@ -96,7 +97,6 @@ export const AddDerugRequst: FC<{
 
   const submitRequest = async (data: any) => {
     try {
-      debugger;
       if (wallet && chainCollectionData && utility && collectionStats && data) {
         const requestAddress = await createOrUpdateDerugRequest(
           wallet,
@@ -114,6 +114,7 @@ export const AddDerugRequst: FC<{
           +sellerFee * 10,
           data.symbol,
           data.name,
+          data.hasWalletLimit ? +data.limitPerWallet : null,
           creators.map((c) => {
             return {
               address: new PublicKey(c.address),
@@ -409,8 +410,10 @@ export const AddDerugRequst: FC<{
                   price={price}
                   setPrice={setPrice}
                   handleMintChange={(e) => setSelectedMint(e)}
-                  duration={duration}
-                  setDuration={setDuration}
+                  privateMintDuration={privateMintDuration}
+                  wlMintDuration={wlMintDuration}
+                  setPrivateMintDuration={setPrivateMintDuration}
+                  setWlMintDuration={setWlMintDuration}
                 />
               </Box>
               <Box
