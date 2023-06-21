@@ -115,12 +115,11 @@ const PublicMint = () => {
 
   const showCloseMinitngButton = useMemo(() => {
     return (
-      wallet?.publicKey.toString() ===
-      candyMachine?.authorityAddress.toString() &&
-      candyMachine?.itemsAvailable &&
-      candyMachine.itemsMinted &&
-      candyMachine?.itemsAvailable.toNumber() >
-      candyMachine?.itemsMinted.toNumber()
+      wallet?.publicKey.toString() === candyMachine?.authority.toString() &&
+      candyMachine?.data.itemsAvailable &&
+      candyMachine.itemsRedeemed &&
+      Number(candyMachine?.data.itemsAvailable) >
+        Number(candyMachine?.itemsRedeemed)
     );
   }, [candyMachine, wallet]);
 
@@ -133,13 +132,13 @@ const PublicMint = () => {
         <Box className="overflow-y-scroll grid grid-cols-3 gap-5">
           {loading
             ? generateSkeletonArrays(15).map(() => (
-              <Skeleton
-                height={100}
-                width={110}
-                baseColor="rgb(22,27,34)"
-                highlightColor="rgb(29,35,44)"
-              />
-            ))
+                <Skeleton
+                  height={100}
+                  width={110}
+                  baseColor="rgb(22,27,34)"
+                  highlightColor="rgb(29,35,44)"
+                />
+              ))
             : renderNfts}
         </Box>
       </Box>
@@ -179,7 +178,7 @@ const PublicMint = () => {
           )}
         </button>
       </Box>
-      <Box className="flex flex-col items-start gap-3 ">
+      {/* <Box className="flex flex-col items-start gap-3 ">
         <p className="text-white text-lg">MINT DETAILS</p>
         <Box className="flex flex-col gap-3 items-start">
           <p className="text-bold text-green-color text-md">Private Mint</p>
@@ -210,8 +209,8 @@ const PublicMint = () => {
               <ProgressBar
                 width={"100%"}
                 progress={
-                  (candyMachine.itemsMinted.toNumber() /
-                    candyMachine.itemsAvailable.toNumber()!) *
+                  (Number(candyMachine.itemsRedeemed) /
+                    Number(candyMachine.data.itemsAvailable)) *
                   100
                 }
                 bg="rgb(9, 194, 246)"
@@ -225,7 +224,7 @@ const PublicMint = () => {
                 }}
               />
               <p>
-                {candyMachine.itemsMinted.toNumber()}/
+                {Number(candyMachine.itemsRedeemed)}/
                 {collectionDerug?.totalSupply ?? 400}
               </p>
             </Box>
@@ -235,13 +234,7 @@ const PublicMint = () => {
           <Box className="flex gap-5 items-center">
             {candyMachine && (
               <>
-                <p className="text-white text-lg">
-                  MINT PRICE :{" "}
-                  {candyMachine?.price.basisPoints.toNumber() /
-                    Math.pow(10, candyMachine?.price.currency.decimals)}{" "}
-                  {remintConfig?.splTokenData?.symbol ??
-                    getMintCurrencyData?.currency}
-                </p>
+                <p className="text-white text-lg">MINT PRICE : </p>
                 <img
                   className="rounded-[50px] w-6"
                   src={
@@ -262,7 +255,7 @@ const PublicMint = () => {
             Stop minting
           </Button>
         )}
-      </Box>
+      </Box> */}
     </Box>
   );
 };

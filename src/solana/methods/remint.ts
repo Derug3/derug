@@ -30,6 +30,7 @@ import {
   feeWallet,
   metadataUploaderWallet,
   metaplex,
+  umi,
 } from "../utilities";
 import {
   AccountLayout,
@@ -57,9 +58,13 @@ import {
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-
+import {
+  fetchCandyMachine,
+  fetchCandyGuard,
+} from "@metaplex-foundation/mpl-candy-machine";
 import { getFungibleTokenMetadata, stringifyData } from "../../common/helpers";
 import { UPLOAD_METADATA_FEE } from "../../common/constants";
+import { publicKey } from "@metaplex-foundation/umi";
 
 dayjs.extend(utc);
 
@@ -487,9 +492,12 @@ export async function getRemintConfig(
 
 export const getCandyMachine = async (candyMachineKey: PublicKey) => {
   try {
-    const candyMachine = await metaplex.candyMachinesV2().findByAddress({
-      address: candyMachineKey,
-    });
+    const candyMachine = await fetchCandyMachine(
+      umi,
+      publicKey(candyMachineKey)
+    );
+
+    const guards = await fetchCandyGuard(umi, publicKey(candyMachine));
 
     return candyMachine;
   } catch (error) {
