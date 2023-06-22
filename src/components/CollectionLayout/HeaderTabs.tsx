@@ -32,7 +32,7 @@ export const HeaderTabs: FC<{
   const wallet = useWallet();
 
   const showAddDerugButton = useMemo(() => {
-    if (!derugRequests || derugRequests.length == 0) {
+    if (!derugRequests || derugRequests.length === 0) {
       return true;
     } else if (
       (collectionDerug &&
@@ -82,7 +82,9 @@ export const HeaderTabs: FC<{
                   className="rounded-lg"
                   onClick={() => openDerugModal(true)}
                 >
-                  <span className="text-sm uppercase rounded-lg">Add derug request</span>
+                  <span className="text-sm uppercase rounded-lg">
+                    Add derug request
+                  </span>
                 </Button>
               )}
             <TabNav
@@ -94,6 +96,24 @@ export const HeaderTabs: FC<{
                 borderRadius: "2em",
               }}
             >
+              {collectionDerug &&
+                (collectionDerug!.status === DerugStatus.Reminting ||
+                  collectionDerug?.status === DerugStatus.UploadingMetadata) &&
+                wallet.publicKey?.toString() ===
+                  derugRequests
+                    ?.find(
+                      (req) =>
+                        req.address.toString() ===
+                        collectionDerug.winningRequest?.toString()
+                    )
+                    ?.derugger.toString() && (
+                  <TabNav.Link
+                    onClick={() => setSelectedData("traits")}
+                    sx={getNavStyling(selectedData, "traits")}
+                  >
+                    DERUG INFO
+                  </TabNav.Link>
+                )}
               <TabNav.Link
                 onClick={() => setSelectedData("listed")}
                 sx={getNavStyling(selectedData, "listed")}
@@ -108,6 +128,7 @@ export const HeaderTabs: FC<{
                   TRAITS
                 </TabNav.Link>
               )}
+
               <TabNav.Link
                 onClick={() => setSelectedData("statistics")}
                 sx={getNavStyling(selectedData, "statistics")}

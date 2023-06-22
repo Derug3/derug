@@ -497,9 +497,9 @@ export const getCandyMachine = async (candyMachineKey: PublicKey) => {
       publicKey(candyMachineKey)
     );
 
-    const guards = await fetchCandyGuard(umi, publicKey(candyMachine));
+    // const guards = await fetchCandyGuard(umi, publicKey(candyMachine));
 
-    return candyMachine;
+    return [] as any;
   } catch (error) {
     return undefined;
   }

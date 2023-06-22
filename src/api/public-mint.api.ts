@@ -1,13 +1,24 @@
 import { Keypair } from "@solana/web3.js";
 import { WlType } from "../enums/collections.enums";
-import { WlSettingsDto } from "../interface/collections.interface";
+import {
+  SaveWlSettingsDto,
+  WlSettingsDto,
+} from "../interface/collections.interface";
 import {
   CandyMachineDto,
   INonMinted,
   StoreCandyMachineData,
 } from "../interface/derug.interface";
 import { get, post } from "./request.api";
-import { COLLECTION, METADATA, NON_MINTED, PUBLIC_REMINT } from "./url.api";
+import {
+  ALL,
+  COLLECTION,
+  METADATA,
+  NON_MINTED,
+  PUBLIC_REMINT,
+  STORE_WALLETS,
+  WALLET_WL,
+} from "./url.api";
 
 export const saveCandyMachineData = async (
   candyMachineDto: CandyMachineDto
@@ -35,10 +46,12 @@ export const getPrivateMintNft = (metadata: string): Promise<INonMinted> => {
   return get(`${PUBLIC_REMINT}${METADATA}/${metadata}`);
 };
 
-export const getWlConfig = async (): Promise<WlSettingsDto> => {
-  return {
-    derugRequest: "",
-    type: WlType.AllowList,
-    wallets: [],
-  };
+export const getWlConfig = async (
+  derugAddress: string
+): Promise<WlSettingsDto> => {
+  return get(`${WALLET_WL}${ALL}/${derugAddress}`);
+};
+
+export const storeWlConfig = async (wlDto: SaveWlSettingsDto) => {
+  return await post(`${WALLET_WL}${STORE_WALLETS}`, wlDto);
 };

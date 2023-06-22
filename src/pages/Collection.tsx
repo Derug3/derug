@@ -38,6 +38,7 @@ import PublicMint from "../components/Remit/PublicMint";
 import { CandyMachineV2 } from "@metaplex-foundation/js";
 import { DERUG } from "../api/url.api";
 import { derugProgramFactory } from "../solana/utilities";
+import { CandyMachine } from "@metaplex-foundation/mpl-candy-machine";
 export const Collections: FC = () => {
   dayjs.extend(utc);
   const [collectionStats, setCollectionStats] = useState<ICollectionStats>();
@@ -57,7 +58,7 @@ export const Collections: FC = () => {
   const [collectionDerug, setCollectionDerug] =
     useState<ICollectionDerugData>();
   const [graphData, setGraphData] = useState<IGraphData>();
-  const [candyMachine, setCandyMachine] = useState<CandyMachineV2>();
+  const [candyMachine, setCandyMachine] = useState<CandyMachine>();
 
   const [derugRequests, setDerugRequests] = useState<IRequest[]>();
   const iframeRef = useRef(null);
@@ -286,16 +287,16 @@ export const Collections: FC = () => {
         <>
           {(collectionDerug.status === DerugStatus.Initialized ||
             collectionDerug.status === DerugStatus.Voting) &&
-            showDerugRequests &&
-            !hasWinning ? (
+          showDerugRequests &&
+          !hasWinning ? (
             <DerugRequest />
           ) : (
             <>
               {remintConfig &&
-                (dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) ||
-                  (remintConfig.mintPrice && !remintConfig.privateMintEnd)) &&
-                candyMachine &&
-                candyMachine.itemsLoaded.toNumber() > 0 ? (
+              (dayjs(remintConfig.privateMintEnd).isBefore(dayjs()) ||
+                (remintConfig.mintPrice && !remintConfig.privateMintEnd)) &&
+              candyMachine &&
+              Number(candyMachine.data.itemsAvailable) > 0 ? (
                 <PublicMint />
               ) : (
                 collectionDerug &&

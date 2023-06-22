@@ -6,16 +6,7 @@ import {
   walletAdapterIdentity,
   WalletAdapterIdentityDriver,
 } from "@metaplex-foundation/js";
-import {
-  addConfigLines,
-  AllowList,
-  create,
-  DefaultGuardSetArgs,
-  fetchCandyMachine,
-  getMerkleRoot,
-  GuardGroupArgs,
-  MintLimit,
-} from "@metaplex-foundation/mpl-candy-machine";
+import {} from "@metaplex-foundation/mpl-candy-machine";
 import { walletAdapterIdentity as umiAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
 
 import {
@@ -121,107 +112,107 @@ export const initCandyMachine = async (
         .toDate();
     }
 
-    const wlConfig = await getWlConfig();
+    const wlConfig = await getWlConfig(collectionDerug.address.toString());
 
-    const paymentConfig: any = {
-      solPayment: remintConfigAccount.mintCurrency
-        ? none()
-        : some({
-            destination: publicKey(remintConfigAccount.authority),
-            lamports: sol(
-              remintConfigAccount.publicMintPrice.toNumber() / LAMPORTS_PER_SOL
-            ),
-          }),
-      tokenPayment: remintConfigAccount.mintCurrency
-        ? some({
-            amount: Number(remintConfigAccount.mintPrice),
-            mint: publicKey(remintConfigAccount.mintCurrency),
-            destinationAta: publicKey(remintConfigAccount.mintFeeTreasury!),
-          })
-        : none(),
-    };
+    // const paymentConfig: any = {
+    //   solPayment: remintConfigAccount.mintCurrency
+    //     ? none()
+    //     : some({
+    //         destination: publicKey(remintConfigAccount.authority),
+    //         lamports: sol(
+    //           remintConfigAccount.publicMintPrice.toNumber() / LAMPORTS_PER_SOL
+    //         ),
+    //       }),
+    //   tokenPayment: remintConfigAccount.mintCurrency
+    //     ? some({
+    //         amount: Number(remintConfigAccount.mintPrice),
+    //         mint: publicKey(remintConfigAccount.mintCurrency),
+    //         destinationAta: publicKey(remintConfigAccount.mintFeeTreasury!),
+    //       })
+    //     : none(),
+    // };
 
-    let allowListConfig: OptionOrNullable<AllowList> = none();
+    // let allowListConfig: OptionOrNullable<AllowList> = none();
 
-    if (wlConfig && wlConfig.type === WlType.AllowList) {
-      const merkleRoot = getMerkleRoot(wlConfig.wallets!);
+    // if (wlConfig && wlConfig.type === WlType.AllowList) {
+    //   const merkleRoot = getMerkleRoot(wlConfig.wallets!);
 
-      allowListConfig = some({
-        merkleRoot,
-      });
-    }
+    //   allowListConfig = some({
+    //     merkleRoot,
+    //   });
+    // }
 
-    //TODO:handle mint limit per wallet
-    let mintLimit: OptionOrNullable<MintLimit> = none();
+    // // //TODO:handle mint limit per wallet
+    // let mintLimit: OptionOrNullable<MintLimit> = none();
 
-    let groups: GuardGroupArgs<DefaultGuardSetArgs>[] | undefined = [
-      {
-        label: "all",
-        guards: {
-          ...paymentConfig,
-          startDate:
-            wlConfig && wlConfig.duration
-              ? some({ date: dayjs().add(wlConfig.duration, "hours").toDate() })
-              : none(),
-        },
-      },
-    ];
+    // let groups: GuardGroupArgs<DefaultGuardSetArgs>[] | undefined = [
+    //   {
+    //     label: "all",
+    //     guards: {
+    //       ...paymentConfig,
+    //       startDate:
+    //         wlConfig && wlConfig.duration
+    //           ? some({ date: dayjs().add(wlConfig.duration, "hours").toDate() })
+    //           : none(),
+    //     },
+    //   },
+    // ];
 
-    if (wlConfig && wlConfig.type === WlType.AllowList && wlConfig.duration) {
-      groups.unshift({
-        label: "wl",
-        guards: {
-          allowList: allowListConfig,
-          endDate: some({
-            date: dayjs().add(wlConfig.duration, "hours").toDate(),
-          }),
-          ...paymentConfig,
-        },
-      });
-    }
+    // if (wlConfig && wlConfig.type === WlType.AllowList && wlConfig.duration) {
+    //   groups.unshift({
+    //     label: "wl",
+    //     guards: {
+    //       allowList: allowListConfig,
+    //       endDate: some({
+    //         date: dayjs().add(wlConfig.duration, "hours").toDate(),
+    //       }),
+    //       ...paymentConfig,
+    //     },
+    //   });
+    // }
 
-    const cmSigner = createSignerFromKeypair(umi, {
-      publicKey: publicKey(candyMachine.publicKey),
-      secretKey: candyMachine.secretKey,
-    });
+    // const cmSigner = createSignerFromKeypair(umi, {
+    //   publicKey: publicKey(candyMachine.publicKey),
+    //   secretKey: candyMachine.secretKey,
+    // });
 
-    umi.use(umiAdapterIdentity(wallet));
+    // umi.use(umiAdapterIdentity(wallet));
 
-    await toast.promise(
-      (
-        await create(umi, {
-          candyMachine: cmSigner,
-          itemsAvailable: nonMintedNfts.length,
-          sellerFeeBasisPoints: percentAmount(
-            remintConfigAccount.sellerFeeBps / 100,
-            2
-          ),
-          creators: remintConfigAccount.creators.map((c) => ({
-            address: publicKey(c.address),
-            percentageShare: c.share,
-            verified: true,
-          })),
-          groups,
-          authority: publicKey(remintConfigAccount.authority),
-          tokenStandard: TokenStandard.NonFungible,
-          isMutable: true,
-          symbol: remintConfigAccount.newSymbol,
-          tokenMetadataProgram: publicKey(PROGRAM_ID),
-          guards: {
-            allowList: allowListConfig,
-          },
-          collectionMint: publicKey(remintConfigAccount.collection),
-          collectionUpdateAuthority: createNoopSigner(
-            publicKey(remintConfigAccount.authority)
-          ),
-        })
-      ).sendAndConfirm(umi),
-      {
-        error: "",
-        loading: "",
-        success: "",
-      }
-    );
+    // await toast.promise(
+    //   (
+    //     await create(umi, {
+    //       candyMachine: cmSigner,
+    //       itemsAvailable: nonMintedNfts.length,
+    //       sellerFeeBasisPoints: percentAmount(
+    //         remintConfigAccount.sellerFeeBps / 100,
+    //         2
+    //       ),
+    //       creators: remintConfigAccount.creators.map((c) => ({
+    //         address: publicKey(c.address),
+    //         percentageShare: c.share,
+    //         verified: true,
+    //       })),
+    //       groups,
+    //       authority: publicKey(remintConfigAccount.authority),
+    //       tokenStandard: TokenStandard.NonFungible,
+    //       isMutable: true,
+    //       symbol: remintConfigAccount.newSymbol,
+    //       tokenMetadataProgram: publicKey(PROGRAM_ID),
+    //       guards: {
+    //         allowList: allowListConfig,
+    //       },
+    //       collectionMint: publicKey(remintConfigAccount.collection),
+    //       collectionUpdateAuthority: createNoopSigner(
+    //         publicKey(remintConfigAccount.authority)
+    //       ),
+    //     })
+    //   ).sendAndConfirm(umi),
+    //   {
+    //     error: "",
+    //     loading: "",
+    //     success: "",
+    //   }
+    // );
 
     // await sendTransaction(
     //   RPC_CONNECTION,
@@ -279,19 +270,18 @@ export const storeCandyMachineItems = async (
     const txBuilders: TransactionBuilder[] = [];
     umi.use(umiAdapterIdentity(wallet));
     for (const nonMintedChunk of chunkedNonMinted) {
-      const candyMachine = await fetchCandyMachine(
-        umi,
-        publicKey(new PublicKey(candyMachineData.candyMachineKey))
-      );
-
-      addConfigLines(umi, {
-        candyMachine: publicKey(candyMachineAccount.address),
-        configLines: nonMintedChunk.map((nmc) => ({
-          name: nmc.name,
-          uri: nmc.uri,
-        })),
-        index: candyMachine.itemsLoaded,
-      }).sendAndConfirm(umi);
+      //   const candyMachine = await fetchCandyMachine(
+      //     umi,
+      //     publicKey(new PublicKey(candyMachineData.candyMachineKey))
+      //   );
+      //   addConfigLines(umi, {
+      //     candyMachine: publicKey(candyMachineAccount.address),
+      //     configLines: nonMintedChunk.map((nmc) => ({
+      //       name: nmc.name,
+      //       uri: nmc.uri,
+      //     })),
+      //     index: candyMachine.itemsLoaded,
+      //   }).sendAndConfirm(umi);
     }
 
     const transactions: Transaction[] = [];

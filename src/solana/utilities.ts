@@ -3,7 +3,6 @@ import { AnchorProvider, Program } from "@project-serum/anchor";
 import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet";
 import { Keypair, PublicKey } from "@solana/web3.js";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import { mplCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
 import { DerugProgram, IDL } from "../solana/idl/derug_program";
 import { DERUG_PROGRAM_ID, RPC_CONNECTION } from "../utilities/utilities";
 export const derugProgramFactory = () => {
@@ -25,9 +24,7 @@ export const metadataUploaderWallet = new PublicKey(
 );
 
 //TODO:load from env
-export const umi = createUmi("https://api.devnet.solana.com").use(
-  mplCandyMachine()
-);
+export const umi = createUmi("https://api.devnet.solana.com");
 
 //TODO mainnet: load this from env file
 export const metaplex = new Metaplex(RPC_CONNECTION).use(

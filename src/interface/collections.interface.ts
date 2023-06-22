@@ -149,7 +149,12 @@ export interface ICollectionVolume {
 
 export interface WlSettingsDto {
   type: WlType;
-  derugRequest: string;
-  wallets?: string[];
+  derugAddress: string;
+  wallets: string[];
   duration?: number;
+  derugger: string;
+}
+
+export interface SaveWlSettingsDto extends WlSettingsDto {
+  signedMessage: string;
 }

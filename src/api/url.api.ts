@@ -23,3 +23,6 @@ export const TOP_VOLUME = "/top-volume";
 export const ORDER_BY = "?orderBy=";
 export const FILTER = "/filter";
 export const TWITTER_API = "https://api.twitter.com";
+export const WALLET_WL = "/wallet-wl";
+export const STORE_WALLETS = "/store-wallets";
+export const ALL = "/all";
